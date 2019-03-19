@@ -4,9 +4,7 @@ import './UniverseView.css';
 import UniverseView from './UniverseView';
 
 class App extends Component {
-    componentDidMount() {
-        const universe = this.refs.universe;
-    }
+
     render() {
         return (
             <div className="App">

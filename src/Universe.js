@@ -1,8 +1,13 @@
+import Graphics from "./Graphics";
+import Creature from "./Creature";
+
 class Universe {
 
     constructor() {
         this.creatures = {
-            alive: [],
+            alive: [
+                new Creature(),
+            ],
             dead: [],
         };
 
@@ -13,14 +18,18 @@ class Universe {
 
     assignCanvas(canvas) {
         this.canvas = canvas;
+        this.graphics = new Graphics(
+            this.canvas.getContext('2d'),
+            this.canvas.width,
+            this.canvas.height);
     }
 
     tick() {
-        this.num = (this.num + 1) % 1000000;
-        const ctx = this.canvas.getContext('2d');
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        ctx.font = "20px Courier"
-        ctx.fillText("whaddup: " + this.num, 100, 100);
+        this.graphics.drawBackground();
+        this.creatures.alive.forEach(creature => {
+            creature.tick();
+            creature.draw(this.graphics);
+        });
     }
 }
 

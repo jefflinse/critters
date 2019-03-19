@@ -3,9 +3,6 @@ import Simulator from './Simulator';
 import Universe from './Universe';
 
 class UniverseView extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     componentWillMount() {
         const universe = new Universe();
@@ -17,17 +14,21 @@ class UniverseView extends Component {
     }
 
     componentDidMount() {
+        this.refs.canvas.width = window.innerWidth;
+        this.refs.canvas.height = window.innerHeight;
         this.state.simulator.universe.assignCanvas(this.refs.canvas);
     }
 
     onCanvasClicked() {
-        const ctx = this.refs.canvas.getContext('2d');
         this.state.simulator.toggle();
     }
 
     render() {
         return (
-            <canvas ref="canvas" className="Universe-canvas" onClick={this.onCanvasClicked.bind(this)}></canvas>
+            <canvas ref="canvas"
+                className="Universe-canvas"
+                onClick={this.onCanvasClicked.bind(this)}>
+            </canvas>
         );
     }
 }
