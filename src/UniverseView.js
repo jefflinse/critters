@@ -17,6 +17,7 @@ class UniverseView extends Component {
         this.refs.canvas.width = window.innerWidth;
         this.refs.canvas.height = window.innerHeight;
         this.state.simulator.universe.assignCanvas(this.refs.canvas);
+        this.state.simulator.universe.populateCreatures(10);
     }
 
     onCanvasClicked() {

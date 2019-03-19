@@ -2,8 +2,8 @@ import Vector from './Vector';
 
 class Creature {
 
-    constructor() {
-        this.location = new Vector(100, 100);
+    constructor(location) {
+        this.location = location;
     }
 
     tick() {
