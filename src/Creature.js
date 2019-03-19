@@ -6,6 +6,16 @@ class Creature {
         this.location = location;
     }
 
+    get fitness() {
+        return 1;
+    }
+
+    clone() {
+        let newCreature = new Creature();
+        newCreature.location = this.location.copy();
+        return newCreature;
+    }
+
     tick() {
         this.location.add(new Vector().random().limit(10));
     }

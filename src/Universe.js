@@ -5,12 +5,7 @@ import Vector from "./Vector";
 class Universe {
 
     constructor() {
-        this.creatures = {
-            alive: [],
-            dead: [],
-        };
-
-        this.food = [];
+        this.reset();
     }
 
     assignCanvas(canvas) {
@@ -37,6 +32,15 @@ class Universe {
             creature.tick();
             creature.draw(this.graphics);
         });
+    }
+
+    reset() {
+        this.creatures = {
+            alive: [],
+            dead: [],
+        };
+
+        this.food = [];
     }
 }
 
