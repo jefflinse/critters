@@ -3,25 +3,15 @@ import Vector from "./Vector";
 class PhysicalObject {
 
     constructor(location) {
-        this.mass = 1;
         this.location = location;
-        this.velocity = new Vector(0, 0).random();
-        this.forces = [];
-    }
-
-    get acceleration() {
-        let totalForce = this.forces.reduce((total, force) => total.add(force), new Vector());
-        return totalForce.setMagnitude(totalForce.magnitude() / this.mass);
-    }
-
-    applyForce(force) {
-        this.forces.push(force);
+        this.velocity = new Vector().random();
+        this.acceleration = new Vector();
     }
 
     tick() {
         this.velocity.add(this.acceleration);
         this.location.add(this.velocity);
-        this.forces.length = 0;
+        this.acceleration.set(0, 0);
     }
 }
 
