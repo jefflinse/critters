@@ -14,13 +14,11 @@ class UniverseView extends Component {
     }
 
     componentDidMount() {
-        this.refs.canvas.width = window.innerWidth;
-        this.refs.canvas.height = window.innerHeight;
-        this.state.simulator.universe.assignCanvas(this.refs.canvas);
-        this.state.simulator.universe.populateCreatures(10);
+        let canvas = this.refs.canvas;
+        this.state.simulator.universe.setup(canvas, 100);
     }
 
-    onCanvasClicked() {
+    onCanvasClick() {
         this.state.simulator.toggle();
     }
 
@@ -28,7 +26,9 @@ class UniverseView extends Component {
         return (
             <canvas ref="canvas"
                 className="Universe-canvas"
-                onClick={this.onCanvasClicked.bind(this)}>
+                width={window.innerWidth}
+                height={window.innerHeight}
+                onClick={this.onCanvasClick.bind(this)}>
             </canvas>
         );
     }

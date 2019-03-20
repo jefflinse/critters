@@ -8,15 +8,10 @@ class Universe {
         this.reset();
     }
 
-    assignCanvas(canvas) {
+    setup(canvas, numCreatures) {
         this.canvas = canvas;
-        this.graphics = new Graphics(
-            this.canvas.getContext('2d'),
-            this.canvas.width,
-            this.canvas.height);
-    }
-
-    populateCreatures(numCreatures) {
+        this.graphics = new Graphics(this.canvas);
+        
         for (let i = 0; i < numCreatures; i++) {
             let location = new Vector(
                 Math.random() * this.canvas.width,

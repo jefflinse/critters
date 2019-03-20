@@ -1,9 +1,9 @@
 class Graphics {
 
-    constructor(ctx, width, height) {
-        this.ctx = ctx;
-        this.width = width;
-        this.height = height;
+    constructor(canvas) {
+        this.ctx = canvas.getContext('2d');
+        this.width = canvas.width;
+        this.height = canvas.height;
     }
 
     _preDraw(props) {
