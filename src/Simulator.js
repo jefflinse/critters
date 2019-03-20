@@ -3,9 +3,6 @@ class Simulator {
     constructor(universe) {
         this.universe = universe;
         this.state = 'stopped';
-        this.ticks = 0;
-        this.generation = 0;
-        this.ticksPerGeneration = 1000;
     }
 
     start() {
@@ -34,23 +31,6 @@ class Simulator {
 
     _tick() {
         this.universe.tick();
-        this.ticks++;
-
-        if (this.ticks > this.ticksPerGeneration) {
-            this._newGeneration();
-            this.ticks = 0;
-            this.generation++;
-        }
-    }
-
-    _newGeneration() {
-        let newCreatures = [];
-        this.creatures.alive.forEach(livingCreature => {
-            newCreatures.push(livingCreature.clone());
-        });
-        this.creatures.alive.length = 0;
-        this.creatures.dead.length = 0;
-        this.creatures.alive = newCreatures;
     }
 }
 
