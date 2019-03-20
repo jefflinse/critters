@@ -18,18 +18,18 @@ class Simulator {
         this.state = 'paused';
     }
 
+    reset() {
+        this.pause();
+        this.universe.reset();
+        this.state = 'stopped';
+    }
+
     toggle() {
         if (this.state === 'stopped' || this.state === 'paused') {
             this.start();
         } else {
             this.pause();
         }
-    }
-
-    reset() {
-        this.pause();
-        this.universe.reset();
-        this.state = 'stopped';
     }
 
     _tick() {
