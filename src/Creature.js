@@ -1,28 +1,20 @@
-import Vector from './Vector';
+import PhysicalObject from "./PhysicalObject";
 
-class Creature {
+class Creature extends PhysicalObject {
 
     constructor(location) {
-        this.location = location;
-    }
-
-    get fitness() {
-        return 1;
-    }
-
-    clone() {
-        let newCreature = new Creature();
-        newCreature.location = this.location.copy();
-        return newCreature;
+        super(location);
     }
 
     tick() {
-        this.location.add(new Vector().random().limit(10));
+        // PhysicalObject tick should always be last
+        // as it depends on modifications to acceleration, etc.
+        super.tick();
     }
 
     draw(graphics) {
-        graphics.drawCircle(this.location, 10, {
-            fillStyle: "#FFFFFF",
+        graphics.drawCircle(this.location, 20, {
+            fillStyle: "#0000FF",
 			globalAlpha: 1,
 			lineWidth: 1
 		});
