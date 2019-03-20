@@ -6,7 +6,7 @@ class Simulator {
     }
 
     start() {
-        this.clock = setInterval(this._tick.bind(this), 100);
+        this.clock = setInterval(this._tick.bind(this), 10);
         this.state = 'running';
     }
 
