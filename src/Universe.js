@@ -14,23 +14,14 @@ class Universe {
 
     setup(canvas, numCreatures) {
         this.canvas = canvas;
-        this.graphics = new Graphics(canvas);
-
-        // create an engine
-        this.physicsEngine = Engine.create({
-            world: World.create({
-                gravity: { x: 0, y: 0, scale: .001 },
-            }),
-        })
 
         // add some creatures
         for (let i = 0; i < numCreatures; i++) {
             this.addCreature();
         }
 
-        // add all of the bodies to the world
-        World.add(this.physicsEngine.world,
-            this.creatures.alive.map(creature => creature.physicalBody));
+        this._initGraphics(canvas);
+        this._initPhysics();
     }
 
     addCreature() {
@@ -57,6 +48,21 @@ class Universe {
         };
 
         this.food = [];
+    }
+
+    _initGraphics(canvas) {
+        this.graphics = new Graphics(canvas);
+    }
+
+    _initPhysics() {
+        this.physicsEngine = Engine.create({
+            world: World.create({
+                gravity: { x: 0, y: 0, scale: .001 },
+            }),
+        });
+
+        World.add(this.physicsEngine.world,
+            this.creatures.alive.map(creature => creature.physicalBody));
     }
 }
 
