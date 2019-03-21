@@ -1,12 +1,16 @@
 import Matter from 'matter-js';
-import Vector from './Vector';
 
 const Bodies = Matter.Bodies;
 
 class Creature {
 
     constructor(location, radius) {
-        this.physicalBody = Bodies.circle(location.x, location.y, radius);
+        this.physicalBody = Bodies.circle(location.x, location.y, radius, {
+            friction: 0,
+            frictionAir: 0,
+        });
+        this.physicalBody.position.x += Math.random() * 10 - 5;
+        this.physicalBody.position.y += Math.random() * 10 - 5;
     }
 
     tick() {

@@ -5,39 +5,40 @@ import Vector from "./Vector";
 const Engine = Matter.Engine;
 const Render = Matter.Render;
 const World = Matter.World;
-const Bodies = Matter.Bodies;
 
 class Universe {
 
     constructor() {
-        this.physicsEngine = Engine.create();
         this.reset();
     }
 
     setup(canvas, numCreatures) {
         this.canvas = canvas;
 
+        // create an engine
+        this.physicsEngine = Engine.create({
+            world: World.create({
+                gravity: { x: 0, y: 0, scale: .001 },
+            }),
+        })
+
         // create a renderer
         this.renderer = Render.create({
-            canvas: canvas,
+            canvas: this.canvas,
             engine: this.physicsEngine,
+            options: {
+                wireframes: false,
+            }
         });
 
-        // add come creatures
+        // add some creatures
         for (let i = 0; i < numCreatures; i++) {
             this.addCreature();
         }
 
-        // create the ground
-        var ground = Bodies.rectangle(0, this.canvas.height, this.canvas.width, 60, {
-            isStatic: true
-        });
-
-        let bodies = this.creatures.alive.map(creature => creature.physicalBody);
-        bodies.unshift(ground);
-
         // add all of the bodies to the world
-        World.add(this.physicsEngine.world, bodies);
+            World.add(this.physicsEngine.world,
+                this.creatures.alive.map(creature => creature.physicalBody));
 
         // run the renderer
         Render.run(this.renderer);
