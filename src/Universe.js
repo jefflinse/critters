@@ -1,9 +1,9 @@
 import Creature from "./Creature";
+import Graphics from "./Graphics";
 import Matter from "matter-js";
 import Vector from "./Vector";
 
 const Engine = Matter.Engine;
-const Render = Matter.Render;
 const World = Matter.World;
 
 class Universe {
@@ -14,6 +14,7 @@ class Universe {
 
     setup(canvas, numCreatures) {
         this.canvas = canvas;
+        this.graphics = new Graphics(canvas);
 
         // create an engine
         this.physicsEngine = Engine.create({
@@ -22,26 +23,14 @@ class Universe {
             }),
         })
 
-        // create a renderer
-        this.renderer = Render.create({
-            canvas: this.canvas,
-            engine: this.physicsEngine,
-            options: {
-                wireframes: false,
-            }
-        });
-
         // add some creatures
         for (let i = 0; i < numCreatures; i++) {
             this.addCreature();
         }
 
         // add all of the bodies to the world
-            World.add(this.physicsEngine.world,
-                this.creatures.alive.map(creature => creature.physicalBody));
-
-        // run the renderer
-        Render.run(this.renderer);
+        World.add(this.physicsEngine.world,
+            this.creatures.alive.map(creature => creature.physicalBody));
     }
 
     addCreature() {
@@ -53,6 +42,12 @@ class Universe {
 
     tick() {
         Engine.update(this.physicsEngine, 1000 / 60);
+        this.render();
+    }
+
+    render() {
+        this.graphics.drawBackground();
+        this.creatures.alive.forEach(creature => creature.render(this.graphics));
     }
 
     reset() {

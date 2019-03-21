@@ -15,7 +15,7 @@ class UniverseView extends Component {
 
     componentDidMount() {
         let canvas = this.refs.canvas;
-        this.state.simulator.universe.setup(canvas, 30);
+        this.state.simulator.universe.setup(canvas, 100);
     }
 
     onCanvasClick() {
