@@ -32,6 +32,7 @@ class Universe {
     }
 
     tick() {
+        this.creatures.alive.forEach(creature => creature.tick());
         Engine.update(this.physicsEngine, 1000 / 60);
         this.render();
     }

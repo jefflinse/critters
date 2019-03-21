@@ -24,15 +24,15 @@ class Neuron {
 
     projectTo(other, value = 0, weight = Math.random()) {
         let connection = { value: value, weight: weight };
-        this.outputs.push(connection);
-        other.inputs.push(connection);
+        this.attachOutput(connection);
+        other.attachInput(connection);
         return connection;
     }
 
     activate() {
         let weightedSum = this.activationFunction(
             this.inputs.reduce((total, connection) =>
-                total + connection.valueFn() * connection.weight, 0));
+                total + connection.value * connection.weight, 0));
         
         this.outputs.forEach(connection => connection.value = weightedSum);
     }
