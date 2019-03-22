@@ -48,7 +48,7 @@ class Graphics {
 
     writeText(x, y, text, props) {
         this._preDraw(props);
-        this.ctx.font = '16px sans-serif';
+        this.ctx.font = '12px sans-serif';
         this.ctx.fillStyle = 'white';
         this.ctx.fillText(text, x, y);
         this._postDraw();

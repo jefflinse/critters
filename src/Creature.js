@@ -23,6 +23,12 @@ class Creature {
             this.physicalBody.velocity.x,
             this.physicalBody.velocity.y,
         ]);
+
+        console.log(this.outputs);
+
+        // let force = new Vector(5 * this.outputs[0], 5 * this.outputs[1]);
+        // let origin = force.copy().invert().setMagnitude(this.radius);
+        // Body.applyForce(this.physicalBody, origin, force);
     }
 
     render(graphics) {
@@ -33,7 +39,7 @@ class Creature {
         // graphics.writeText(this.physicalBody.position.x + 10, this.physicalBody.position.y,
         //     this.name + ': ' + this.outputs.join(', '));
 
-        this.brain.render(graphics, this.physicalBody.position, 5, 5, 10, 1);
+        this.brain.render(graphics, this.physicalBody.position, 10, 10, 20, 1);
     }
 }
 

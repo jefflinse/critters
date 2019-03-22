@@ -30,11 +30,10 @@ class Neuron {
     }
 
     activate() {
-        let weightedSum = this.activationFunction(
+        this.value = this.activationFunction(
             this.inputs.reduce((total, connection) =>
                 total + connection.value * connection.weight, 0));
-        
-        this.outputs.forEach(connection => connection.value = weightedSum);
+        this.outputs.forEach(connection => connection.value = this.value);
     }
 
     clone() {
