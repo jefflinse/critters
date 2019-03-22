@@ -1,16 +1,17 @@
 import ActivationFunctions from 'activation-functions';
 
+const ACTIVATION_FUNCTIONS = [
+    ActivationFunctions.Identity,
+    ActivationFunctions.Sigmoid,
+    Math.tanh,
+    ActivationFunctions.BinaryStep,
+];
+
 class Neuron {
 
     constructor() {
         this.inputs = [];
         this.outputs = [];
-        this.availableActivationFunctions = [
-            ActivationFunctions.Identity,
-            ActivationFunctions.Sigmoid,
-            ActivationFunctions.TanH,
-            ActivationFunctions.BinaryStep,
-        ];
         this.activationFunction = ActivationFunctions.Identity;
     }
 
@@ -29,19 +30,16 @@ class Neuron {
         return connection;
     }
 
-    activate() {
-        this.value = this.activationFunction(
-            this.inputs.reduce((total, connection) =>
-                total + connection.value * connection.weight, 0));
-        this.outputs.forEach(connection => connection.value = this.value);
+    assignRandomActivationFunction() {
+        return ACTIVATION_FUNCTIONS[Math.floor(Math.random() * ACTIVATION_FUNCTIONS.length)];
     }
 
-    clone() {
-        let neuron = new Neuron();
-        neuron.inputs = this.inputs.map(input => {
-            return { value: input.value, weight: input.weight }
-        })
-        neuron.activationFunction = this.activationFunction;
+    activate() {
+        let weightedSum = this.inputs.reduce((total, connection) =>
+            total + (connection.value * connection.weight), 0);
+        this.value = this.activationFunction(weightedSum);
+        console.log("WS: " + weightedSum + " -> " + this.value);
+        this.outputs.forEach(connection => connection.value = this.value);
     }
 
     get ActivationFunctions() { return ActivationFunctions; }

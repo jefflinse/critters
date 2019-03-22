@@ -18,7 +18,7 @@ class Layer {
     addNeuron(neuron) {
         if (neuron === undefined) {
             neuron = new Neuron();
-            neuron.activationFunction = ActivationFunctions.TanH;
+            neuron.assignRandomActivationFunction();
         }
 
         this.neurons.push(neuron);

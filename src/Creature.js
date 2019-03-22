@@ -24,8 +24,6 @@ class Creature {
             this.physicalBody.velocity.y,
         ]);
 
-        console.log(this.outputs);
-
         // let force = new Vector(5 * this.outputs[0], 5 * this.outputs[1]);
         // let origin = force.copy().invert().setMagnitude(this.radius);
         // Body.applyForce(this.physicalBody, origin, force);

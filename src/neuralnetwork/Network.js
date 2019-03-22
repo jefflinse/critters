@@ -67,10 +67,10 @@ class Network {
             let hidden = this.addHiddenNeuron();
             if (Math.random() < .5) {
                 let input = this.inputs.chooseRandomNeuron();
-                input.projectTo(hidden);
+                connection = input.projectTo(hidden);
             } else {
                 let output = this.outputs.chooseRandomNeuron();
-                hidden.projectTo(output);
+                connection = hidden.projectTo(output);
             }
         } else {
             // choose any neuron at random, then choose a neuron from any other layer and connect them
@@ -80,9 +80,9 @@ class Network {
             let otherNeuron = otherLayer.chooseRandomNeuron();
 
             if (otherLayer.ordinal > layer.ordinal) {
-                neuron.projectTo(otherNeuron);
+                connection = neuron.projectTo(otherNeuron);
             } else {
-                otherNeuron.projectTo(neuron);
+                connection = otherNeuron.projectTo(neuron);
             }
         }
 
