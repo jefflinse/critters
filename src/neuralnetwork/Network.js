@@ -29,6 +29,8 @@ class Network {
                 neuron.activate();
             });
         });
+
+        return this.outputs.map(output => output.outputs[0].value);
     }
 
     addInputNeuron() {
@@ -118,7 +120,7 @@ class Network {
 
     _createBiasNeuron() {
         let neuron = new Neuron();
-        neuron.activationFunction = ActivationFunctions.Identity;
+        neuron.activationFunction = ActivationFunctions.Sigmoid;
         return neuron;
     }
 }
