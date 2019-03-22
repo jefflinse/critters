@@ -1,9 +1,7 @@
 import Matter from 'matter-js';
 import Network from './neuralnetwork/Network';
 
-const Body = Matter.Body;
 const Bodies = Matter.Bodies;
-const Vector = Matter.Vector;
 
 class Creature {
 
