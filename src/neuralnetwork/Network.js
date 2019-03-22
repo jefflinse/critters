@@ -1,6 +1,7 @@
 import ActivationFunctions from 'activation-functions';
 import Layer from './Layer'
 import Neuron from "./Neuron";
+import Vector from '../Vector';
 
 class Network {
 
@@ -106,6 +107,22 @@ class Network {
         }
 
         return this;
+    }
+
+    render(graphics, position, nodeRadius, nodeDistance, layerDistance, connectionLineWeight) {
+        let currentPosition = new Vector(position.x + nodeRadius, position.y + nodeRadius);
+
+        for (let l = 0; l < this.layers.length; l++) {
+            for (let n = 0; n < this.layers[l].size; n++) {
+                graphics.drawCircle(currentPosition, nodeRadius, {
+                    lineWidth: 2,
+                    strokeStyle: "#FFFFFF",
+                });
+                currentPosition.y += 2 * nodeRadius + nodeDistance;
+            }
+            currentPosition.y = position.y + nodeRadius;
+            currentPosition.x += 2 * nodeRadius + layerDistance;
+        }
     }
 
     _createBiasNeuron() {

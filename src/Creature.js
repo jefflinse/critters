@@ -1,6 +1,8 @@
 import Matter from 'matter-js';
 import Network from './neuralnetwork/Network';
+import Vector from './Vector';
 
+const Body = Matter.Body;
 const Bodies = Matter.Bodies;
 
 class Creature {
@@ -24,12 +26,14 @@ class Creature {
     }
 
     render(graphics) {
-        graphics.drawCircle(this.physicalBody.position, this.radius, {
-            fillStyle: "#FFFFFF",
-        });
+        // graphics.drawCircle(this.physicalBody.position, this.radius, {
+        //     fillStyle: "#FFFFFF",
+        // });
 
-        graphics.writeText(this.physicalBody.position.x + 10, this.physicalBody.position.y,
-            this.name + ': ' + this.outputs.join(', '));
+        // graphics.writeText(this.physicalBody.position.x + 10, this.physicalBody.position.y,
+        //     this.name + ': ' + this.outputs.join(', '));
+
+        this.brain.render(graphics, this.physicalBody.position, 5, 5, 10, 1);
     }
 }
 

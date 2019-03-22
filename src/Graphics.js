@@ -34,6 +34,7 @@ class Graphics {
         this._preDraw(props);
         this.ctx.beginPath();
         this.ctx.arc(origin.x, origin.y, radius, 0, 2 * Math.PI);
+        this.ctx.stroke();
         this.ctx.fill();
         this._postDraw();
     }
