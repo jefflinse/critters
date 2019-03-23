@@ -1,8 +1,8 @@
+import _ from 'lodash';
 import ActivationFunctions from 'activation-functions';
 import Layer from './Layer'
 import Neuron from './Neuron';
 import Vector from '../Vector';
-import Connection from './Connection';
 
 class Network {
 
@@ -99,7 +99,7 @@ class Network {
     }
 
     chooseRandomLayer(mustNotBeEmpty, exclude) {
-        let layer = this.layers[Math.floor(Math.random() * this.layers.length)];
+        let layer = _.sample(this.layers);
 
         if ((mustNotBeEmpty === true && layer.size === 0) ||
             (exclude !== undefined && layer.ordinal === exclude)) {

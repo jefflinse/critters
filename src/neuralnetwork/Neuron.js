@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import ActivationFunctions from 'activation-functions';
 import Connection from './Connection';
 
@@ -37,7 +38,7 @@ class Neuron {
     }
 
     assignRandomActivationFunction() {
-        return ACTIVATION_FUNCTIONS[Math.floor(Math.random() * ACTIVATION_FUNCTIONS.length)];
+        return _.sample(ACTIVATION_FUNCTIONS);
     }
 
     activate() {

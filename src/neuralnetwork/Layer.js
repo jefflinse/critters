@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Neuron from './Neuron';
 
 class Layer {
@@ -27,7 +28,7 @@ class Layer {
     }
 
     chooseRandomNeuron() {
-        return this.size > 0 ? this.neuronAt(Math.floor(Math.random() * this.size)) : undefined;
+        return this.size > 0 ? _.sample(this.neurons) : undefined;
     }
 
     neuronAt(index) {

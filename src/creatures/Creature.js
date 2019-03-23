@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Matter from 'matter-js';
 import Network from '../neuralnetwork/Network';
 import Part from './Part';
@@ -30,7 +31,7 @@ class Creature {
 
         // attach to an existing part using a muscle
         if (this.parts.length > 0) {
-            let parent = this.parts.random();
+            let parent = _.sample(this.parts);
             let constraint = parent.addPart(part);
             Composite.add(this.physics, constraint);
         }
