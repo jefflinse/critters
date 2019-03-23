@@ -1,4 +1,3 @@
-import ActivationFunctions from 'activation-functions';
 import Neuron from './Neuron';
 
 class Layer {

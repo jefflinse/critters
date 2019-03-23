@@ -1,6 +1,6 @@
 import ActivationFunctions from 'activation-functions';
 import Layer from './Layer'
-import Neuron from "./Neuron";
+import Neuron from './Neuron';
 import Vector from '../Vector';
 
 class Network {

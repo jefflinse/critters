@@ -1,7 +1,7 @@
-import Creature from "./Creature";
-import Graphics from "./Graphics";
-import Matter from "matter-js";
-import Vector from "./Vector";
+import Creature from './Creature';
+import Graphics from './Graphics';
+import Matter from 'atter-js';
+import Vector from './Vector';
 
 const Engine = Matter.Engine;
 const World = Matter.World;
