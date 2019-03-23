@@ -10,8 +10,9 @@ class Part {
     constructor(position, radius) {
         this.radius = radius;
         this.physics = Bodies.circle(position.x, position.y, radius, {
-            frictionAir: .01,
+            frictionAir: 0,
         });
+        this.numMuscles = 2;
     }
 
     get sensors() {
@@ -21,19 +22,11 @@ class Part {
         ];
     }
 
-    triggerMuscles() {
-        let force = new Vector(Math.random() * .0001 - .00005, Math.random() * .0001 - .00005);
+    triggerMuscles(muscleData) {
+        let i = 0;
+        let force = new Vector(muscleData[i++] * .0001 - .00005, muscleData[i++] * .0001 - .00005);
         let origin = force.copy().invert().setMagnitude(this.radius);
         Body.applyForce(this.physics, origin, force);
-    }
-
-    attachTo(other, muscleLength, muscleStiffness) {
-        let constraint = new Constraint();
-        constraint.bodyA = this;
-        constraint.bodyB = other;
-        constraint.length = muscleLength;
-        constraint.stiffness = muscleStiffness;
-        return constraint;
     }
 
     render(graphics) {
@@ -42,8 +35,8 @@ class Part {
         });
     }
 
-    tick(muscleData, startingIndex) {
-        this.triggerMuscles();
+    tick(muscleData) {
+        this.triggerMuscles(muscleData);
     }
 }
 

@@ -24,7 +24,7 @@ class Creature {
 
         let muscleDataIndex = 0;
         this.parts.forEach(part => {
-            muscleDataIndex = part.tick(outputs, muscleDataIndex);
+            part.tick(outputs.slice(muscleDataIndex, part.numMuscles));
         });
     }
 
