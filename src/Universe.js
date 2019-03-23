@@ -1,6 +1,6 @@
 import Creature from './Creature';
 import Graphics from './Graphics';
-import Matter from 'atter-js';
+import Matter from 'matter-js';
 import Vector from './Vector';
 
 const Engine = Matter.Engine;

@@ -9,7 +9,8 @@ const ACTIVATION_FUNCTIONS = [
 
 class Neuron {
 
-    constructor() {
+    constructor(layer) {
+        this.layer = layer;
         this.inputs = [];
         this.outputs = [];
         this.activationFunction = ActivationFunctions.Identity;

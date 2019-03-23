@@ -6,11 +6,10 @@ import Vector from '../Vector';
 class Network {
 
     constructor(numInputs, numOutputs) {
-        this.inputs = new Layer()
-        this.hidden = new Layer();
-        this.outputs = new Layer();
+        this.inputs = new Layer(0)
+        this.hidden = new Layer(1);
+        this.outputs = new Layer(2);
         this.layers = [this.inputs, this.hidden, this.outputs]
-        this.layers.forEach((layer, index) => layer.ordinal = index);
         this.bias = this._createBiasNeuron();
 
         for (let i = 0; i < numInputs; i++) {

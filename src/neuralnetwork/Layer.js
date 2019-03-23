@@ -2,7 +2,8 @@ import Neuron from './Neuron';
 
 class Layer {
 
-    constructor() {
+    constructor(ordinal) {
+        this.ordinal = ordinal;
         this.neurons = [];
     }
 
@@ -16,7 +17,7 @@ class Layer {
 
     addNeuron(neuron) {
         if (neuron === undefined) {
-            neuron = new Neuron();
+            neuron = new Neuron(this);
             neuron.assignRandomActivationFunction();
         }
 
