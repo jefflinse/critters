@@ -28,6 +28,10 @@ class Network {
     }
 
     activate(inputValues) {
+        if (inputValues.length !== this.inputs.size) {
+            throw new Error("mismatched number of NN input values");
+        }
+        
         for (let i = 0; i < inputValues.length; i++) {
             this.inputs.neurons[i].value = inputValues[i];
         }
