@@ -1,7 +1,8 @@
 class Muscle {
 
-    constructor(part, constraint) {
+    constructor(part, parentPart, constraint) {
         this.part = part;
+        this.parentPart = parentPart;
         this.constraint = constraint;
         this.triggers = [
             this.setFriction.bind(this),
@@ -20,6 +21,13 @@ class Muscle {
 
     setStiffness(stiffness) {
         this.constraint.stiffness = stiffness;
+    }
+
+    render(graphics) {
+        graphics.drawLine(this.parentPart.physics.position, this.part.physics.position, {
+            lineWidth: this.constraint.stiffness * 5,
+            strokeStyle: '#AAAAFF'
+        });
     }
 }
 

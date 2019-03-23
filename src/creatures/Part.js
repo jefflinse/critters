@@ -33,13 +33,13 @@ class Part {
             damping: .5,
         });
 
-        part.addMuscle(constraint);
+        part.addMuscle(this, constraint);
 
         return constraint;
     }
 
-    addMuscle(constraint) {
-        this.muscles.push(new Muscle(this, constraint));
+    addMuscle(parentPart, constraint) {
+        this.muscles.push(new Muscle(this, parentPart, constraint));
     }
 
     get muscleDataNeeded() {
@@ -47,8 +47,10 @@ class Part {
     }
 
     render(graphics) {
+        this.muscles.forEach(muscle => muscle.render(graphics));
         graphics.drawCircle(this.physics.position, this.radius, {
             fillStyle: "#FFFFFF",
+            globalAlpha: this.physics.friction,
         });
     }
 

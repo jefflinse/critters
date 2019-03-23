@@ -50,7 +50,8 @@ class Creature {
     }
 
     render(graphics) {
-        this.parts.forEach(part => part.render(graphics));
+        // this.parts.forEach(part => part.render(graphics));
+        this.brain.render(graphics, this.parts[0].physics.position, 10, 20, 20);
     }
 }
 
