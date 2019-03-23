@@ -31,8 +31,8 @@ class Creature {
         // attach to an existing part using a muscle
         if (this.parts.length > 0) {
             let parent = this.parts.random();
-            let muscle = parent.addPart(part);
-            Composite.add(this.physics, muscle);
+            let constraint = parent.addPart(part);
+            Composite.add(this.physics, constraint);
         }
 
         this.parts.push(part);

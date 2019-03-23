@@ -3,7 +3,8 @@ import ActivationFunctions from 'activation-functions';
 const ACTIVATION_FUNCTIONS = [
     //ActivationFunctions.Identity,
     ActivationFunctions.Sigmoid,
-    Math.tanh,
+    ActivationFunctions.Logistic,
+    //Math.tanh,
     //ActivationFunctions.BinaryStep,
 ];
 
@@ -39,7 +40,6 @@ class Neuron {
         let weightedSum = this.inputs.reduce((total, connection) =>
             total + (connection.value * connection.weight), 0);
         this.value = this.activationFunction(weightedSum);
-        console.log("WS: " + weightedSum + " -> " + this.value);
         this.outputs.forEach(connection => connection.value = this.value);
     }
 

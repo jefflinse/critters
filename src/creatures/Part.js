@@ -1,5 +1,6 @@
 import Matter from 'matter-js';
 import Vector from '../Vector';
+import Muscle from './Muscle';
 
 const Body = Matter.Body;
 const Bodies = Matter.Bodies;
@@ -24,29 +25,25 @@ class Part {
     }
 
     addPart(part) {
-        let muscle = Constraint.create({
+        let constraint = Constraint.create({
             bodyA: part.physics,
             bodyB: this.physics,
-            length: this.radius * 1000,
+            length: this.radius * 10,
             stiffness: .3,
             damping: .5,
-            render: {
-                lineWidth: 3,
-                strokeStyle: "#AAAAFF",
-                visible: true,
-            }
         });
 
-        part.addMuscle(muscle);
+        part.addMuscle(constraint);
 
-        return muscle;
+        return constraint;
     }
 
-    addMuscle(muscle) {
-        this.muscles.push({
-            muscle: muscle,
-            attributes: ['length', 'stiffness'],
-        });
+    addMuscle(constraint) {
+        this.muscles.push(new Muscle(this, constraint));
+    }
+
+    get muscleDataNeeded() {
+        return this.muscles.reduce((total, muscle) => total + muscle.triggers.length, 0);
     }
 
     render(graphics) {
@@ -58,8 +55,8 @@ class Part {
     tick(neuralData) {
         for (let i = 0; i < this.muscles.length; i++) {
             let muscle = this.muscles[i];
-            for (let j = 0; j < muscle.attributes.length; j++) {
-                muscle.muscle[muscle.attributes[j]] = neuralData[i*j];
+            for (let j = 0; j < muscle.triggers.length; j++) {
+                muscle.triggers[j](neuralData[i*j]);
             }
         }
     }
