@@ -25,10 +25,10 @@ class Universe {
     }
 
     addCreature() {
-        let location = new Vector(
+        let position = new Vector(
             Math.random() * this.canvas.width,
             Math.random() * this.canvas.height);
-        this.creatures.alive.push(new Creature(location, 10));
+        this.creatures.alive.push(new Creature(position, 10));
     }
 
     tick() {

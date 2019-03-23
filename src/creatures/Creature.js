@@ -1,30 +1,51 @@
 import Matter from 'matter-js';
 import Network from '../neuralnetwork/Network';
-import Vector from '../Vector';
 import Part from './Part';
+import Vector from '../Vector';
 
-const Body = Matter.Body;
-const Bodies = Matter.Bodies;
 const Composite = Matter.Composite;
+const Composites = Matter.Composites;
 
 class Creature {
 
     constructor(position, radius) {
-        this.parts = [new Part(position, radius)];
-        this.brain = new Network(2, 2).randomize(2);
+        this.parts = [];
+        this.physics = Composite.create();
+        this.addPart(position, radius);
+        this.addPart(chooseRandomPartLocation(position, radius), radius);
+        this.addPart(chooseRandomPartLocation(position, radius), radius);
+        this.addPart(chooseRandomPartLocation(position, radius), radius);
+
+        let totalSensors = this.parts.reduce((total, part) => total + part.sensors.length, 0);
+        let totalMuscles = this.parts.reduce((total, part) => total + part.muscles.length, 0);
+        this.brain = new Network(totalSensors, totalMuscles).randomize();
+
+        function chooseRandomPartLocation(parentPosition, radius) {
+            return parentPosition.copy().add(new Vector().random().setMagnitude(radius * 5))
+        }
     }
 
-    get physics() {
-        return this.parts[0].physics;
+    addPart(position, radius) {
+        let part = new Part(position, radius);
+
+        // attach to an existing part using a muscle
+        if (this.parts.length > 0) {
+            let parent = this.parts.random();
+            let muscle = parent.addPart(part);
+            Composite.add(this.physics, muscle);
+        }
+
+        this.parts.push(part);
+        Composite.add(this.physics, part.physics);
     }
 
     tick() {
         let sensors = this.parts.reduce((data, part) => data.concat(part.sensors), [])
-        let outputs = this.brain.activate(sensors);
+        let neuralData = this.brain.activate(sensors.map(sensor => sensor()));
 
-        let muscleDataIndex = 0;
+        let neuralDataIndex = 0;
         this.parts.forEach(part => {
-            part.tick(outputs.slice(muscleDataIndex, part.numMuscles));
+            part.tick(neuralData.slice(neuralDataIndex, part.neuralDataNeeded));
         });
     }
 

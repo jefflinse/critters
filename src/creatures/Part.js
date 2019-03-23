@@ -10,23 +10,43 @@ class Part {
     constructor(position, radius) {
         this.radius = radius;
         this.physics = Bodies.circle(position.x, position.y, radius, {
-            frictionAir: 0,
+            frictionAir: .5,
+            friction: .5,
         });
-        this.numMuscles = 2;
-    }
-
-    get sensors() {
-        return [
-            this.physics.velocity.x,
-            this.physics.velocity.y,
+        this.parts = [];
+        this.sensors = [
+            () => this.physics.velocity.x,
+            () => this.physics.velocity.y,
+            () => this.physics.angularSpeed,
+            () => this.physics.angle,
         ];
+        this.muscles = [];
     }
 
-    triggerMuscles(muscleData) {
-        let i = 0;
-        let force = new Vector(muscleData[i++] * .0001 - .00005, muscleData[i++] * .0001 - .00005);
-        let origin = force.copy().invert().setMagnitude(this.radius);
-        Body.applyForce(this.physics, origin, force);
+    addPart(part) {
+        let muscle = Constraint.create({
+            bodyA: part.physics,
+            bodyB: this.physics,
+            length: this.radius * 1000,
+            stiffness: .3,
+            damping: .5,
+            render: {
+                lineWidth: 3,
+                strokeStyle: "#AAAAFF",
+                visible: true,
+            }
+        });
+
+        part.addMuscle(muscle);
+
+        return muscle;
+    }
+
+    addMuscle(muscle) {
+        this.muscles.push({
+            muscle: muscle,
+            attributes: ['length', 'stiffness'],
+        });
     }
 
     render(graphics) {
@@ -35,8 +55,13 @@ class Part {
         });
     }
 
-    tick(muscleData) {
-        this.triggerMuscles(muscleData);
+    tick(neuralData) {
+        for (let i = 0; i < this.muscles.length; i++) {
+            let muscle = this.muscles[i];
+            for (let j = 0; j < muscle.attributes.length; j++) {
+                muscle.muscle[muscle.attributes[j]] = neuralData[i*j];
+            }
+        }
     }
 }
 

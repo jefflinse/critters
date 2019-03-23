@@ -3,6 +3,10 @@ import './App.css';
 import './UniverseView.css';
 import UniverseView from './UniverseView';
 
+Array.prototype.random = function () {
+    return this[Math.floor(Math.random() * this.length)];
+}
+
 class App extends Component {
 
     render() {
