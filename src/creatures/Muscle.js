@@ -12,7 +12,7 @@ class Muscle {
     }
 
     setFriction(friction) {
-        this.part.friction = friction;
+        this.part.physics.friction = friction;
     }
 
     setLength(length) {
