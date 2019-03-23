@@ -114,6 +114,10 @@ class Vector {
 		this.setAngle(Math.random() * Math.PI * 2);
 		return this;
 	}
+
+	toString() {
+		return '(' + this.x + ', ' + this.y + ')';
+	}
 }
 
 export default Vector;

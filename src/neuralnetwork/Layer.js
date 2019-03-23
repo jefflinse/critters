@@ -22,6 +22,7 @@ class Layer {
         }
 
         this.neurons.push(neuron);
+        this.neurons.forEach((neuron, index) => neuron.ordinal = index);
         return neuron;
     }
 

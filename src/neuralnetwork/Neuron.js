@@ -1,4 +1,5 @@
 import ActivationFunctions from 'activation-functions';
+import Connection from './Connection';
 
 const ACTIVATION_FUNCTIONS = [
     //ActivationFunctions.Identity,
@@ -11,25 +12,28 @@ const ACTIVATION_FUNCTIONS = [
 class Neuron {
 
     constructor(layer) {
+        this.ordinal = undefined;
         this.layer = layer;
         this.inputs = [];
         this.outputs = [];
         this.activationFunction = ActivationFunctions.Identity;
-    }
-
-    attachInput(input) {
-        this.inputs.push(input);
-    }
-
-    attachOutput(output) {
-        this.outputs.push(output);
+        this.value = 0;
     }
 
     projectTo(other, value = 0, weight = Math.random()) {
-        let connection = { value: value, weight: weight };
-        this.attachOutput(connection);
-        other.attachInput(connection);
+        if (this.isConnectedTo(other)) {
+            return undefined;
+        }
+
+        let connection = new Connection(this, other, value, weight);
+        this.outputs.push(connection);
+        other.inputs.push(connection);
         return connection;
+    }
+
+    isConnectedTo(other) {
+        return (this.inputs.length > 0 && this.inputs.reduce((found, input) => found = found || input.from === other))
+            || (this.outputs.length > 0 && this.outputs.reduce((found, output) => found = found || output.to === other));
     }
 
     assignRandomActivationFunction() {
@@ -37,9 +41,11 @@ class Neuron {
     }
 
     activate() {
-        let weightedSum = this.inputs.reduce((total, connection) =>
-            total + (connection.value * connection.weight), 0);
-        this.value = this.activationFunction(weightedSum);
+        if (this.inputs.length > 0) {
+            this.value = this.inputs.reduce((total, connection) => total + (connection.value * connection.weight), 0);
+        }
+        
+        this.value = this.activationFunction(this.value);
         this.outputs.forEach(connection => connection.value = this.value);
     }
 

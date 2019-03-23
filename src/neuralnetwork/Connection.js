@@ -1,22 +1,10 @@
 class Connection {
 
-    constructor(from, to, weight) {
+    constructor(from, to, value, weight) {
         this.from = from;
         this.to = to;
+        this.value = value;
         this.weight = weight;
-    }
-
-    setTopology(fromLayer, toLayer, fromNeuron, toNeuron) {
-        this.topology = {
-            from: {
-                layer: fromLayer,
-                neuron: fromNeuron,
-            },
-            to : {
-                layer: toLayer,
-                neuron: toNeuron,
-            }
-        }
     }
 }
 

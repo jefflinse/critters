@@ -39,7 +39,6 @@ class Part {
     }
 
     addMuscle(parentPart, constraint) {
-        console.log('added muscle');
         this.muscles.push(new Muscle(this, parentPart, constraint));
     }
 

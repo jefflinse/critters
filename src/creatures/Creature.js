@@ -18,7 +18,7 @@ class Creature {
 
         let totalSensors = this.parts.reduce((total, part) => total + part.sensors.length, 0);
         let totalTriggers = this.parts.reduce((total, part) => total + part.totalTriggers, 0);
-        this.brain = new Network(totalSensors, totalTriggers).randomize();
+        this.brain = new Network(totalSensors, totalTriggers).randomize(10);
 
         function chooseRandomPartLocation(parentPosition, radius) {
             return parentPosition.copy().add(new Vector().random().setMagnitude(radius * 5))
@@ -50,8 +50,8 @@ class Creature {
     }
 
     render(graphics) {
-        this.parts.forEach(part => part.render(graphics));
-        // this.brain.render(graphics, this.parts[0].physics.position, 10, 20, 20);
+        // this.parts.forEach(part => part.render(graphics));
+        this.brain.render(graphics, this.parts[0].physics.position, 10, 20, 20);
     }
 }
 
