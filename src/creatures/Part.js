@@ -48,7 +48,7 @@ class Part {
         this.muscles.forEach(muscle => muscle.render(graphics));
         graphics.drawCircle(this.physics.position, this.radius, {
             fillStyle: "#FFFFFF",
-            globalAlpha: this.physics.friction,
+            globalAlpha: .1 + (.9 * this.physics.friction),
         });
     }
 
@@ -56,7 +56,8 @@ class Part {
         for (let i = 0; i < this.muscles.length; i++) {
             let muscle = this.muscles[i];
             for (let j = 0; j < muscle.triggers.length; j++) {
-                muscle.triggers[j](neuralData[i*j]);
+                let trigger = muscle.triggers[j];
+                trigger(neuralData[i*j]);
             }
         }
     }
