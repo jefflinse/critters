@@ -1,4 +1,4 @@
-import Creature from './Creature';
+import Creature from './creatures/Creature';
 import Graphics from './Graphics';
 import Matter from 'matter-js';
 import Vector from './Vector';
@@ -63,7 +63,7 @@ class Universe {
         });
 
         World.add(this.physicsEngine.world,
-            this.creatures.alive.map(creature => creature.physicalBody));
+            this.creatures.alive.map(creature => creature.physics));
     }
 }
 
