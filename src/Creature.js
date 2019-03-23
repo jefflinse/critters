@@ -10,7 +10,7 @@ class Creature {
     constructor(location, radius) {
         this.radius = radius;
         this.physicalBody = Bodies.circle(location.x, location.y, radius, {
-            frictionAir: 0,
+            frictionAir: .1,
         });
 
         this.brain = new Network(2, 2).randomize(2);
@@ -34,14 +34,12 @@ class Creature {
     }
 
     render(graphics) {
-        // graphics.drawCircle(this.physicalBody.position, this.radius, {
-        //     fillStyle: "#FFFFFF",
-        // });
+        graphics.drawCircle(this.physicalBody.position, this.radius, {
+            fillStyle: "#FFFFFF",
+        });
 
         // graphics.writeText(this.physicalBody.position.x + 10, this.physicalBody.position.y,
         //     this.name + ': ' + this.outputs.join(', '));
-
-        this.brain.render(graphics, this.physicalBody.position, 10, 10, 20, 1);
     }
 }
 
