@@ -39,10 +39,11 @@ class Part {
     }
 
     addMuscle(parentPart, constraint) {
+        console.log('added muscle');
         this.muscles.push(new Muscle(this, parentPart, constraint));
     }
 
-    get muscleDataNeeded() {
+    get totalTriggers() {
         return this.muscles.reduce((total, muscle) => total + muscle.triggers.length, 0);
     }
 
