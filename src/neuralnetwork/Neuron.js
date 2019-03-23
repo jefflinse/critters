@@ -21,12 +21,12 @@ class Neuron {
         this.value = 0;
     }
 
-    projectTo(other, value = 0, weight = Math.random()) {
+    projectTo(other, weight = Math.random()) {
         if (this.isConnectedTo(other)) {
             return undefined;
         }
 
-        let connection = new Connection(this, other, value, weight);
+        let connection = new Connection(this, other, weight);
         this.outputs.push(connection);
         other.inputs.push(connection);
         return connection;
@@ -47,7 +47,6 @@ class Neuron {
         }
         
         this.value = this.activationFunction(this.value);
-        this.outputs.forEach(connection => connection.value = this.value);
     }
 
     get ActivationFunctions() { return ActivationFunctions; }

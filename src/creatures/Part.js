@@ -1,8 +1,6 @@
 import Matter from 'matter-js';
-import Vector from '../Vector';
 import Muscle from './Muscle';
 
-const Body = Matter.Body;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 

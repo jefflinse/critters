@@ -155,9 +155,8 @@ class Network {
             let to = pos.copy().add(new Vector(
                 (2 * nodeRadius + layerDistance) * toX,
                 (2 * nodeRadius + nodeDistance) * toY));
-            console.log(from.toString() + ' -> ' + to.toString());
             graphics.drawLine(from, to, {
-                lineWidth: this.connections[c].weight * 4,
+                lineWidth: this.connections[c].weight * connectionLineWeight,
                 strokeStyle: '#FFFFFF',
             });
         }
