@@ -16,6 +16,10 @@ class Creature {
         this.brain = new Network(2, 2).randomize(2);
         this.outputs = [];
         this.name = Math.floor(Math.random() * 1000);
+
+        let force = new Vector(Math.random() * .0001 - .00005, Math.random() * .0001 - .00005);
+        let origin = force.copy().invert().setMagnitude(this.radius);
+        Body.applyForce(this.physicalBody, origin, force);
     }
 
     tick() {
@@ -24,9 +28,9 @@ class Creature {
             this.physicalBody.velocity.y,
         ]);
 
-        // let force = new Vector(5 * this.outputs[0], 5 * this.outputs[1]);
-        // let origin = force.copy().invert().setMagnitude(this.radius);
-        // Body.applyForce(this.physicalBody, origin, force);
+        let force = new Vector(Math.random() * .0001 - .00005, Math.random() * .0001 - .00005);
+        let origin = force.copy().invert().setMagnitude(this.radius);
+        Body.applyForce(this.physicalBody, origin, force);
     }
 
     render(graphics) {

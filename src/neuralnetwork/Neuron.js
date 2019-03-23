@@ -1,10 +1,10 @@
 import ActivationFunctions from 'activation-functions';
 
 const ACTIVATION_FUNCTIONS = [
-    ActivationFunctions.Identity,
+    //ActivationFunctions.Identity,
     ActivationFunctions.Sigmoid,
     Math.tanh,
-    ActivationFunctions.BinaryStep,
+    //ActivationFunctions.BinaryStep,
 ];
 
 class Neuron {
