@@ -18,7 +18,7 @@ class Creature {
         let totalSensors = this.parts.reduce((total, part) => total + part.sensors.length, 0);
         let totalTriggers = this.parts.reduce((total, part) => total + part.triggers.length, 0);
         //this.brain = new Network(totalSensors, totalTriggers).randomize();
-        this.brain = new Network(totalSensors, totalTriggers).fullyConnect();
+        this.brain = new Network([totalSensors, totalTriggers]).fullyConnect();
 
         function chooseRandomPartLocation(parentPosition, radius) {
             return parentPosition.copy().add(new Vector().random().setMagnitude(radius * 5))

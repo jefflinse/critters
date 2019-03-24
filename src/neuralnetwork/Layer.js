@@ -3,9 +3,9 @@ import Neuron from './Neuron';
 
 class Layer {
 
-    constructor(ordinal) {
-        this.ordinal = ordinal;
+    constructor() {
         this.neurons = [];
+        this.ordinal = undefined;
     }
 
     get size() {
@@ -16,14 +16,11 @@ class Layer {
         this.neurons.forEach(neuron => neuron.activate());
     }
 
-    addNeuron(neuron) {
-        if (neuron === undefined) {
-            neuron = new Neuron(this);
-            neuron.assignRandomActivationFunction();
-        }
-
+    addNeuron() {
+        let neuron = new Neuron(this);
+        neuron.layer = this;
         this.neurons.push(neuron);
-        this.neurons.forEach((neuron, index) => neuron.ordinal = index);
+        this._refreshNeuronOrdinals();
         return neuron;
     }
 
@@ -46,6 +43,10 @@ class Layer {
                 neuron.projectTo(otherNeuron);
             });
         });
+    }
+
+    _refreshNeuronOrdinals() {
+        this.neurons.forEach((neuron, index) => neuron.ordinal = index);
     }
 }
 

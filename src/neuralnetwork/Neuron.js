@@ -11,13 +11,13 @@ const ACTIVATION_FUNCTIONS = [
 
 class Neuron {
 
-    constructor(layer) {
-        this.ordinal = undefined;
-        this.layer = layer || 'bias';
+    constructor() {
         this.inputs = [];
         this.outputs = [];
         this.activationFunction = this.assignRandomActivationFunction();
         this.value = 0;
+        this.layer = undefined;
+        this.ordinal = undefined;
     }
 
     projectTo(other, weight = Math.random()) {

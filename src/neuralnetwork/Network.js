@@ -1,38 +1,35 @@
 import _ from 'lodash';
-import ActivationFunctions from 'activation-functions';
 import Layer from './Layer'
-import Neuron from './Neuron';
 import Vector from '../Vector';
 
 class Network {
 
-    constructor(numInputs, numOutputs) {
-        this.inputs = new Layer(0)
-        this.hidden = new Layer(1);
-        this.outputs = new Layer(2);
-        this.layers = [this.inputs, this.hidden, this.outputs];
+    constructor(topology = []) {
+        if (topology.length === 1) {
+            throw new Error("Invalid topology; must contain zero or at least two layers");
+        }
+
+        this.layers = [];
+        for (let l = 0; l < topology.length; l++) {
+            let layer = this.addLayer();
+            for (let n = 0; n < topology[l]; n++) {
+                layer.addNeuron();
+            }
+        }
+
+        this.inputs = this.layers[0];
+        this.hidden = this.layers.slice(1, this.layers.length - 1);
+        this.outputs = this.layers[this.layers.length - 1];
+        
         this.connections = [];
-        // this.bias = this._createBiasNeuron();
-
-        for (let i = 0; i < numInputs; i++) {
-            this.addInputNeuron();
-        };
-
-        let numHidden = 2;
-        for (let i = 0; i < numHidden; i++) {
-            this.addHiddenNeuron();
-        };
-
-        for (let i = 0; i < numOutputs; i++) {
-            this.addOutputNeuron();
-        };
     }
 
     get size() {
-        return this.inputs.size + this.hidden.size + this.outputs.size;
+        return this.layers.reduce((sum, layer) => sum + layer.size);
     }
 
     activate(inputValues) {
+        this.validate();
         if (inputValues.length !== this.inputs.size) {
             throw new Error('mismatched number of NN input values (expected ' + 
                 this.inputs.size + ', got ' + inputValues.length + ')');
@@ -49,25 +46,11 @@ class Network {
         return this.outputs.neurons.map(outputNeuron => outputNeuron.value);
     }
 
-    addInputNeuron() {
-        let neuron = this.inputs.addNeuron();
-        // this.bias.projectTo(neuron, 1);
-        // this.updateConnectionsCache();
-        return neuron;
-    }
-
-    addHiddenNeuron() {
-        let neuron = this.hidden.addNeuron();
-        // this.bias.projectTo(neuron, 1);
-        // this.updateConnectionsCache();
-        return neuron;
-    }
-
-    addOutputNeuron() {
-        let neuron = this.outputs.addNeuron();
-        // this.bias.projectTo(neuron, 1);
-        // this.updateConnectionsCache();
-        return neuron;
+    addLayer() {
+        let layer = new Layer();
+        this.layers.push(layer);
+        this._refreshLayerOrdinals();
+        return layer;
     }
 
     fullyConnect() {
@@ -195,10 +178,20 @@ class Network {
         }
     }
 
-    _createBiasNeuron() {
-        let neuron = new Neuron();
-        neuron.activationFunction = ActivationFunctions.Sigmoid;
-        return neuron;
+    validate() {
+        if (this.layers.length < 2) {
+            throw new Error('Invalid NN: too few layers (' + this.layers.length + ')');
+        }
+        else if (this.inputs.size === 0) {
+            throw new Error('Invalid NN: no input neurons present');
+        }
+        else if (this.outputs.size === 0) {
+            throw new Error('Invalid NN: no output neurons present');
+        }
+    }
+
+    _refreshLayerOrdinals() {
+        this.layers.forEach((layer, index) => layer.ordinal = index);
     }
 }
 
