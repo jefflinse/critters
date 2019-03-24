@@ -12,10 +12,15 @@ class Network {
         this.outputs = new Layer(2);
         this.layers = [this.inputs, this.hidden, this.outputs];
         this.connections = [];
-        this.bias = this._createBiasNeuron();
+        // this.bias = this._createBiasNeuron();
 
         for (let i = 0; i < numInputs; i++) {
             this.addInputNeuron();
+        };
+
+        let numHidden = 2;
+        for (let i = 0; i < numHidden; i++) {
+            this.addHiddenNeuron();
         };
 
         for (let i = 0; i < numOutputs; i++) {
@@ -29,7 +34,8 @@ class Network {
 
     activate(inputValues) {
         if (inputValues.length !== this.inputs.size) {
-            throw new Error("mismatched number of NN input values");
+            throw new Error('mismatched number of NN input values (expected ' + 
+                this.inputs.size + ', got ' + inputValues.length + ')');
         }
         
         for (let i = 0; i < inputValues.length; i++) {
@@ -45,23 +51,32 @@ class Network {
 
     addInputNeuron() {
         let neuron = this.inputs.addNeuron();
-        this.bias.projectTo(neuron, 1);
-        this.updateConnectionsCache();
+        // this.bias.projectTo(neuron, 1);
+        // this.updateConnectionsCache();
         return neuron;
     }
 
     addHiddenNeuron() {
         let neuron = this.hidden.addNeuron();
-        this.bias.projectTo(neuron, 1);
-        this.updateConnectionsCache();
+        // this.bias.projectTo(neuron, 1);
+        // this.updateConnectionsCache();
         return neuron;
     }
 
     addOutputNeuron() {
         let neuron = this.outputs.addNeuron();
-        this.bias.projectTo(neuron, 1);
-        this.updateConnectionsCache();
+        // this.bias.projectTo(neuron, 1);
+        // this.updateConnectionsCache();
         return neuron;
+    }
+
+    fullyConnect() {
+        for (let i = 0; i < this.layers.length - 1; i++) {
+            this.layers[i].projectTo(this.layers[i+1]);
+        }
+
+        this.updateConnectionsCache();
+        return this;
     }
 
     addRandomConnection(chanceOfNewNeuron = 0) {
@@ -83,7 +98,7 @@ class Network {
         } else {
             // choose any neuron at random, then choose a neuron from any other layer and connect them
             let layer = this.chooseRandomLayer(true);
-            let otherLayer = this.chooseRandomLayer(true, layer.ordinal);
+            let otherLayer = this.chooseRandomLayer(true, [layer.ordinal]);
             let neuron = layer.chooseRandomNeuron();
             let otherNeuron = otherLayer.chooseRandomNeuron();
 
@@ -97,21 +112,23 @@ class Network {
         }
 
         connection = from.projectTo(to);
-        this.updateConnectionsCache()
+        this.updateConnectionsCache();
 
         return connection;
     }
 
-    chooseRandomLayer(mustNotBeEmpty, exclude) {
-        let layer = _.sample(this.layers);
+    chooseRandomLayer(mustNotBeEmpty, exclusions = []) {
+        let searchSpace = this.layers;
 
-        if ((mustNotBeEmpty === true && layer.size === 0) ||
-            (exclude !== undefined && layer.ordinal === exclude)) {
-
-            return this.chooseRandomLayer(mustNotBeEmpty, exclude);
+        if (mustNotBeEmpty) {
+            searchSpace = searchSpace.filter(layer => layer.size > 0);
         }
 
-        return layer;
+        if (exclusions !== undefined) {
+            searchSpace = searchSpace.filter(layer => exclusions.indexOf(layer.ordinal) < 0);
+        }
+
+        return _.sample(searchSpace);
     }
 
     randomize(numConnections) {
@@ -126,6 +143,7 @@ class Network {
         this.connections = this.layers.reduce(
             (layerConnections, layer) => layerConnections.concat(layer.neurons.reduce(
             (neuronConnections, neuron) => neuronConnections.concat(neuron.outputs), [])), []);
+        console.log('updated connections cache (' + this.connections.length + ')');
     }
 
     render(graphics, position, nodeRadius, nodeDistance, layerDistance, connectionLineWeight) {

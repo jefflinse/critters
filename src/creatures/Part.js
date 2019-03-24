@@ -2,46 +2,46 @@ import Matter from 'matter-js';
 import Muscle from './Muscle';
 
 const Bodies = Matter.Bodies;
-const Constraint = Matter.Constraint;
 
 class Part {
 
     constructor(position, radius) {
         this.radius = radius;
+        this.muscles = [];
+        this.sensors = [];
         this.physics = Bodies.circle(position.x, position.y, radius, {
             frictionAir: .5,
             friction: .5,
         });
-        this.parts = [];
-        this.sensors = [
-            () => this.physics.velocity.x,
-            () => this.physics.velocity.y,
-            () => this.physics.angularSpeed,
-            () => this.physics.angle,
-        ];
-        this.muscles = [];
     }
 
-    addPart(part) {
-        let constraint = Constraint.create({
-            bodyA: part.physics,
-            bodyB: this.physics,
-            length: this.radius * 10,
-            stiffness: .3,
-            damping: .5,
-        });
+    addMuscle(otherPart) {
+        let muscle = new Muscle(this, otherPart, this.radius * 5);
+        this.muscles.push(muscle);
+        return muscle;
+    }   
 
-        part.addMuscle(this, constraint);
-
-        return constraint;
+    get numSensors() {
+        return 1; // TODO: Fix this, this is bad.
     }
 
-    addMuscle(parentPart, constraint) {
-        this.muscles.push(new Muscle(this, parentPart, constraint));
-    }
-
-    get totalTriggers() {
+    get numTriggers() {
         return this.muscles.reduce((total, muscle) => total + muscle.triggers.length, 0);
+    }
+
+    getSensoryData() {
+        // let data = [
+        //     this.physics.velocity.x,
+        //     this.physics.velocity.y,
+        //     this.physics.angle,
+        //     this.physics.angularSpeed,
+        // ];
+
+        let data = [
+            Math.random(),
+        ]
+
+        return data;
     }
 
     render(graphics) {

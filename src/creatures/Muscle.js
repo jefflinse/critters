@@ -1,9 +1,21 @@
+import Matter from 'matter-js';
+
+const Constraint = Matter.Constraint;
+
 class Muscle {
 
-    constructor(part, parentPart, constraint) {
+    constructor(part, parentPart, length) {
         this.part = part;
         this.parentPart = parentPart;
-        this.constraint = constraint;
+
+        this.physics = Constraint.create({
+            bodyA: part.physics,
+            bodyB: parentPart.physics,
+            length: length,
+            stiffness: .3,
+            damping: .5,
+        });
+
         this.triggers = [
             this.setFriction.bind(this),
             this.setLength.bind(this),
@@ -16,16 +28,16 @@ class Muscle {
     }
 
     setLength(length) {
-        this.constraint.length = length * 50;
+        this.physics.length = length * 50;
     }
 
     setStiffness(stiffness) {
-        this.constraint.stiffness = stiffness;
+        this.physics.stiffness = stiffness;
     }
 
     render(graphics) {
         graphics.drawLine(this.parentPart.physics.position, this.part.physics.position, {
-            lineWidth: this.constraint.stiffness * 5,
+            lineWidth: 1 + (this.physics.stiffness * 4),
             strokeStyle: '#AAAAFF'
         });
     }

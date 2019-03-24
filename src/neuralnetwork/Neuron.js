@@ -14,7 +14,7 @@ class Neuron {
 
     constructor(layer) {
         this.ordinal = undefined;
-        this.layer = layer;
+        this.layer = layer || 'bias';
         this.inputs = [];
         this.outputs = [];
         this.activationFunction = ActivationFunctions.Identity;
@@ -22,19 +22,11 @@ class Neuron {
     }
 
     projectTo(other, weight = Math.random()) {
-        if (this.isConnectedTo(other)) {
-            return undefined;
-        }
-
+        console.log('P(N->N)');
         let connection = new Connection(this, other, weight);
         this.outputs.push(connection);
         other.inputs.push(connection);
         return connection;
-    }
-
-    isConnectedTo(other) {
-        return (this.inputs.length > 0 && this.inputs.reduce((found, input) => found = found || input.from === other))
-            || (this.outputs.length > 0 && this.outputs.reduce((found, output) => found = found || output.to === other));
     }
 
     assignRandomActivationFunction() {
@@ -47,6 +39,17 @@ class Neuron {
         }
         
         this.value = this.activationFunction(this.value);
+    }
+
+    toString() {
+        let layerOrdinal = 'b';
+        let ordinal = 'b';
+        if (this.layer !== 'bias') {
+            layerOrdinal = this.layer.ordinal;
+            ordinal = this.ordinal;
+        }
+        return 'Neuron(L'+ layerOrdinal + 'N' + ordinal +
+            ', ' + this.value + ' (' + this.inputs.length + '|' + this.outputs.length + ')';
     }
 
     get ActivationFunctions() { return ActivationFunctions; }

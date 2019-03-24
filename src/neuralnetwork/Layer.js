@@ -36,6 +36,11 @@ class Layer {
     }
 
     projectTo(layer) {
+        if (this.size === 0 || layer.size === 0) {
+            return;
+        }
+
+        console.log('P{L' + this.ordinal + '(' + this.size + ')->L' + layer.ordinal + '(' + layer.size + ')}');
         this.neurons.forEach(neuron => {
             layer.neurons.forEach(otherNeuron => {
                 neuron.projectTo(otherNeuron);
