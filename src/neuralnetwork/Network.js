@@ -130,7 +130,7 @@ class Network {
                     fillStyle: nodeColor,
                 });
                 graphics.writeText(currentPosition.x, currentPosition.y,
-                    this.layers[l].neuronAt(n).value.toFixed(2), {
+                    this.layers[l].neurons[n].value.toFixed(2), {
                         font: '12px sans-serif',
                         fillStyle: textColor,
                         textAlign: 'center',

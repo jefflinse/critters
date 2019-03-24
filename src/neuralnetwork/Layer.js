@@ -28,10 +28,6 @@ class Layer {
         return this.size > 0 ? _.sample(this.neurons) : undefined;
     }
 
-    neuronAt(index) {
-        return this.neurons[index];
-    }
-
     projectTo(layer) {
         if (this.size === 0 || layer.size === 0) {
             return;
