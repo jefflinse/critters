@@ -78,7 +78,12 @@ class Network {
         return this;
     }
 
-    randomlyConnect(numConnections) {
+    randomlyConnect(numConnections = 0) {
+        if (numConnections === 0) {
+            let maxPossibleConnections = this.layers.reduce((product, layer) => product * layer.size, 1);
+            numConnections = _.random(1, maxPossibleConnections)
+        }
+
         for (let i = 0; i < numConnections; i++) {
             this.addRandomConnection();
         }
@@ -150,18 +155,17 @@ class Network {
         }
     }
 
-    _chooseRandomLayer(mustNotBeEmpty, exclusions = []) {
-        let searchSpace = this.layers;
+    _chooseRandomLayer(mustNotBeEmpty = false, exclusions = []) {
+        let searchSpace = _.range(0, this.layers.length);
+        searchSpace = _.difference(searchSpace, exclusions);
 
-        if (mustNotBeEmpty) {
-            searchSpace = searchSpace.filter(layer => layer.size > 0);
+        let layerIndex = _.sample(searchSpace);
+        while (mustNotBeEmpty && this.layers[layerIndex].size === 0) {
+            searchSpace = _.difference(searchSpace, [layerIndex]);
+            layerIndex = _.sample(searchSpace);
         }
 
-        if (exclusions !== undefined) {
-            searchSpace = searchSpace.filter(layer => exclusions.indexOf(layer.ordinal) < 0);
-        }
-
-        return _.sample(searchSpace);
+        return this.layers[layerIndex];
     }
 
     _refreshLayerOrdinals() {
