@@ -15,8 +15,8 @@ class Creature {
         this.addPart(chooseRandomPartLocation(position, radius), radius);
         this.addPart(chooseRandomPartLocation(position, radius), radius);
 
-        let totalSensors = this.parts.reduce((total, part) => total + part.numSensors, 0);
-        let totalTriggers = this.parts.reduce((total, part) => total + part.numTriggers, 0);
+        let totalSensors = this.parts.reduce((total, part) => total + part.sensors.length, 0);
+        let totalTriggers = this.parts.reduce((total, part) => total + part.triggers.length, 0);
         //this.brain = new Network(totalSensors, totalTriggers).randomize();
         this.brain = new Network(totalSensors, totalTriggers).fullyConnect();
 
@@ -44,13 +44,8 @@ class Creature {
     }
 
     tick() {
-        let sensoryData = this.parts.reduce((data, part) => {
-            let partSensoryData = part.getSensoryData();
-            if (partSensoryData === undefined || !_.every(partSensoryData, (d) => !isNaN(d))) {
-                throw new Error("Invalid input data from sensor(s)");
-            }
-            return data.concat(partSensoryData);
-        }, []);
+        let sensors = this.parts.reduce((data, part) => data.concat(part.sensors), []);
+        let sensoryData = sensors.map(sensor => sensor());
         console.log('inputs ' + sensoryData);
         let neuralData = this.brain.activate(sensoryData);
         console.log('outputs: ' + neuralData);

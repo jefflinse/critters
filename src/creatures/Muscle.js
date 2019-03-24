@@ -5,26 +5,20 @@ const Constraint = Matter.Constraint;
 
 class Muscle {
 
-    constructor(part, parentPart, maxLength) {
+    constructor(part, parentPart) {
         this.part = part;
         this.parentPart = parentPart;
-        this.minLength = part.radius + parentPart.radius;
-        this.maxLength = maxLength;
-        this.lengthChangeDistance = 1;
-        this.lengthChangeDirection = 1;
 
         this.physics = Constraint.create({
             bodyA: part.physics,
             bodyB: parentPart.physics,
-            length: maxLength / 2,
+            length: this.part.radius + this.parentPart.radius * 2,
             stiffness: .3,
-            damping: .8,
+            damping: .5,
         });
 
         this.triggers = [
             this.setFriction.bind(this),
-            this.changeLength.bind(this),
-            this.toggleExtendContract.bind(this),
             this.setStiffness.bind(this),
         ];
     }
@@ -33,21 +27,8 @@ class Muscle {
         this.part.physics.friction = friction;
     }
 
-    changeLength(delta) {
-        let newLength = this.physics.length + (this.lengthChangeDistance * delta * this.lengthChangeDirection);
-        newLength = Math.min(newLength, this.maxLength);
-        newLength = Math.max(newLength, this.minLength);
-        this.physics.length = newLength;
-    }
-
     setStiffness(stiffness) {
         this.physics.stiffness = stiffness;
-    }
-
-    toggleExtendContract(value) {
-        if (value > Math.random() / 2) {
-            this.lengthChangeDirection *= -1;
-        }
     }
 
     render(graphics) {
