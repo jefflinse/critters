@@ -42,17 +42,6 @@ class Neuron {
         other.inputs.push(connection);
         return connection;
     }
-
-    toString() {
-        let layerOrdinal = 'b';
-        let ordinal = 'b';
-        if (this.layer !== 'bias') {
-            layerOrdinal = this.layer.ordinal;
-            ordinal = this.ordinal;
-        }
-        return 'Neuron(L'+ layerOrdinal + 'N' + ordinal +
-            ', ' + this.value + ' (' + this.inputs.length + '|' + this.outputs.length + ')';
-    }
 }
 
 export default Neuron;
