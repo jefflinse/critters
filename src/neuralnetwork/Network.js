@@ -178,7 +178,7 @@ class Network {
                 (2 * nodeRadius + layerDistance) * toX,
                 (2 * nodeRadius + nodeDistance) * toY));
             graphics.drawLine(from, to, {
-                lineWidth: this.connections[c].weight * connectionLineWeight,
+                lineWidth: 1 + (this.connections[c].weight * (connectionLineWeight - 1)),
                 strokeStyle: '#FFFFFF',
             });
         }

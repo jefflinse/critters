@@ -30,7 +30,7 @@ class Creature {
         let muscle;
 
         // attach to an existing part using a muscle
-        if (this.parts.length > 1) {
+        if (this.parts.length > 0) {
             let parent = _.sample(this.parts);
             muscle = part.addMuscle(parent);
         }

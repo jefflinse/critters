@@ -1,6 +1,8 @@
 import Matter from 'matter-js';
 import Muscle from './Muscle';
+import Vector from '../Vector';
 
+const Body = Matter.Body;
 const Bodies = Matter.Bodies;
 
 class Part {
@@ -10,9 +12,11 @@ class Part {
         this.muscles = [];
         this.sensors = [];
         this.physics = Bodies.circle(position.x, position.y, radius, {
-            frictionAir: .5,
+            frictionAir: .1,
             friction: .5,
         });
+
+        //this._applyRandomForce();
     }
 
     addMuscle(otherPart) {
@@ -60,6 +64,13 @@ class Part {
                 trigger(neuralData[i*j]);
             }
         }
+    }
+
+    _applyRandomForce() {
+        let position = new Vector(this.physics.position.x, this.physics.position.y)
+            .add(new Vector().random().setMagnitude(this.radius));
+        let force = position.copy().invert().setMagnitude(.001);
+        Body.applyForce(this.physics, position, force);
     }
 }
 
