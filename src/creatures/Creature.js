@@ -46,9 +46,7 @@ class Creature {
     tick() {
         let sensors = this.parts.reduce((data, part) => data.concat(part.sensors), []);
         let sensoryData = sensors.map(sensor => sensor());
-        console.log('inputs ' + sensoryData);
         let neuralData = this.brain.activate(sensoryData);
-        console.log('outputs: ' + neuralData);
 
         let neuralDataIndex = 0;
         this.parts.forEach(part => {

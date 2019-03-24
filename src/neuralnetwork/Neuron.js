@@ -3,11 +3,10 @@ import ActivationFunctions from 'activation-functions';
 import Connection from './Connection';
 
 const ACTIVATION_FUNCTIONS = [
-    //ActivationFunctions.Identity,
     ActivationFunctions.Sigmoid,
     ActivationFunctions.Logistic,
-    //Math.tanh,
-    //ActivationFunctions.BinaryStep,
+    Math.tanh,
+    ActivationFunctions.BinaryStep,
 ];
 
 class Neuron {
@@ -17,12 +16,11 @@ class Neuron {
         this.layer = layer || 'bias';
         this.inputs = [];
         this.outputs = [];
-        this.activationFunction = ActivationFunctions.Identity;
+        this.activationFunction = this.assignRandomActivationFunction();
         this.value = 0;
     }
 
     projectTo(other, weight = Math.random()) {
-        console.log('P(N->N)');
         let connection = new Connection(this, other, weight);
         this.outputs.push(connection);
         other.inputs.push(connection);
