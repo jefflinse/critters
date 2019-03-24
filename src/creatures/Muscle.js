@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Matter from 'matter-js';
+import Vector from '../Vector';
 
 const Constraint = Matter.Constraint;
 
@@ -9,10 +10,12 @@ class Muscle {
         this.from = from;
         this.to = to;
 
+        let length = new Vector(this.from.physics.position.x, this.from.physics.position.y).distanceBetween(
+            new Vector(this.to.physics.position.x, this.to.physics.position.y));
         this.physics = Constraint.create({
             bodyA: from.physics,
             bodyB: to.physics,
-            length: this.from.radius + this.to.radius * 2,
+            length: length,
             stiffness: .5,
             damping: .5,
         });

@@ -28,12 +28,12 @@ class Part {
     }
 
     addPart() {
-        let position = new Vector(this.position.x, this.position.y)
-            .add(new Vector().random().setMagnitude(this.radius * 5));
+        let position = new Vector(this.physics.position.x, this.physics.position.y)
+            .add(new Vector().random().setMagnitude(this.radius * 4));
         let part = new Part(position, this.radius);
-        let muscle = new Muscle(this, part, this.radius * 5);
+        let muscle = new Muscle(this, part);
         this.muscles.push(muscle);
-        return part;
+        return [part, muscle];
     }
 
     render(graphics) {

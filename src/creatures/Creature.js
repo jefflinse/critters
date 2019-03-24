@@ -7,11 +7,11 @@ const Composite = Matter.Composite;
 
 class Creature {
 
-    constructor(position, partRadius, parts = 1) {
+    constructor(position, partRadius, numParts = 3) {
         this.parts = [];
         this.physics = Composite.create();
-        
-        this.addPart(position, partRadius);
+
+        this.parts.concat(_.times(numParts, () => this.addPart(position, partRadius)));
 
         let totalSensors = this.parts.reduce((total, part) => total + part.sensors.length, 0);
         let totalTriggers = this.parts.reduce((total, part) => total + part.triggers.length, 0);
@@ -20,14 +20,19 @@ class Creature {
 
     addPart(position, radius) {
         let part;
+        let muscle;
         if (this.parts.length === 0) {
             part = new Part(position, radius);
         } else {
-            part = _.sample(this.parts).addPart();
+            [part, muscle] = _.sample(this.parts).addPart();
         }
 
         this.parts.push(part);
         Composite.add(this.physics, part.physics);
+
+        if (muscle) {
+            Composite.add(this.physics, muscle);
+        }
     }
 
     tick() {
