@@ -20,6 +20,10 @@ class Neuron {
         this.ordinal = undefined;
     }
 
+    isProjectedTo(other) {
+        return this.outputs.reduce((projected, output) => projected || output.to === other, false);
+    }
+
     projectTo(other, weight = Math.random()) {
         let connection = new Connection(this, other, weight);
         this.outputs.push(connection);

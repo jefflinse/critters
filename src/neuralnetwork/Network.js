@@ -20,8 +20,6 @@ class Network {
         this.inputs = this.layers[0];
         this.hidden = this.layers.slice(1, this.layers.length - 1);
         this.outputs = this.layers[this.layers.length - 1];
-        
-        this.connections = [];
     }
 
     get size() {
@@ -53,38 +51,13 @@ class Network {
         return layer;
     }
 
-    fullyConnect() {
-        for (let i = 0; i < this.layers.length - 1; i++) {
-            this.layers[i].projectTo(this.layers[i+1]);
-        }
-
-        this.updateConnectionsCache();
-        return this;
-    }
-
-    addRandomConnection(chanceOfNewNeuron = 0) {
-
-        let connection;
-        let from;
-        let to;
-        if (Math.random() < chanceOfNewNeuron) {
-            // add a new hidden neuron and connect it to either
-            // a random input neuron or a random output neuron
-            let hidden = this.addHiddenNeuron();
-            if (Math.random() < .5) {
-                from = this.inputs.chooseRandomNeuron();
-                to = hidden;
-            } else {
-                from = hidden;
-                to = this.outputs.chooseRandomNeuron();
-            }
-        } else {
-            // choose any neuron at random, then choose a neuron from any other layer and connect them
-            let layer = this.chooseRandomLayer(true);
-            let otherLayer = this.chooseRandomLayer(true, [layer.ordinal]);
+    addRandomConnection() {
+        let from, to;
+        do {
+            let layer = this._chooseRandomLayer(true);
+            let otherLayer = this._chooseRandomLayer(true, [layer.ordinal]);
             let neuron = layer.chooseRandomNeuron();
             let otherNeuron = otherLayer.chooseRandomNeuron();
-
             if (otherLayer.ordinal > layer.ordinal) {
                 from = neuron;
                 to = otherNeuron;
@@ -92,51 +65,38 @@ class Network {
                 from = otherNeuron;
                 to = neuron;
             }
-        }
+        } while (from.isProjectedTo(to)); // disallow multiple connections between the same two neurons
 
-        connection = from.projectTo(to);
-        this.updateConnectionsCache();
-
-        return connection;
+        return from.projectTo(to);
     }
 
-    chooseRandomLayer(mustNotBeEmpty, exclusions = []) {
-        let searchSpace = this.layers;
-
-        if (mustNotBeEmpty) {
-            searchSpace = searchSpace.filter(layer => layer.size > 0);
-        }
-
-        if (exclusions !== undefined) {
-            searchSpace = searchSpace.filter(layer => exclusions.indexOf(layer.ordinal) < 0);
-        }
-
-        return _.sample(searchSpace);
-    }
-
-    randomize(numConnections) {
-        for (let i = 0; i < numConnections; i++) {
-            this.addRandomConnection(.5);
+    fullyConnect() {
+        for (let i = 0; i < this.layers.length - 1; i++) {
+            this.layers[i].projectTo(this.layers[i+1]);
         }
 
         return this;
     }
 
-    updateConnectionsCache() {
-        this.connections = this.layers.reduce(
-            (layerConnections, layer) => layerConnections.concat(layer.neurons.reduce(
-            (neuronConnections, neuron) => neuronConnections.concat(neuron.outputs), [])), []);
-        console.log('updated connections cache (' + this.connections.length + ')');
+    randomlyConnect(numConnections) {
+        for (let i = 0; i < numConnections; i++) {
+            this.addRandomConnection();
+        }
+
+        return this;
     }
 
     render(graphics, position, nodeRadius, nodeDistance, layerDistance, connectionLineWeight) {
-        
+        const connections = this.layers.reduce(
+            (layerConnections, layer) => layerConnections.concat(layer.neurons.reduce(
+            (neuronConnections, neuron) => neuronConnections.concat(neuron.outputs), [])), []);
+
         // draw connections (first, so they appear behind nodes)
-        for (let c = 0; c < this.connections.length; c++) {
-            let fromX = this.connections[c].from.layer.ordinal;
-            let fromY = this.connections[c].from.ordinal;
-            let toX = this.connections[c].to.layer.ordinal;
-            let toY = this.connections[c].to.ordinal;
+        for (let c = 0; c < connections.length; c++) {
+            let fromX = connections[c].from.layer.ordinal;
+            let fromY = connections[c].from.ordinal;
+            let toX = connections[c].to.layer.ordinal;
+            let toY = connections[c].to.ordinal;
 
             let pos = new Vector(position.x, position.y);
             pos.add(new Vector(nodeRadius, nodeRadius));
@@ -147,7 +107,7 @@ class Network {
                 (2 * nodeRadius + layerDistance) * toX,
                 (2 * nodeRadius + nodeDistance) * toY));
             graphics.drawLine(from, to, {
-                lineWidth: 1 + (this.connections[c].weight * (connectionLineWeight - 1)),
+                lineWidth: 1 + (connections[c].weight * (connectionLineWeight - 1)),
                 strokeStyle: '#FFFFFF',
             });
         }
@@ -188,6 +148,20 @@ class Network {
         else if (this.outputs.size === 0) {
             throw new Error('Invalid NN: no output neurons present');
         }
+    }
+
+    _chooseRandomLayer(mustNotBeEmpty, exclusions = []) {
+        let searchSpace = this.layers;
+
+        if (mustNotBeEmpty) {
+            searchSpace = searchSpace.filter(layer => layer.size > 0);
+        }
+
+        if (exclusions !== undefined) {
+            searchSpace = searchSpace.filter(layer => exclusions.indexOf(layer.ordinal) < 0);
+        }
+
+        return _.sample(searchSpace);
     }
 
     _refreshLayerOrdinals() {
