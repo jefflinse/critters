@@ -147,24 +147,8 @@ class Network {
     }
 
     render(graphics, position, nodeRadius, nodeDistance, layerDistance, connectionLineWeight) {
-        let currentPosition = new Vector(position.x + nodeRadius, position.y + nodeRadius);
-
-        for (let l = 0; l < this.layers.length; l++) {
-            for (let n = 0; n < this.layers[l].size; n++) {
-                graphics.drawCircle(currentPosition, nodeRadius, {
-                    lineWidth: 2,
-                    strokeStyle: "#FFFFFF",
-                    fillStyle: "#FFFFFF",
-                    globalAlpha: this.layers[l].neurons[n].value,
-                });
-                graphics.writeText(currentPosition.x - 5, currentPosition.y + 5,
-                    Math.floor(this.layers[l].neuronAt(n).value));
-                currentPosition.y += 2 * nodeRadius + nodeDistance;
-            }
-            currentPosition.y = position.y + nodeRadius;
-            currentPosition.x += 2 * nodeRadius + layerDistance;
-        }
-
+        
+        // draw connections (first, so they appear behind nodes)
         for (let c = 0; c < this.connections.length; c++) {
             let fromX = this.connections[c].from.layer.ordinal;
             let fromY = this.connections[c].from.ordinal;
@@ -172,7 +156,7 @@ class Network {
             let toY = this.connections[c].to.ordinal;
 
             let pos = new Vector(position.x, position.y);
-            pos.add(new Vector(1, 1).setMagnitude(nodeRadius));
+            pos.add(new Vector(nodeRadius, nodeRadius));
             let from = pos.copy().add(new Vector(
                 (2 * nodeRadius + layerDistance) * fromX,
                 (2 * nodeRadius + nodeDistance) * fromY));
@@ -183,6 +167,31 @@ class Network {
                 lineWidth: 1 + (this.connections[c].weight * (connectionLineWeight - 1)),
                 strokeStyle: '#FFFFFF',
             });
+        }
+
+        // draw nodes
+        let currentPosition = new Vector(position.x + nodeRadius, position.y + nodeRadius);
+        for (let l = 0; l < this.layers.length; l++) {
+            for (let n = 0; n < this.layers[l].size; n++) {
+                let intensity = Math.floor(256 * this.layers[l].neurons[n].value);
+                let nodeColor = 'rgb(' + [intensity, intensity, intensity].join(',') + ')';
+                let textColor = 'rgb(' + [255 - intensity, 255 - intensity, 255 - intensity].join(',') + ')';
+                graphics.drawCircle(currentPosition, nodeRadius, {
+                    lineWidth: 2,
+                    strokeStyle: '#FFFFFF',
+                    fillStyle: nodeColor,
+                });
+                graphics.writeText(currentPosition.x, currentPosition.y,
+                    this.layers[l].neuronAt(n).value.toFixed(2), {
+                        font: '12px sans-serif',
+                        fillStyle: textColor,
+                        textAlign: 'center',
+                        textBaseline: 'middle',
+                    });
+                currentPosition.y += 2 * nodeRadius + nodeDistance;
+            }
+            currentPosition.y = position.y + nodeRadius;
+            currentPosition.x += 2 * nodeRadius + layerDistance;
         }
     }
 
