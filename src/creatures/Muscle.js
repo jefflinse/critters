@@ -13,22 +13,13 @@ class Muscle {
             bodyA: part.physics,
             bodyB: parentPart.physics,
             length: this.part.radius + this.parentPart.radius * 2,
-            stiffness: .3,
+            stiffness: .5,
             damping: .5,
         });
 
         this.triggers = [
-            this.setFriction.bind(this),
-            this.setStiffness.bind(this),
+            ((value) => this.physics.stiffness = value).bind(this),
         ];
-    }
-
-    setFriction(friction) {
-        this.part.physics.friction = friction;
-    }
-
-    setStiffness(stiffness) {
-        this.physics.stiffness = stiffness;
     }
 
     render(graphics) {

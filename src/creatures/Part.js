@@ -19,16 +19,16 @@ class Part {
         this.sensors = [
             Math.random.bind(Math),
         ];
+
+        this.triggers = [
+            ((value) => this.physics.friction = value).bind(this),
+        ];
     }
 
     addMuscle(otherPart) {
         let muscle = new Muscle(this, otherPart, this.radius * 5);
         this.muscles.push(muscle);
         return muscle;
-    }
-
-    get triggers() {
-        return this.muscles.reduce((total, muscle) => total.concat(muscle.triggers), []);
     }
 
     render(graphics) {
@@ -39,14 +39,8 @@ class Part {
         });
     }
 
-    tick(neuralData) {
-        for (let i = 0; i < this.muscles.length; i++) {
-            let muscle = this.muscles[i];
-            for (let j = 0; j < muscle.triggers.length; j++) {
-                let trigger = muscle.triggers[j];
-                trigger(neuralData[i*j]);
-            }
-        }
+    tick() {
+        
     }
 
     _applyRandomForce() {

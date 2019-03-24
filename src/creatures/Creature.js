@@ -8,21 +8,15 @@ const Composite = Matter.Composite;
 
 class Creature {
 
-    constructor(position, radius) {
+    constructor(position, partRadius, parts = 1) {
         this.parts = [];
         this.physics = Composite.create();
-        this.addPart(position, radius);
-        this.addPart(chooseRandomPartLocation(position, radius), radius);
-        this.addPart(chooseRandomPartLocation(position, radius), radius);
+        
+        this.addPart(position, partRadius);
 
         let totalSensors = this.parts.reduce((total, part) => total + part.sensors.length, 0);
         let totalTriggers = this.parts.reduce((total, part) => total + part.triggers.length, 0);
         this.brain = new Network([totalSensors, totalTriggers]).randomlyConnect();
-        // this.brain = new Network([totalSensors, totalTriggers]).fullyConnect();
-
-        function chooseRandomPartLocation(parentPosition, radius) {
-            return parentPosition.copy().add(new Vector().random().setMagnitude(radius * 5))
-        }
     }
 
     addPart(position, radius) {
@@ -44,15 +38,19 @@ class Creature {
     }
 
     tick() {
-        let sensors = this.parts.reduce((data, part) => data.concat(part.sensors), []);
-        let sensoryData = sensors.map(sensor => sensor());
-        let neuralData = this.brain.activate(sensoryData);
+        let sensors = this.parts.reduce((s, part) => s.concat(part.sensors), []);
+        let triggers = this.parts.reduce((partTriggers, part) => {
+            return partTriggers
+                .concat(part.triggers)
+                .concat(part.muscles.reduce((muscleTriggers, muscle) => muscleTriggers.concat(muscle.triggers), []));
+        }, []);
 
-        let neuralDataIndex = 0;
-        this.parts.forEach(part => {
-            part.tick(neuralData.slice(neuralDataIndex, part.totalTriggers));
-            neuralDataIndex += part.totalTriggers;
-        });
+        let neuralData = this.brain.activate(sensors.map(sensor => sensor()));
+        for (let i = 0; i < neuralData.length; i++) {
+            triggers[i](neuralData[i]);
+        }
+
+        this.parts.forEach(part => part.tick());
     }
 
     render(graphics) {
