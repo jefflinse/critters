@@ -5,14 +5,14 @@ const Constraint = Matter.Constraint;
 
 class Muscle {
 
-    constructor(part, parentPart) {
-        this.part = part;
-        this.parentPart = parentPart;
+    constructor(from, to) {
+        this.from = from;
+        this.to = to;
 
         this.physics = Constraint.create({
-            bodyA: part.physics,
-            bodyB: parentPart.physics,
-            length: this.part.radius + this.parentPart.radius * 2,
+            bodyA: from.physics,
+            bodyB: to.physics,
+            length: this.from.radius + this.to.radius * 2,
             stiffness: .5,
             damping: .5,
         });
@@ -23,7 +23,7 @@ class Muscle {
     }
 
     render(graphics) {
-        graphics.drawLine(this.parentPart.physics.position, this.part.physics.position, {
+        graphics.drawLine(this.from.physics.position, this.to.physics.position, {
             lineWidth: 1 + (this.physics.stiffness * 4),
             strokeStyle: '#AAAAFF'
         });

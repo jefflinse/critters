@@ -2,7 +2,6 @@ import _ from 'lodash';
 import Matter from 'matter-js';
 import Network from '../neuralnetwork/Network';
 import Part from './Part';
-import Vector from '../Vector';
 
 const Composite = Matter.Composite;
 
@@ -20,21 +19,15 @@ class Creature {
     }
 
     addPart(position, radius) {
-        let part = new Part(position, radius);
-        let muscle;
-
-        // attach to an existing part using a muscle
-        if (this.parts.length > 0) {
-            let parent = _.sample(this.parts);
-            muscle = part.addMuscle(parent);
+        let part;
+        if (this.parts.length === 0) {
+            part = new Part(position, radius);
+        } else {
+            part = _.sample(this.parts).addPart();
         }
 
         this.parts.push(part);
         Composite.add(this.physics, part.physics);
-
-        if (muscle) {
-            Composite.add(this.physics, muscle.physics);
-        }
     }
 
     tick() {
@@ -54,9 +47,9 @@ class Creature {
     }
 
     render(graphics) {
-        // this.parts.forEach(part => part.render(graphics));
+        this.parts.forEach(part => part.render(graphics));
         // this.brain.render(graphics, this.parts[0].physics.position, 10, 20, 20, 3);
-        this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+        // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
     }
 }
 

@@ -9,6 +9,8 @@ class Part {
 
     constructor(position, radius) {
         this.radius = radius;
+
+        // each part only "owns" the muscles it created when adding child parts
         this.muscles = [];
         
         this.physics = Bodies.circle(position.x, position.y, radius, {
@@ -25,10 +27,13 @@ class Part {
         ];
     }
 
-    addMuscle(otherPart) {
-        let muscle = new Muscle(this, otherPart, this.radius * 5);
+    addPart() {
+        let position = new Vector(this.position.x, this.position.y)
+            .add(new Vector().random().setMagnitude(this.radius * 5));
+        let part = new Part(position, this.radius);
+        let muscle = new Muscle(this, part, this.radius * 5);
         this.muscles.push(muscle);
-        return muscle;
+        return part;
     }
 
     render(graphics) {
