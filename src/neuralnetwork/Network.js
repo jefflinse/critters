@@ -154,6 +154,8 @@ class Network {
                 graphics.drawCircle(currentPosition, nodeRadius, {
                     lineWidth: 2,
                     strokeStyle: "#FFFFFF",
+                    fillStyle: "#FFFFFF",
+                    globalAlpha: this.layers[l].neurons[n].value,
                 });
                 graphics.writeText(currentPosition.x - 5, currentPosition.y + 5,
                     Math.floor(this.layers[l].neuronAt(n).value));
