@@ -20,17 +20,6 @@ class Neuron {
         this.ordinal = undefined;
     }
 
-    isProjectedTo(other) {
-        return this.outputs.reduce((projected, output) => projected || output.to === other, false);
-    }
-
-    projectTo(other, weight = Math.random()) {
-        let connection = new Connection(this, other, weight);
-        this.outputs.push(connection);
-        other.inputs.push(connection);
-        return connection;
-    }
-
     assignRandomActivationFunction() {
         return _.sample(ACTIVATION_FUNCTIONS);
     }
@@ -43,6 +32,17 @@ class Neuron {
         this.value = this.activationFunction(this.value);
     }
 
+    isProjectedTo(other) {
+        return this.outputs.reduce((projected, output) => projected || output.to === other, false);
+    }
+
+    projectTo(other, weight = Math.random()) {
+        let connection = new Connection(this, other, weight);
+        this.outputs.push(connection);
+        other.inputs.push(connection);
+        return connection;
+    }
+
     toString() {
         let layerOrdinal = 'b';
         let ordinal = 'b';
@@ -53,8 +53,6 @@ class Neuron {
         return 'Neuron(L'+ layerOrdinal + 'N' + ordinal +
             ', ' + this.value + ' (' + this.inputs.length + '|' + this.outputs.length + ')';
     }
-
-    get ActivationFunctions() { return ActivationFunctions; }
 }
 
 export default Neuron;
