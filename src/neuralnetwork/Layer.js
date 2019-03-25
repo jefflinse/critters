@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import ActivationFunction from 'activation-functions';
 import Neuron from './Neuron';
 
 class Layer {
@@ -20,12 +21,15 @@ class Layer {
     addNeuron() {
         let neuron = new Neuron(this);
         neuron.layer = this;
-        this.neurons.push(neuron);
 
-        if (this.bias !== undefined) {
+        if (this.ordinal === 0) {
+            neuron.activationFunction = ActivationFunction.Logistic;
+        }
+        else if (this.bias !== undefined) {
             this.bias.projectTo(neuron);
         }
         
+        this.neurons.push(neuron);
         this._refreshNeuronOrdinals();
         return neuron;
     }

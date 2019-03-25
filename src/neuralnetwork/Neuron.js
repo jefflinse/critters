@@ -25,7 +25,7 @@ class Neuron {
     }
 
     activate() {
-        if (this.ordinal > 0) {
+        if (this.layer === undefined || this.layer.ordinal > 0) {
             this.value = this.inputs.reduce((total, connection) => total + (connection.value * connection.weight), 0);
         }
         
