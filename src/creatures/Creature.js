@@ -46,6 +46,11 @@ class Creature {
         }
     }
 
+    render(graphics) {
+        this.parts.forEach(part => part.render(graphics));
+        this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+    }
+
     tick() {
         let neuralData = this.brain.activate(this.sensors.map(sensor => sensor()));
         _.times(neuralData.length, i => {
@@ -53,11 +58,6 @@ class Creature {
         });
 
         this.parts.forEach(part => part.tick());
-    }
-
-    render(graphics) {
-        this.parts.forEach(part => part.render(graphics));
-        this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
     }
 }
 
