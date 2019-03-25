@@ -14,7 +14,8 @@ class Creature {
         this.parts = [];
         this.parts.concat(_.times(numParts, () => this.addPart(position, partRadius)));
 
-        this.brain = new Network([this.sensors.length, this.triggers.length]).fullyConnect();
+        let mindSize = _.random(this.sensors.length, this.triggers.length);
+        this.brain = new Network([this.sensors.length, mindSize, this.triggers.length]).fullyConnect();
     }
 
     get sensors() {
