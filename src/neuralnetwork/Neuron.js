@@ -36,7 +36,7 @@ class Neuron {
         return this.outputs.reduce((projected, output) => projected || output.to === other, false);
     }
 
-    projectTo(other, weight = Math.random()) {
+    projectTo(other, weight = _.random(-1, 1, true)) {
         let connection = new Connection(this, other, weight);
         this.outputs.push(connection);
         other.inputs.push(connection);

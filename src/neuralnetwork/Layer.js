@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import ActivationFunction from 'activation-functions';
 import Neuron from './Neuron';
 
 class Layer {
