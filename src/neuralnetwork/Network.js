@@ -124,7 +124,7 @@ class Network {
         let currentPosition = new Vector(position.x + nodeRadius, position.y + nodeRadius);
         for (let l = 0; l < this.layers.length; l++) {
             for (let n = 0; n < this.layers[l].size; n++) {
-                let intensity = Math.floor(256 * this.layers[l].neurons[n].value);
+                let intensity = Math.floor(256 * Math.abs(this.layers[l].neurons[n].value));
                 let nodeColor = 'rgb(' + [intensity, intensity, intensity].join(',') + ')';
                 let textColor = 'rgb(' + [255 - intensity, 255 - intensity, 255 - intensity].join(',') + ')';
                 graphics.drawCircle(currentPosition, nodeRadius, {
