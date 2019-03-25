@@ -1,23 +1,24 @@
 import _ from 'lodash';
 import Matter from 'matter-js';
 import Muscle from './Muscle';
+import PhysicalObject from './PhysicalObject';
 import Vector from '../Vector';
 
-const Body = Matter.Body;
 const Bodies = Matter.Bodies;
 
-class Part {
+class Part extends PhysicalObject {
 
     constructor(position, radius) {
+        
+        super(Bodies.circle(position.x, position.y, radius, {
+            frictionAir: 0,
+        }));
+
         this.radius = radius;
 
         // each part only "owns" the muscles it created when adding child parts
         this.muscles = [];
         
-        this.physics = Bodies.circle(position.x, position.y, radius, {
-            frictionAir: 0,
-        });
-
         this.sensors = [
             (() => this.physics.speed).bind(this),
             (() => this.physics.angularSpeed).bind(this),
@@ -30,8 +31,7 @@ class Part {
     }
 
     addPart() {
-        let position = new Vector(this.physics.position.x, this.physics.position.y)
-            .add(new Vector().random().setMagnitude(this.radius * 3));
+        let position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 3));
         let part = new Part(position, this.radius);
         let muscle = new Muscle(this, part);
         this.muscles.push(muscle);
@@ -40,7 +40,7 @@ class Part {
 
     render(graphics) {
         this.muscles.forEach(muscle => muscle.render(graphics));
-        graphics.drawCircle(this.physics.position, this.radius, {
+        graphics.drawCircle(this.position, this.radius, {
             fillStyle: "#FFFFFF",
             globalAlpha: .1 + (.9 * this.physics.frictionAir),
         });

@@ -10,8 +10,7 @@ class Muscle {
         this.from = from;
         this.to = to;
 
-        let length = new Vector(this.from.physics.position.x, this.from.physics.position.y).distanceBetween(
-            new Vector(this.to.physics.position.x, this.to.physics.position.y));
+        let length = this.from.position.distanceBetween(this.to.position);
         this.physics = Constraint.create({
             bodyA: from.physics,
             bodyB: to.physics,
@@ -27,7 +26,7 @@ class Muscle {
     }
 
     render(graphics) {
-        graphics.drawLine(this.from.physics.position, this.to.physics.position, {
+        graphics.drawLine(this.from.position, this.to.position, {
             lineWidth: 1 + (this.physics.stiffness * 4),
             strokeStyle: '#AAAAFF'
         });
