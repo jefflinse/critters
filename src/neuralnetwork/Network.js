@@ -24,7 +24,7 @@ class Network {
         this.hidden = this.layers.slice(1, this.layers.length - 1);
         this.outputs = this.layers[this.layers.length - 1];
 
-        //this.outputs.neurons.forEach(neuron => neuron.activationFunction = Math.tanh);
+        this.outputs.neurons.forEach(neuron => neuron.activationFunction = ActivationFunctions.SoftSign);
     }
 
     get size() {

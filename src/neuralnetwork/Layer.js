@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import ActivationFunctions from 'activation-functions';
 import Neuron from './Neuron';
 
 class Layer {
@@ -22,7 +23,7 @@ class Layer {
         neuron.layer = this;
 
         if (this.ordinal === 0) {
-            neuron.activationFunction = Math.tanh;
+            neuron.activationFunction = ActivationFunctions.SoftSign;
         }
         else if (this.bias !== undefined) {
             this.bias.projectTo(neuron);

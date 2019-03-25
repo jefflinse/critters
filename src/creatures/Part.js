@@ -21,20 +21,20 @@ class Part {
         this.sensors = [
             // () => _.random(-1, 1, true),
             // () => _.random(-1, 1, true),
-            () => _.random(-1, 1, true),
+            //() => _.random(-1, 1, true),
             (() => this.physics.speed).bind(this),
             (() => this.physics.angularSpeed).bind(this),
         ];
 
         this.triggers = [
             ((value) => this.physics.frictionAir = Math.min(Math.max(
-                this.physics.frictionAir + (value * .01), 0), 1)).bind(this),
+                this.physics.frictionAir + (value * .05), 0), .1)).bind(this),
         ];
     }
 
     addPart() {
         let position = new Vector(this.physics.position.x, this.physics.position.y)
-            .add(new Vector().random().setMagnitude(this.radius * 4));
+            .add(new Vector().random().setMagnitude(this.radius * 3));
         let part = new Part(position, this.radius);
         let muscle = new Muscle(this, part);
         this.muscles.push(muscle);

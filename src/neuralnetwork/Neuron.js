@@ -5,7 +5,8 @@ import Connection from './Connection';
 const ACTIVATION_FUNCTIONS = [
     ActivationFunctions.Sigmoid,
     ActivationFunctions.Logistic,
-    Math.tanh,
+    ActivationFunctions.SoftSign,
+    // Math.tanh,
     // ActivationFunctions.BinaryStep,
 ];
 
