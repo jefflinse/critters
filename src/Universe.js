@@ -26,8 +26,8 @@ class Universe {
 
     addCreature() {
         let position = new Vector(
-            Math.random() * this.canvas.width,
-            Math.random() * this.canvas.height);
+            this.canvas.width * 2 / 3,
+            this.canvas.height / 2);
         this.creatures.alive.push(new Creature(position, 10));
     }
 
