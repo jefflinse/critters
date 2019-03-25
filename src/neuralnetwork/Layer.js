@@ -23,7 +23,7 @@ class Layer {
         neuron.layer = this;
 
         if (this.ordinal === 0) {
-            neuron.activationFunction = ActivationFunction.Logistic;
+            neuron.activationFunction = Math.tanh;
         }
         else if (this.bias !== undefined) {
             this.bias.projectTo(neuron);

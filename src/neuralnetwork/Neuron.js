@@ -6,7 +6,7 @@ const ACTIVATION_FUNCTIONS = [
     ActivationFunctions.Sigmoid,
     ActivationFunctions.Logistic,
     Math.tanh,
-    ActivationFunctions.BinaryStep,
+    // ActivationFunctions.BinaryStep,
 ];
 
 class Neuron {

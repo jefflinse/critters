@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Matter from 'matter-js';
 import Muscle from './Muscle';
 import Vector from '../Vector';
@@ -19,7 +20,7 @@ class Part {
         });
 
         this.sensors = [
-            Math.random.bind(Math),
+            () => _.random(-1, 1, true),
         ];
 
         this.triggers = [
