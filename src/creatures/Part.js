@@ -15,14 +15,15 @@ class Part {
         this.muscles = [];
         
         this.physics = Bodies.circle(position.x, position.y, radius, {
-            frictionAir: .01,
+            frictionAir: 0,
         });
 
         this.sensors = [
+            // () => _.random(-1, 1, true),
+            // () => _.random(-1, 1, true),
             () => _.random(-1, 1, true),
-            () => _.random(-1, 1, true),
-            () => _.random(-1, 1, true),
-            // (() => this.physics.motion).bind(this),
+            (() => this.physics.speed).bind(this),
+            (() => this.physics.angularSpeed).bind(this),
         ];
 
         this.triggers = [

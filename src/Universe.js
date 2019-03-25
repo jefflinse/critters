@@ -4,6 +4,8 @@ import Matter from 'matter-js';
 import Vector from './Vector';
 
 const Engine = Matter.Engine;
+const Mouse = Matter.Mouse;
+const MouseConstraint = Matter.MouseConstraint;
 const World = Matter.World;
 
 class Universe {
@@ -61,6 +63,21 @@ class Universe {
                 gravity: { x: 0, y: 0, scale: .001 },
             }),
         });
+
+        // add mouse control
+        let mouse = Mouse.create(this.graphics.canvas);
+        let mouseConstraint = MouseConstraint.create(this.physicsEngine, {
+            mouse: mouse,
+            constraint: {
+                // allow bodies on mouse to rotate
+                angularStiffness: 0,
+            }
+        });
+
+        World.add(this.physicsEngine.world, mouseConstraint);
+
+        // keep the mouse in sync with rendering
+        // render.mouse = mouse;
 
         World.add(this.physicsEngine.world,
             this.creatures.alive.map(creature => creature.physics));
