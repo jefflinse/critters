@@ -19,9 +19,6 @@ class Part {
         });
 
         this.sensors = [
-            // () => _.random(-1, 1, true),
-            // () => _.random(-1, 1, true),
-            //() => _.random(-1, 1, true),
             (() => this.physics.speed).bind(this),
             (() => this.physics.angularSpeed).bind(this),
         ];

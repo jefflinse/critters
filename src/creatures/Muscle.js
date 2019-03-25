@@ -23,8 +23,6 @@ class Muscle {
         this.triggers = [
             ((value) => this.physics.stiffness = 
                 Math.min(Math.max(this.physics.stiffness + (value * .01), .01), .5)).bind(this),
-            // ((value) => this.physics.damping = 
-            //     Math.min(Math.max(this.physics.damping + (value * .001), 0), .1)).bind(this),
         ];
     }
 
