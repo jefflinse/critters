@@ -25,7 +25,11 @@ class Part {
 
         this.triggers = [
             ((value) => this.physics.friction = value).bind(this),
+            ((value) => this.thrust.setMagnitude(value * .0001)).bind(this),
+            ((value) => this.thrust.setAngle(value * 2 * Math.PI)).bind(this),
         ];
+
+        this.thrust = new Vector();
     }
 
     addPart() {
@@ -46,14 +50,13 @@ class Part {
     }
 
     tick() {
-        
+        this._applyForce(this.thrust);
     }
 
-    _applyRandomForce() {
-        let relativePosition = new Vector().random().setMagnitude(this.radius);
-        let position = new Vector(this.physics.position.x, this.physics.position.y).add(relativePosition);
-        let force = relativePosition.copy().invert().setMagnitude(.01);
-        Body.applyForce(this.physics, position, force);
+    _applyForce(force) {
+        // let relativePosition = new Vector().random().setMagnitude(this.radius);
+        // let position = new Vector(this.physics.position.x, this.physics.position.y).add(relativePosition);
+        Body.applyForce(this.physics, this.physics.position, force);
     }
 }
 
