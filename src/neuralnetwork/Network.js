@@ -23,6 +23,8 @@ class Network {
         this.inputs = this.layers[0];
         this.hidden = this.layers.slice(1, this.layers.length - 1);
         this.outputs = this.layers[this.layers.length - 1];
+
+        //this.outputs.neurons.forEach(neuron => neuron.activationFunction = Math.tanh);
     }
 
     get size() {
@@ -115,7 +117,7 @@ class Network {
                 (2 * nodeRadius + layerDistance) * toX,
                 (2 * nodeRadius + nodeDistance) * toY));
             graphics.drawLine(from, to, {
-                lineWidth: 1 + (connections[c].weight * (connectionLineWeight - 1)),
+                lineWidth: 1, // + (connections[c].weight * (connectionLineWeight - 1)),
                 strokeStyle: '#FFFFFF',
             });
         }

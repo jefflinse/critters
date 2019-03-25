@@ -15,21 +15,20 @@ class Part {
         this.muscles = [];
         
         this.physics = Bodies.circle(position.x, position.y, radius, {
-            frictionAir: .1,
-            friction: .5,
+            frictionAir: .01,
         });
 
         this.sensors = [
             () => _.random(-1, 1, true),
+            () => _.random(-1, 1, true),
+            () => _.random(-1, 1, true),
+            // (() => this.physics.motion).bind(this),
         ];
 
         this.triggers = [
-            ((value) => this.physics.friction = value).bind(this),
-            ((value) => this.thrust.setMagnitude(value * .0001)).bind(this),
-            ((value) => this.thrust.setAngle(value * 2 * Math.PI)).bind(this),
+            ((value) => this.physics.frictionAir = Math.min(Math.max(
+                this.physics.frictionAir + (value * .01), 0), 1)).bind(this),
         ];
-
-        this.thrust = new Vector();
     }
 
     addPart() {
@@ -45,18 +44,12 @@ class Part {
         this.muscles.forEach(muscle => muscle.render(graphics));
         graphics.drawCircle(this.physics.position, this.radius, {
             fillStyle: "#FFFFFF",
-            globalAlpha: .1 + (.9 * this.physics.friction),
+            globalAlpha: .1 + (.9 * this.physics.frictionAir),
         });
     }
 
     tick() {
-        this._applyForce(this.thrust);
-    }
-
-    _applyForce(force) {
-        // let relativePosition = new Vector().random().setMagnitude(this.radius);
-        // let position = new Vector(this.physics.position.x, this.physics.position.y).add(relativePosition);
-        Body.applyForce(this.physics, this.physics.position, force);
+        
     }
 }
 
