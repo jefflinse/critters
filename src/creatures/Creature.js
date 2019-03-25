@@ -43,7 +43,7 @@ class Creature {
         Composite.add(this.physics, part.physics);
 
         if (muscle) {
-            Composite.add(this.physics, muscle);
+            Composite.add(this.physics, muscle.physics);
         }
     }
 
