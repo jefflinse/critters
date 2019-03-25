@@ -1,6 +1,8 @@
 import _ from 'lodash';
+import ActivationFunctions from 'activation-functions';
 import Layer from './Layer'
 import Vector from '../Vector';
+import Neuron from './Neuron';
 
 class Network {
 
@@ -9,9 +11,10 @@ class Network {
             throw new Error("Invalid topology; must contain zero or at least two layers");
         }
 
+        this.bias = this._createBiasNeuron();
         this.layers = [];
         for (let l = 0; l < topology.length; l++) {
-            let layer = this.addLayer();
+            let layer = this.addLayer(l === 0);
             for (let n = 0; n < topology[l]; n++) {
                 layer.addNeuron();
             }
@@ -44,8 +47,8 @@ class Network {
         return this.outputs.neurons.map(outputNeuron => outputNeuron.value);
     }
 
-    addLayer() {
-        let layer = new Layer();
+    addLayer(isInput = false) {
+        let layer = new Layer(isInput ? undefined : this.bias);
         this.layers.push(layer);
         this._refreshLayerOrdinals();
         return layer;
@@ -153,6 +156,13 @@ class Network {
         else if (this.outputs.size === 0) {
             throw new Error('Invalid NN: no output neurons present');
         }
+    }
+
+    _createBiasNeuron() {
+        let bias = new Neuron();
+        bias.activationFunction = ActivationFunctions.Identity;
+        bias.value = 1;
+        return bias;
     }
 
     _chooseRandomLayer(mustNotBeEmpty = false, exclusions = []) {

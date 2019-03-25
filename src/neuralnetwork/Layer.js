@@ -3,8 +3,9 @@ import Neuron from './Neuron';
 
 class Layer {
 
-    constructor() {
+    constructor(bias) {
         this.neurons = [];
+        this.bias = bias;
         this.ordinal = undefined;
     }
 
@@ -20,6 +21,11 @@ class Layer {
         let neuron = new Neuron(this);
         neuron.layer = this;
         this.neurons.push(neuron);
+
+        if (this.bias !== undefined) {
+            this.bias.projectTo(neuron);
+        }
+        
         this._refreshNeuronOrdinals();
         return neuron;
     }
