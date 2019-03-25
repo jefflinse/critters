@@ -17,7 +17,6 @@ class Muscle {
             bodyB: to.physics,
             length: length,
             stiffness: .5,
-            damping: .5,
         });
 
         this.triggers = [
