@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Simulator from './Simulator';
+import Simulator from './simulator/Simulator';
 import Universe from './Universe';
 
 class UniverseView extends Component {
