@@ -8,7 +8,7 @@ const Composite = Matter.Composite;
 
 class Creature {
 
-    constructor(position, partRadius, numParts = 3) {
+    constructor(position, partRadius, numParts = 10) {
         this.physics = Composite.create();
 
         this.parts = [];

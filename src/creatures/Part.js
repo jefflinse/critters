@@ -26,7 +26,7 @@ class Part extends PhysicalObject {
 
         this.triggers = [
             ((value) => this.physics.frictionAir = Math.min(Math.max(
-                this.physics.frictionAir + (value * .05), 0), .1)).bind(this),
+                this.physics.frictionAir + (value * .05), 0), .9)).bind(this),
         ];
     }
 
