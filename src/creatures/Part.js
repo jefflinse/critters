@@ -11,7 +11,7 @@ class Part extends PhysicalObject {
     constructor(position, radius) {
         
         super(Bodies.circle(position.x, position.y, radius, {
-            frictionAir: 0,
+            frictionAir: .45,
         }));
 
         this.radius = radius;
@@ -21,6 +21,7 @@ class Part extends PhysicalObject {
         
         this.sensors = [
             (() => this.physics.speed).bind(this),
+            (() => this.physics.angle).bind(this),
             (() => this.physics.angularSpeed).bind(this),
         ];
 
