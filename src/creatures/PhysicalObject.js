@@ -13,6 +13,10 @@ class PhysicalObject {
     get position() {
         return this.physics.position;
     }
+
+    applyForceFromCenter(force) {
+        Matter.Body.applyForce(this.physics, this.position, force);
+    }
 }
 
 export default PhysicalObject;

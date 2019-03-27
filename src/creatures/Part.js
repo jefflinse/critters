@@ -31,6 +31,9 @@ class Part extends PhysicalObject {
         ];
 
         this.movement = 0;
+
+        // give the part an random push on birth
+        this.applyForceFromCenter(new Vector().random().setMagnitude(.0005));
     }
 
     addPart() {
