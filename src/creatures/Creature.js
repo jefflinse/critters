@@ -69,6 +69,12 @@ class Creature {
         // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
     }
 
+    setPosition(position) {
+        // instantly set the position of the creature, without affecting physics
+        let relativePosition = position.copy().subtract(this.position);
+        Matter.Composite.translate(this.physics, relativePosition);
+    }
+
     tick() {
         let neuralData = this.brain.activate(this.sensors.map(sensor => sensor()));
         _.times(neuralData.length, i => {
