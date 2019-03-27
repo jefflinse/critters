@@ -1,12 +1,16 @@
 class Simulator {
 
-    constructor(universe) {
-        this.universe = universe;
+    constructor(simulation) {
+        this.simulation = simulation;
         this.state = 'stopped';
+        this.ticks = 1;
+        this.ticksPerSecond = 60;
+        this.secondsPerGeneration = 10;
+        this.ticksPerGeneration = this.ticksPerSecond * this.secondsPerGeneration;
     }
 
     start() {
-        this.clock = setInterval(this._tick.bind(this), 1000 / 60);
+        this.clock = setInterval(this._tick.bind(this), 1000 / this.ticksPerSecond);
         this.state = 'running';
     }
 
@@ -17,7 +21,7 @@ class Simulator {
 
     reset() {
         this.pause();
-        this.universe.reset();
+        this.simulation.reset();
         this.state = 'stopped';
     }
 
@@ -30,7 +34,12 @@ class Simulator {
     }
 
     _tick() {
-        this.universe.tick();
+        this.simulation.tick(this.ticksPerSecond);
+        this.ticks++;
+        if (this.ticks > this.ticksPerGeneration) {
+            this.simulation.nextGeneration();
+            this.ticks = 1;
+        }
     }
 }
 

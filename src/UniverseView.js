@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 import Simulator from './simulator/Simulator';
 import Universe from './Universe';
+import Simulation from './simulator/Simulation';
 
 class UniverseView extends Component {
 
     componentWillMount() {
-        const universe = new Universe();
-        const simulator = new Simulator(universe);
-
         this.setState({
-            simulator: simulator,
+            simulator: null,
         });
     }
 
     componentDidMount() {
         let canvas = this.refs.canvas;
-        this.state.simulator.universe.setup(canvas, 1);
-        this.state.simulator.start();
+        let universe = new Universe(canvas);
+        let simulation = new Simulation(universe);
+        let simulator = new Simulator(simulation);
+        this.setState({ simulator: simulator }, () => {
+            this.state.simulator.start();
+        });
     }
 
     onCanvasMouseDown() {

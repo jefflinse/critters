@@ -10,19 +10,23 @@ const World = Matter.World;
 
 class Universe {
 
-    constructor() {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.graphics = new Graphics(this.canvas);
+        this.creatures = [];
         this.reset();
     }
 
-    setup(canvas, numCreatures) {
-        this.canvas = canvas;
+    get height() {
+        return this.canvas.height;
+    }
 
-        // add some creatures
-        for (let i = 0; i < numCreatures; i++) {
-            this.addCreature();
-        }
+    get width() {
+        return this.canvas.width;
+    }
 
-        this._initGraphics(canvas);
+    setup(creatures) {
+        this.creatures = creatures;
         this._initPhysics();
     }
 
@@ -51,10 +55,6 @@ class Universe {
         };
 
         this.food = [];
-    }
-
-    _initGraphics(canvas) {
-        this.graphics = new Graphics(canvas);
     }
 
     _initPhysics() {
