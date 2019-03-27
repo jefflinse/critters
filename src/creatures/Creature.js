@@ -49,7 +49,7 @@ class Creature {
 
     render(graphics) {
         this.parts.forEach(part => part.render(graphics));
-        this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+        // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
     }
 
     tick() {
