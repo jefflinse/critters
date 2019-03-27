@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Simulator from './simulator/Simulator';
-import Universe from './Universe';
+import Runner from './simulator/Runner';
 import Simulation from './simulator/Simulation';
+import Universe from './Universe';
 
 class UniverseView extends Component {
 
@@ -15,9 +15,9 @@ class UniverseView extends Component {
         let canvas = this.refs.canvas;
         let universe = new Universe(canvas);
         let simulation = new Simulation(universe);
-        let simulator = new Simulator(simulation);
-        this.setState({ simulator: simulator }, () => {
-            this.state.simulator.start();
+        let runner = new Runner(simulation);
+        this.setState({ runner: runner }, () => {
+            this.state.runner.start();
         });
     }
 
