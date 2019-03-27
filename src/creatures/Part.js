@@ -34,11 +34,11 @@ class Part extends PhysicalObject {
         this.movement = 0;
 
         // give the part an random push on birth
-        this.applyForceFromCenter(new Vector().random().setMagnitude(.0005));
+        this.applyForceFromCenter(new Vector().random().setMagnitude(.01));
     }
 
     addPart() {
-        let position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 3));
+        let position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 2));
         let part = new Part(position);
         let muscle = new Muscle(this, part);
         this.muscles.push(muscle);
