@@ -10,11 +10,11 @@ class Simulation {
             alive: []
         };
 
-        this.maxPopulation = 10;
+        this.maxPopulation = 25;
         this.reproductionPercentile = .5;
 
         this.reset();
-        this._generateRandomPopulation(10);
+        this._generateRandomPopulation(this.maxPopulation);
     }
 
     nextGeneration() {

@@ -10,7 +10,7 @@ class Part extends PhysicalObject {
 
     constructor(position) {
         position = position || new Vector(0, 0);
-        let radius = 10;
+        let radius = 7;
         super(Bodies.circle(position.x, position.y, radius, {
             frictionAir: .45,
         }));
