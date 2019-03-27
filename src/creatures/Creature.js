@@ -8,12 +8,16 @@ const Composite = Matter.Composite;
 
 class Creature {
 
-    constructor(position, partRadius, numParts = 3) {
+    constructor() {
+        this.partRadius = 5;
+        this.parts = [];
         this.physics = Composite.create();
 
-        this.partRadius = partRadius;
-        this.parts = [];
-        this.parts.concat(_.times(numParts, () => this.addPart(position, this.partRadius)));
+        // ensure at least one part
+        this.addPart();
+
+        let numParts = 3;
+        _.times(numParts - 1, () => this.addPart());
 
         let mindSize = _.random(this.sensors.length, this.triggers.length);
         this.brain = new Network([this.sensors.length, mindSize, this.triggers.length]).fullyConnect();
@@ -41,11 +45,11 @@ class Creature {
         }, []);
     }
 
-    addPart(position, radius) {
+    addPart(position) {
         let part;
         let muscle;
         if (this.parts.length === 0) {
-            part = new Part(position, radius);
+            part = new Part(position);
         } else {
             [part, muscle] = _.sample(this.parts).addPart();
         }

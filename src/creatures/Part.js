@@ -8,8 +8,9 @@ const Bodies = Matter.Bodies;
 
 class Part extends PhysicalObject {
 
-    constructor(position, radius) {
-        
+    constructor(position) {
+        position = position || new Vector(0, 0);
+        let radius = 10;
         super(Bodies.circle(position.x, position.y, radius, {
             frictionAir: .45,
         }));
@@ -38,7 +39,7 @@ class Part extends PhysicalObject {
 
     addPart() {
         let position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 3));
-        let part = new Part(position, this.radius);
+        let part = new Part(position);
         let muscle = new Muscle(this, part);
         this.muscles.push(muscle);
         return [part, muscle];
