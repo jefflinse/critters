@@ -16,6 +16,12 @@ class Creature {
 
         let mindSize = _.random(this.sensors.length, this.triggers.length);
         this.brain = new Network([this.sensors.length, mindSize, this.triggers.length]).fullyConnect();
+
+        this.movement = 0;
+    }
+
+    get fitness() {
+        return this.movement;
     }
 
     get sensors() {
@@ -59,6 +65,7 @@ class Creature {
         });
 
         this.parts.forEach(part => part.tick());
+        this.movement += this.parts.reduce((movement, part) => part.movement);
     }
 }
 

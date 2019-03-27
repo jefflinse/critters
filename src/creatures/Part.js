@@ -29,6 +29,8 @@ class Part extends PhysicalObject {
             ((value) => this.physics.frictionAir = Math.min(Math.max(
                 this.physics.frictionAir + (value * .05), 0), .9)).bind(this),
         ];
+
+        this.movement = 0;
     }
 
     addPart() {
@@ -48,7 +50,7 @@ class Part extends PhysicalObject {
     }
 
     tick() {
-        
+        this.movement += this.physics.movement;
     }
 }
 
