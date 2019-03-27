@@ -11,8 +11,9 @@ class Creature {
     constructor(position, partRadius, numParts = 3) {
         this.physics = Composite.create();
 
+        this.partRadius = partRadius;
         this.parts = [];
-        this.parts.concat(_.times(numParts, () => this.addPart(position, partRadius)));
+        this.parts.concat(_.times(numParts, () => this.addPart(position, this.partRadius)));
 
         let mindSize = _.random(this.sensors.length, this.triggers.length);
         this.brain = new Network([this.sensors.length, mindSize, this.triggers.length]).fullyConnect();
@@ -22,6 +23,10 @@ class Creature {
 
     get fitness() {
         return this.movement;
+    }
+
+    get position() {
+        return this.parts[0].position;
     }
 
     get sensors() {
@@ -51,6 +56,12 @@ class Creature {
         if (muscle) {
             Composite.add(this.physics, muscle.physics);
         }
+    }
+
+    clone() {
+        let creature = new Creature(this.position.copy(), this.partRadius, this.parts.length);
+        // TODO: cloning logic
+        return creature;
     }
 
     render(graphics) {

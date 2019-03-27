@@ -26,8 +26,10 @@ class Simulation {
 
         this.reset();
         this.population.alive = best;
+        let numSurvivors = best.length, i = 0;
         while (best.length < this.maxPopulation) {
-            this._addIndividual();
+            this._addIndividual(best[i % numSurvivors]);
+            i++;
         }
     }
 
@@ -44,9 +46,9 @@ class Simulation {
         this.universe.tick(ticksPerSecond);
     }
 
-    _addIndividual() {
+    _addIndividual(cloneFrom) {
         let position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
-        let creature = new Creature(position, 10);
+        let creature = cloneFrom !== undefined ? cloneFrom.clone() : new Creature(position, 10);
         this.population.alive.push(creature);
         this.universe.onIndividualAdded(creature);
     }
