@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Creature from '../creatures/Creature';
 import Vector from '../Vector';
 
@@ -14,7 +15,6 @@ class Simulation {
 
         this.reset();
         this._generateRandomPopulation(10);
-        this.universe.setup(this.population);
     }
 
     nextGeneration() {
@@ -35,6 +35,8 @@ class Simulation {
         this.population = {
             alive: [],
         };
+
+        this.universe.setup(this.population);
     }
 
     tick(ticksPerSecond) {
@@ -43,10 +45,10 @@ class Simulation {
     }
 
     _addIndividual() {
-        let position = new Vector(
-            this.universe.width * 2 / 3,
-            this.universe.height / 2);
-        this.population.alive.push(new Creature(position, 10));
+        let position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
+        let creature = new Creature(position, 10);
+        this.population.alive.push(creature);
+        this.universe.onIndividualAdded(creature);
     }
 
     _generateRandomPopulation(size) {

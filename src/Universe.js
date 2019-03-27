@@ -14,6 +14,7 @@ class Universe {
         this.canvas = canvas;
         this.graphics = new Graphics(this.canvas);
         this.creatures = [];
+        this.physics = this._createPhysicsEngine();
         this.reset();
     }
 
@@ -25,21 +26,13 @@ class Universe {
         return this.canvas.width;
     }
 
-    setup(creatures) {
-        this.creatures = creatures;
-        this._initPhysics();
-    }
-
-    addCreature() {
-        let position = new Vector(
-            this.canvas.width * 2 / 3,
-            this.canvas.height / 2);
-        this.creatures.alive.push(new Creature(position, 10));
+    onIndividualAdded(creature) {
+        World.add(this.physics.world, creature.physics);
     }
 
     tick() {
         this.creatures.alive.forEach(creature => creature.tick());
-        Engine.update(this.physicsEngine, 1000 / 60);
+        Engine.update(this.physics, 1000 / 60);
         this.render();
     }
 
@@ -57,8 +50,12 @@ class Universe {
         this.food = [];
     }
 
-    _initPhysics() {
-        this.physicsEngine = Engine.create({
+    setup(creatures) {
+        this.creatures = creatures;
+    }
+
+    _createPhysicsEngine() {
+        let physics = Engine.create({
             world: World.create({
                 gravity: { x: 0, y: 0, scale: .001 },
             }),
@@ -66,7 +63,7 @@ class Universe {
 
         // add mouse control
         let mouse = Mouse.create(this.graphics.canvas);
-        let mouseConstraint = MouseConstraint.create(this.physicsEngine, {
+        let mouseConstraint = MouseConstraint.create(physics, {
             mouse: mouse,
             constraint: {
                 // allow bodies on mouse to rotate
@@ -74,13 +71,12 @@ class Universe {
             }
         });
 
-        World.add(this.physicsEngine.world, mouseConstraint);
+        World.add(physics.world, mouseConstraint);
 
         // keep the mouse in sync with rendering
         // render.mouse = mouse;
 
-        World.add(this.physicsEngine.world,
-            this.creatures.alive.map(creature => creature.physics));
+        return physics;
     }
 }
 
