@@ -30,6 +30,10 @@ class Universe {
         World.add(this.physics.world, creature.physics);
     }
 
+    onIndividualRemoved(creature) {
+        World.remove(this.physics.world, creature.physics);
+    }
+
     tick() {
         this.creatures.alive.forEach(creature => creature.tick());
         Engine.update(this.physics, 1000 / 60);

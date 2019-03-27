@@ -21,7 +21,8 @@ class Simulation {
         let best = this.population.alive.sort((a, b) => a.fitness - b.fitness);
         let numAllowedToLive = Math.floor(this.maxPopulation * this.reproductionPercentile);
         while (best.length > numAllowedToLive) {
-            best.pop();
+            let removed = best.pop();
+            this.universe.onIndividualRemoved(removed);
         }
 
         this.reset();
