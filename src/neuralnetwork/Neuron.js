@@ -2,13 +2,13 @@ import _ from 'lodash';
 import AF from 'activation-functions';
 import Connection from './Connection';
 
-const ACTIVATION_FUNCTIONS = [
-    AF.Sigmoid,
-    AF.Logistic,
-    AF.SoftSign,
-    // Math.tanh,
-    // ActivationFunctions.BinaryStep,
-];
+const ActivationFuntionMap = {
+    // 'binarystep': AF.BinaryStep,
+    'logistic': AF.Logistic,
+    'sigmoid': AF.Sigmoid,
+    'softsign': AF.SoftSign,
+    // 'tanh': Math.tanh,
+}
 
 let nextNeuronId = 1;
 class Neuron {
@@ -17,14 +17,17 @@ class Neuron {
         this.id = nextNeuronId++;
         this.inputs = [];
         this.outputs = [];
-        this.activationFunction = this.assignRandomActivationFunction();
+        this.activationFunction = this.getRandomActivationFunction();
         this.value = 0;
         this.layer = undefined;
         this.ordinal = undefined;
+
+        console.log(JSON.stringify(this.toJSON()));
     }
 
-    assignRandomActivationFunction() {
-        return _.sample(ACTIVATION_FUNCTIONS);
+    getRandomActivationFunction() {
+        const keys = Object.keys(ActivationFuntionMap);
+        return ActivationFuntionMap[_.sample(keys)];
     }
 
     activate() {
@@ -50,7 +53,17 @@ class Neuron {
         return {
             id: this.id,
             value: preserveValues ? this.value : 0,
-            activationFunction: 'TODO',
+            af: stringFromActivationFunction(this.activationFunction),
+        }
+
+        function stringFromActivationFunction(af) {
+            for (let key in ActivationFuntionMap) {
+                if (ActivationFuntionMap[key] === af) {
+                    return key;
+                }
+            }
+
+            return 'identity';
         }
     }
 }
