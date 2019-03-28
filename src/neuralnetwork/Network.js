@@ -25,6 +25,16 @@ class Network {
         this.outputs = this.layers[this.layers.length - 1];
 
         this.outputs.neurons.forEach(neuron => neuron.activationFunction = ActivationFunctions.SoftSign);
+
+        console.log(this.toJSON());
+    }
+
+    get connections() {
+        return this.layers.reduce((allConnections, layer) => allConnections.concat(layer.inputs), []);
+    }
+
+    get neurons() {
+        return this.layers.reduce((allNeurons, layer) => allNeurons.concat(layer.neurons), [this.bias]);
     }
 
     get size() {
@@ -146,6 +156,16 @@ class Network {
             currentPosition.y = position.y + nodeRadius;
             currentPosition.x += 2 * nodeRadius + layerDistance;
         }
+    }
+
+    toJSON() {
+        return {
+            topology: [].concat(this.topology),
+            bias: this.bias.id,
+            layers: this.layers.map(layer => layer.toJSON()),
+            neurons: this.neurons.map(neuron => neuron.toJSON()),
+            connections: this.connections.map(connection => connection.toJSON()),
+        };
     }
 
     validate() {

@@ -10,6 +10,10 @@ class Layer {
         this.ordinal = undefined;
     }
 
+    get inputs() {
+        return this.neurons.reduce((allInputs, neuron) => allInputs.concat(neuron.inputs), []);
+    }
+
     get size() {
         return this.neurons.length;
     }
@@ -48,6 +52,14 @@ class Layer {
                 neuron.projectTo(otherNeuron);
             });
         });
+    }
+
+    toJSON() {
+        return {
+            neurons: this.neurons.map(neuron => neuron.id),
+            bias: this.bias,
+            ordinal: this.ordinal,
+        }
     }
 
     _refreshNeuronOrdinals() {
