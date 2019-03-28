@@ -159,13 +159,12 @@ class Network {
     }
 
     toJSON() {
-        return {
-            topology: [].concat(this.topology),
+        return JSON.stringify({
             bias: this.bias.id,
             layers: this.layers.map(layer => layer.toJSON()),
             neurons: this.neurons.map(neuron => neuron.toJSON()),
             connections: this.connections.map(connection => connection.toJSON()),
-        };
+        });
     }
 
     validate() {

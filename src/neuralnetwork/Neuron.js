@@ -49,11 +49,8 @@ class Neuron {
     toJSON(preserveValues = false) {
         return {
             id: this.id,
-            inputs: this.inputs.map(input => input.id),
-            outputs: this.outputs.map(output => output.id),
             value: preserveValues ? this.value : 0,
-            layer: this.layer !== undefined ? this.layer.ordinal : -1,
-            ordinal: this.ordinal,
+            activationFunction: 'TODO',
         }
     }
 }

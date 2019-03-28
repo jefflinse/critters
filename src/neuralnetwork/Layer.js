@@ -57,8 +57,6 @@ class Layer {
     toJSON() {
         return {
             neurons: this.neurons.map(neuron => neuron.id),
-            bias: this.bias,
-            ordinal: this.ordinal,
         }
     }
 
