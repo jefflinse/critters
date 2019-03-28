@@ -2,7 +2,6 @@ import _ from 'lodash';
 import Matter from 'matter-js';
 import Network from '../neuralnetwork/Network';
 import Part from './Part';
-import Vector from '../Vector';
 
 const Composite = Matter.Composite;
 
@@ -11,7 +10,6 @@ class Creature {
 
     constructor() {
         this.id = nextCreatureId++;
-        this.partRadius = 5;
         this.parts = [];
         this.physics = Composite.create();
 
@@ -65,7 +63,7 @@ class Creature {
     }
 
     clone() {
-        let creature = new Creature(this.position.copy(), this.partRadius, this.parts.length);
+        let creature = new Creature();
         // TODO: cloning logic
         return creature;
     }
