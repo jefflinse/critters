@@ -6,9 +6,11 @@ import Vector from '../Vector';
 
 const Composite = Matter.Composite;
 
+let nextCreatureId = 1;
 class Creature {
 
     constructor() {
+        this.id = nextCreatureId++;
         this.partRadius = 5;
         this.parts = [];
         this.physics = Composite.create();
@@ -87,6 +89,14 @@ class Creature {
 
         this.parts.forEach(part => part.tick());
         this.movement += this.parts.reduce((movement, part) => part.movement);
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            parts: this.parts.map(part => part.toJSON()),
+            brain: this.brain.toJSON(),
+        }
     }
 }
 

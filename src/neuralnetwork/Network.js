@@ -25,8 +25,6 @@ class Network {
         this.outputs = this.layers[this.layers.length - 1];
 
         this.outputs.neurons.forEach(neuron => neuron.activationFunction = ActivationFunctions.SoftSign);
-
-        console.log(this.toJSON());
     }
 
     get connections() {
@@ -159,12 +157,12 @@ class Network {
     }
 
     toJSON() {
-        return JSON.stringify({
+        return {
             bias: this.bias.id,
             layers: this.layers.map(layer => layer.toJSON()),
             neurons: this.neurons.map(neuron => neuron.toJSON()),
             connections: this.connections.map(connection => connection.toJSON()),
-        });
+        };
     }
 
     validate() {

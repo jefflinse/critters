@@ -4,9 +4,11 @@ import Vector from '../Vector';
 
 const Constraint = Matter.Constraint;
 
+let nextMuscleId = 1;
 class Muscle {
 
     constructor(from, to) {
+        this.id = nextMuscleId++;
         this.from = from;
         this.to = to;
 
@@ -30,6 +32,15 @@ class Muscle {
             lineWidth: 1 + (this.physics.stiffness * 4),
             strokeStyle: '#AAAAFF'
         });
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            from: this.from.id,
+            to: this.to.id,
+            length: this.physics.length,
+        }
     }
 }
 

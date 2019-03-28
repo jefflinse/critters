@@ -6,6 +6,7 @@ import Vector from '../Vector';
 
 const Bodies = Matter.Bodies;
 
+let nextPartId = 1;
 class Part extends PhysicalObject {
 
     constructor(position) {
@@ -15,6 +16,7 @@ class Part extends PhysicalObject {
             frictionAir: .45,
         }));
 
+        this.id = nextPartId++;
         this.radius = radius;
 
         // each part only "owns" the muscles it created when adding child parts
@@ -55,6 +57,14 @@ class Part extends PhysicalObject {
 
     tick() {
         this.movement += this.physics.movement;
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            radius: this.radius,
+            muscles: this.muscles.map(muscle => muscle.id),
+        }
     }
 }
 
