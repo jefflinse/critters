@@ -1,38 +1,34 @@
 import _ from 'lodash';
-import ActivationFunctions from 'activation-functions';
+import AF from 'activation-functions';
 import Layer from './Layer'
 import Vector from '../Vector';
 import Neuron from './Neuron';
 
 class Network {
 
-    constructor(topology = []) {
-        if (topology.length === 1) {
-            throw new Error("Invalid topology; must contain zero or at least two layers");
-        }
-
+    constructor() {
         this.bias = this._createBiasNeuron();
         this.layers = [];
-        for (let l = 0; l < topology.length; l++) {
-            let layer = this.addLayer(l === 0);
-            for (let n = 0; n < topology[l]; n++) {
-                layer.addNeuron();
-            }
-        }
-
-        this.inputs = this.layers[0];
-        this.hidden = this.layers.slice(1, this.layers.length - 1);
-        this.outputs = this.layers[this.layers.length - 1];
-
-        this.outputs.neurons.forEach(neuron => neuron.activationFunction = ActivationFunctions.SoftSign);
     }
 
     get connections() {
         return this.layers.reduce((allConnections, layer) => allConnections.concat(layer.inputs), []);
     }
 
+    get hidden() {
+        return this.layers.slice(1, this.layers.length - 1);
+    }
+
+    get inputs() {
+        return this.layers[0];
+    }
+
     get neurons() {
         return this.layers.reduce((allNeurons, layer) => allNeurons.concat(layer.neurons), [this.bias]);
+    }
+
+    get outputs() {
+        return this.layers[this.layers.length - 1];
     }
 
     get size() {
@@ -101,6 +97,22 @@ class Network {
             this.addRandomConnection();
         }
 
+        return this;
+    }
+
+    randomlyPopulate(topology) {
+        if (topology.length < 2) {
+            throw new Error('Invalid topology; must contain at least 2 layers (received ' + topology.length + ')');
+        }
+        
+        for (let l = 0; l < topology.length; l++) {
+            let layer = this.addLayer(l === 0);
+            for (let n = 0; n < topology[l]; n++) {
+                layer.addNeuron();
+            }
+        }
+
+        this.outputs.neurons.forEach(neuron => neuron.activationFunction = AF.SoftSign);
         return this;
     }
 
@@ -179,7 +191,7 @@ class Network {
 
     _createBiasNeuron() {
         let bias = new Neuron();
-        bias.activationFunction = ActivationFunctions.Identity;
+        bias.activationFunction = AF.Identity;
         bias.value = 1;
         return bias;
     }
