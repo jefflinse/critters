@@ -41,7 +41,7 @@ class Creature {
         let part;
         let muscle;
         if (this.parts.length === 0) {
-            part = new Part(position);
+            part = Part.Create(position);
         } else {
             [part, muscle] = _.sample(this.parts).addPart();
         }
