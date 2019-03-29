@@ -21,8 +21,6 @@ class Neuron {
         this.value = 0;
         this.layer = undefined;
         this.ordinal = undefined;
-
-        console.log(JSON.stringify(this.toJSON()));
     }
 
     getRandomActivationFunction() {
