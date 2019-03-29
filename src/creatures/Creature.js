@@ -55,9 +55,7 @@ class Creature {
     }
 
     clone() {
-        let creature = new Creature();
-        // TODO: cloning logic
-        return creature;
+        return Creature.FromJSON(JSON.stringify(this.toJSON()));
     }
 
     render(graphics) {
@@ -69,7 +67,11 @@ class Creature {
 
     setPosition(position) {
         // instantly set the position of the creature, without affecting physics
-        let relativePosition = position.copy().subtract(this.position);
+
+        // heuristic: if there are no parts, just use (0, 0)
+        let currentPosition = this.parts.length > 0 ? this.position : new Vector(0, 0);
+
+        let relativePosition = position.copy().subtract(currentPosition);
         Matter.Composite.translate(this.physics, relativePosition);
     }
 
@@ -80,7 +82,7 @@ class Creature {
         });
 
         this.parts.forEach(part => part.tick());
-        this.movement += this.parts.reduce((movement, part) => part.movement);
+        this.movement += this.parts.reduce((movement, part) => movement + part.movement);
     }
 
     toJSON() {
