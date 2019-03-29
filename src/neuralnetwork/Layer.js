@@ -65,15 +65,16 @@ class Layer {
     }
 
     static FromJSON(json, ordinal, neuronMap) {
-        let layer = new Layer();
-        layer.ordinal = ordinal;
-
         // heuristic: we assume the bias is Neuron with id 1
-        layer.bias = neuronMap[1];
-
+        let layer = new Layer(neuronMap[1]);
+        layer.ordinal = ordinal;
         json.neurons.forEach(neuronId => {
+            let neuron = neuronMap[neuronId];
+            neuron.layer = layer;
             layer.neurons.push(neuronMap[neuronId]);
         });
+
+        layer._refreshNeuronOrdinals();
 
         return layer;
     }

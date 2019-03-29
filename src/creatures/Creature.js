@@ -2,6 +2,7 @@ import _ from 'lodash';
 import Matter from 'matter-js';
 import Network from '../neuralnetwork/Network';
 import Part from './Part';
+import Vector from '../Vector';
 
 const Composite = Matter.Composite;
 
@@ -23,6 +24,9 @@ class Creature {
         this.brain = new Network();
         Network.RandomlyPopulate(this.brain, [this.sensors.length, mindSize, this.triggers.length])
         Network.FullyConnect(this.brain);
+
+        // maintain JSON serialization capabilities until UTs are in place
+        this.brain = Network.FromJSON(JSON.stringify(this.brain.toJSON()));
 
         this.movement = 0;
     }
@@ -72,7 +76,9 @@ class Creature {
 
     render(graphics) {
         this.parts.forEach(part => part.render(graphics));
-        // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+        if (this.id === 1) {
+            // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+        }
     }
 
     setPosition(position) {
