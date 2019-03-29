@@ -14,20 +14,6 @@ class Creature {
         this.parts = [];
         this.physics = Composite.create();
 
-        // ensure at least one part
-        this.addPart();
-
-        let numParts = 3;
-        _.times(numParts - 1, () => this.addPart());
-
-        let mindSize = _.random(this.sensors.length, this.triggers.length);
-        this.brain = new Network();
-        Network.RandomlyPopulate(this.brain, [this.sensors.length, mindSize, this.triggers.length])
-        Network.FullyConnect(this.brain);
-
-        // maintain JSON serialization capabilities until UTs are in place
-        this.brain = Network.FromJSON(JSON.stringify(this.brain.toJSON()));
-
         this.movement = 0;
     }
 
@@ -103,6 +89,23 @@ class Creature {
             parts: this.parts.map(part => part.toJSON()),
             brain: this.brain.toJSON(),
         }
+    }
+
+    static CreateRandom() {
+        let creature = new Creature();
+        _.times(3, () => creature.addPart());
+
+        let numSensors = creature.sensors.length;
+        let numTriggers = creature.triggers.length;
+        let mindSize = _.random(numSensors, numTriggers);
+        creature.brain = new Network();
+        Network.RandomlyPopulate(creature.brain, [numSensors, mindSize, numTriggers])
+        Network.FullyConnect(creature.brain);
+
+        // maintain JSON serialization capabilities until UTs are in place
+        creature.brain = Network.FromJSON(JSON.stringify(creature.brain.toJSON()));
+
+        return creature;
     }
 }
 
