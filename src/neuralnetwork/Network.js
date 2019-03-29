@@ -79,43 +79,6 @@ class Network {
         return from.projectTo(to);
     }
 
-    fullyConnect() {
-        for (let i = 0; i < this.layers.length - 1; i++) {
-            this.layers[i].projectTo(this.layers[i+1]);
-        }
-
-        return this;
-    }
-
-    randomlyConnect(numConnections = 0) {
-        if (numConnections === 0) {
-            let maxPossibleConnections = this.layers.reduce((product, layer) => product * layer.size, 1);
-            numConnections = _.random(1, maxPossibleConnections)
-        }
-
-        for (let i = 0; i < numConnections; i++) {
-            this.addRandomConnection();
-        }
-
-        return this;
-    }
-
-    randomlyPopulate(topology) {
-        if (topology.length < 2) {
-            throw new Error('Invalid topology; must contain at least 2 layers (received ' + topology.length + ')');
-        }
-        
-        for (let l = 0; l < topology.length; l++) {
-            let layer = this.addLayer(l === 0);
-            for (let n = 0; n < topology[l]; n++) {
-                layer.addNeuron();
-            }
-        }
-
-        this.outputs.neurons.forEach(neuron => neuron.activationFunction = AF.SoftSign);
-        return this;
-    }
-
     render(graphics, position, nodeRadius, nodeDistance, layerDistance, connectionLineWeight) {
         const connections = this.layers.reduce(
             (layerConnections, layer) => layerConnections.concat(layer.neurons.reduce(
@@ -211,6 +174,38 @@ class Network {
 
     _refreshLayerOrdinals() {
         this.layers.forEach((layer, index) => layer.ordinal = index);
+    }
+
+    static FullyConnect(network) {
+        for (let i = 0; i < network.layers.length - 1; i++) {
+            network.layers[i].projectTo(network.layers[i+1]);
+        }
+    }
+
+    static RandomlyConnect(network, numConnections = 0) {
+        if (numConnections === 0) {
+            let maxPossibleConnections = network.layers.reduce((product, layer) => product * layer.size, 1);
+            numConnections = _.random(1, maxPossibleConnections)
+        }
+
+        for (let i = 0; i < numConnections; i++) {
+            this.AddRandomConnection(network);
+        }
+    }
+
+    static RandomlyPopulate(network, topology) {
+        if (topology.length < 2) {
+            throw new Error('Invalid topology; must contain at least 2 layers (received ' + topology.length + ')');
+        }
+        
+        for (let l = 0; l < topology.length; l++) {
+            let layer = network.addLayer(l === 0);
+            for (let n = 0; n < topology[l]; n++) {
+                layer.addNeuron();
+            }
+        }
+
+        network.outputs.neurons.forEach(neuron => neuron.activationFunction = AF.SoftSign);
     }
 }
 

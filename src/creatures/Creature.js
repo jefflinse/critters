@@ -20,9 +20,9 @@ class Creature {
         _.times(numParts - 1, () => this.addPart());
 
         let mindSize = _.random(this.sensors.length, this.triggers.length);
-        this.brain = new Network()
-            .randomlyPopulate([this.sensors.length, mindSize, this.triggers.length])
-            .fullyConnect();
+        this.brain = new Network();
+        Network.RandomlyPopulate(this.brain, [this.sensors.length, mindSize, this.triggers.length])
+        Network.FullyConnect(this.brain);
 
         this.movement = 0;
     }
