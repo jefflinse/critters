@@ -64,6 +64,19 @@ class Neuron {
             return 'identity';
         }
     }
+
+    static ActivationFunctionFromString(afString) {
+        return ActivationFuntionMap[afString];
+    }
+
+    static FromJSON(json) {
+        let neuron = new Neuron();
+        neuron.id = json.id;
+        neuron.value = json.value;
+        neuron.activationFunction = this.ActivationFunctionFromString(json.af);
+
+        return neuron;
+    }
 }
 
 export default Neuron;

@@ -3,6 +3,7 @@ import AF from 'activation-functions';
 import Layer from './Layer'
 import Vector from '../Vector';
 import Neuron from './Neuron';
+import Connection from './Connection';
 
 class Network {
 
@@ -129,6 +130,25 @@ class Network {
             currentPosition.y = position.y + nodeRadius;
             currentPosition.x += 2 * nodeRadius + layerDistance;
         }
+    }
+
+    static FromJSON(json) {
+        let jsonData = JSON.parse(json);
+        let network = new Network();
+        
+        // heuristic: we're assuming the created biases are the same
+        network.bias.id = jsonData.bias.id;
+
+        let neurons = jsonData.neurons.map(neuronJson => Neuron.FromJSON(neuronJson));
+        let idToNeuronMap = neurons.reduce((map, neuron) => {
+            map[neuron.id] = neuron;
+            return map;
+        }, {});
+
+        network.layers = jsonData.layers.map((layerJson, index) => Layer.FromJSON(layerJson, index, idToNeuronMap));
+        jsonData.connections.forEach(connectionJson => Connection.FromJSON(connectionJson, idToNeuronMap));
+
+        return network;
     }
 
     toJSON() {
