@@ -1,7 +1,5 @@
-import Creature from './creatures/Creature';
 import Graphics from './Graphics';
 import Matter from 'matter-js';
-import Vector from './Vector';
 
 const Engine = Matter.Engine;
 const Mouse = Matter.Mouse;
@@ -13,7 +11,7 @@ class Universe {
     constructor(canvas) {
         this.canvas = canvas;
         this.graphics = new Graphics(this.canvas);
-        this.creatures = [];
+        this.individuals = [];
         this.physics = this._createPhysicsEngine();
         this.reset();
     }
@@ -26,27 +24,27 @@ class Universe {
         return this.canvas.width;
     }
 
-    onIndividualAdded(creature) {
-        World.add(this.physics.world, creature.physics);
+    onIndividualAdded(individual) {
+        World.add(this.physics.world, individual.physics);
     }
 
-    onIndividualRemoved(creature) {
-        World.remove(this.physics.world, creature.physics);
+    onIndividualRemoved(individual) {
+        World.remove(this.physics.world, individual.physics);
     }
 
     tick() {
-        this.creatures.alive.forEach(creature => creature.tick());
+        this.individuals.alive.forEach(individual => individual.tick());
         Engine.update(this.physics, 1000 / 60);
         this.render();
     }
 
     render() {
         this.graphics.drawBackground();
-        this.creatures.alive.forEach(creature => creature.render(this.graphics));
+        this.individuals.alive.forEach(individual => individual.render(this.graphics));
     }
 
     reset() {
-        this.creatures = {
+        this.individuals = {
             alive: [],
             dead: [],
         };
@@ -54,8 +52,8 @@ class Universe {
         this.food = [];
     }
 
-    setup(creatures) {
-        this.creatures = creatures;
+    setup(individuals) {
+        this.individuals = individuals;
     }
 
     _createPhysicsEngine() {
