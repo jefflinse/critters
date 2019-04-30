@@ -17,7 +17,7 @@ class Creature {
         // ensure at least one part
         this.addPart();
 
-        let numParts = 3;
+        let numParts = 5;
         _.times(numParts - 1, () => this.addPart());
 
         let mindSize = _.random(this.sensors.length, this.triggers.length);
@@ -94,7 +94,7 @@ class Creature {
         });
 
         this.parts.forEach(part => part.tick());
-        this.movement += this.parts.reduce((movement, part) => part.movement);
+        this.movement += this.parts.reduce((movement, part) => movement + part.movement);
     }
 
     toJSON() {
