@@ -62,9 +62,13 @@ class Part extends PhysicalObject {
 
     render(graphics) {
         this.muscles.forEach(muscle => muscle.render(graphics));
+        let color = 'hsla(' +
+            0 + ', ' +
+            100 + '%, ' +
+            (100 - (this.dm * 50)) + '%)';
         graphics.drawCircle(this.position, this.radius, {
-            fillStyle: "#FFFFFF",
-            globalAlpha: .1 + (.9 * this.physics.frictionAir),
+            fillStyle: color,
+            globalAlpha: .25 + (.75 * this.physics.frictionAir),
         });
     }
 
