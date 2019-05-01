@@ -64,7 +64,7 @@ class Part extends PhysicalObject {
         this.muscles.forEach(muscle => muscle.render(graphics));
         graphics.drawCircle(this.position, this.radius, {
             fillStyle: "#FFFFFF",
-            globalAlpha: .1 + (.9 * this.physics.frictionAir),
+            globalAlpha: .25 + (.75 * this.physics.frictionAir),
         });
     }
 
