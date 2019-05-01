@@ -26,6 +26,7 @@ class Part extends PhysicalObject {
             (() => this.physics.speed).bind(this),
             (() => this.physics.angle).bind(this),
             (() => this.physics.angularSpeed).bind(this),
+            (() => this.ticks).bind(this),
         ];
 
         this.triggers = [

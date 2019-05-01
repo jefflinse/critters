@@ -22,7 +22,7 @@ class Creature {
 
         let mindSize = _.random(this.sensors.length, this.triggers.length);
         this.brain = new Network();
-        Network.RandomlyPopulate(this.brain, [this.sensors.length, mindSize, this.triggers.length])
+        Network.RandomlyPopulate(this.brain, [this.sensors.length, mindSize, mindSize, this.triggers.length])
         Network.FullyConnect(this.brain);
 
         // maintain JSON serialization capabilities until UTs are in place
