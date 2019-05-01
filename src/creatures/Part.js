@@ -30,13 +30,24 @@ class Part extends PhysicalObject {
 
         this.triggers = [
             ((value) => this.physics.frictionAir = Math.min(Math.max(
-                this.physics.frictionAir + (value * .05), 0), .9)).bind(this),
+                this.physics.frictionAir + (value * .01), 0), .9)).bind(this),
+            ((value) => this.dm = Math.min(Math.max(value, 0), 1)).bind(this),
+            ((value) => this.da = Math.min(Math.max(value, -1), 1)).bind(this),
+            ((value) => {
+                if (this.ticks++ % _.floor(value * 240) === 0) {
+                    this.applyForceFromCenter(new Vector(1, 1)
+                        .setAngle(Math.PI * this.da)
+                        .setMagnitude(.0005 * this.dm));
+                    this.ticks = 0;
+                }
+            }).bind(this),
         ];
 
+        // there's a better way to do this
+        this.ticks = 0;
+        this.dm = 0;
+        this.da = 0;
         this.movement = 0;
-
-        // give the part an random push on birth
-        this.applyForceFromCenter(new Vector().random().setMagnitude(.01));
     }
 
     addPart() {
