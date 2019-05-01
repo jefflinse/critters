@@ -35,9 +35,10 @@ class Part extends PhysicalObject {
             ((value) => this.dm = Math.min(Math.max(value, 0), 1)).bind(this),
             ((value) => this.da = Math.min(Math.max(value, -1), 1)).bind(this),
             ((value) => {
-                if (this.ticks++ % _.floor(value * 240) === 0) {
+                this.ticks++;
+                if (this.ticks % _.floor(value * 20) === 0) {
                     this.applyForceFromCenter(new Vector(1, 1)
-                        .setAngle(Math.PI * this.da)
+                        .setAngle(Math.PI * 2 *  this.da)
                         .setMagnitude(.0005 * this.dm));
                     this.ticks = 0;
                 }
