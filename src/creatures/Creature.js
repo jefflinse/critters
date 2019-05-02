@@ -90,10 +90,10 @@ class Creature {
     }
 
     static CreateRandom(options) {
-        options = options || {};
+        options = options || { numParts: 5 };
         let creature = new Creature();
 
-        _.times(options.numParts || 5, () => Creature.AddRandomPart(creature));
+        _.times(options.numParts, () => Creature.AddRandomPart(creature));
 
         let mindSize = _.random(creature.sensors.length, creature.triggers.length);
         Network.RandomlyPopulate(creature.brain, [creature.sensors.length, mindSize, mindSize, creature.triggers.length])
