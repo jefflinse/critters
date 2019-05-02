@@ -39,6 +39,22 @@ class Graphics {
         this._postDraw();
     }
 
+    drawPolygon(vertices, props) {
+        this._preDraw(props);
+        this.ctx.beginPath();
+
+        let vertex = vertices[0];
+        this.ctx.moveTo(vertex.x, vertex.y);
+        for (let i = 1; i < vertices.length; i++) {
+            vertex = vertices[i];
+            this.ctx.lineTo(vertex.x, vertex.y);
+        }
+
+        this.ctx.closePath();
+        this.ctx.fill();
+        this._postDraw();
+    }
+
     drawRectangle(x, y, width, height, props) {
         this._preDraw(props);
         this.ctx.beginPath();

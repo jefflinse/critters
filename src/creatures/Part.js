@@ -12,7 +12,7 @@ class Part extends PhysicalObject {
     constructor(position) {
         position = position || new Vector(0, 0);
         let radius = 7;
-        super(Bodies.circle(position.x, position.y, radius, {
+        super(Bodies.polygon(position.x, position.y, _.random(3, 6), radius, {
             frictionAir: .45,
         }));
 
@@ -58,7 +58,8 @@ class Part extends PhysicalObject {
             0 + ', ' +
             100 + '%, ' +
             (100 - (this.dm * 50)) + '%)';
-        graphics.drawCircle(this.position, this.radius, {
+        
+        graphics.drawPolygon(this.physics.vertices, {
             fillStyle: color,
             globalAlpha: .25 + (.75 * this.physics.frictionAir),
         });
