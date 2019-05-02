@@ -52,14 +52,6 @@ class Part extends PhysicalObject {
         this.movement = 0;
     }
 
-    addPart() {
-        let position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 2));
-        let part = new Part(position);
-        let muscle = new Muscle(this, part);
-        this.muscles.push(muscle);
-        return [part, muscle];
-    }
-
     render(graphics) {
         this.muscles.forEach(muscle => muscle.render(graphics));
         let color = 'hsla(' +
@@ -82,6 +74,14 @@ class Part extends PhysicalObject {
             radius: this.radius,
             muscles: this.muscles.map(muscle => muscle.id),
         }
+    }
+    
+    static AddRandomPart(part) {
+        let position = part.position.copy().add(new Vector().random().setMagnitude(part.radius * 2));
+        let newPart = new Part(position);
+        let muscle = new Muscle(part, newPart);
+        part.muscles.push(muscle);
+        return [newPart, muscle];
     }
 }
 

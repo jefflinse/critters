@@ -13,26 +13,11 @@ class Creature {
         this.id = nextCreatureId++;
         this.parts = [];
         this.physics = Composite.create();
-
-        // ensure at least one part
-        this.addPart();
-
-        let numParts = 5;
-        _.times(numParts - 1, () => this.addPart());
-
-        let mindSize = _.random(this.sensors.length, this.triggers.length);
         this.brain = new Network();
-        Network.RandomlyPopulate(this.brain, [this.sensors.length, mindSize, mindSize, this.triggers.length])
-        Network.FullyConnect(this.brain);
-
-        // maintain JSON serialization capabilities until UTs are in place
-        this.brain = Network.FromJSON(JSON.stringify(this.brain.toJSON()));
-
-        this.movement = 0;
     }
 
     get fitness() {
-        return this.movement;
+        return this.parts.reduce((movement, part) => movement + part.movement);
     }
 
     get position() {
@@ -51,25 +36,8 @@ class Creature {
         }, []);
     }
 
-    addPart(position) {
-        let part;
-        let muscle;
-        if (this.parts.length === 0) {
-            part = new Part(position);
-        } else {
-            [part, muscle] = _.sample(this.parts).addPart();
-        }
-
-        this.parts.push(part);
-        Composite.add(this.physics, part.physics);
-
-        if (muscle) {
-            Composite.add(this.physics, muscle.physics);
-        }
-    }
-
     clone() {
-        let creature = new Creature();
+        let creature = Creature.CreateRandom();
         // TODO: cloning logic
         return creature;
     }
@@ -94,7 +62,6 @@ class Creature {
         });
 
         this.parts.forEach(part => part.tick());
-        this.movement += this.parts.reduce((movement, part) => movement + part.movement);
     }
 
     toJSON() {
@@ -103,6 +70,39 @@ class Creature {
             parts: this.parts.map(part => part.toJSON()),
             brain: this.brain.toJSON(),
         }
+    }
+
+    static AddRandomPart(creature) {
+        let part;
+        let muscle;
+        if (creature.parts.length === 0) {
+            part = new Part();
+        } else {
+            [part, muscle] = Part.AddRandomPart(_.sample(creature.parts));
+        }
+
+        creature.parts.push(part);
+        Composite.add(creature.physics, part.physics);
+
+        if (muscle) {
+            Composite.add(creature.physics, muscle.physics);
+        }
+    }
+
+    static CreateRandom(options) {
+        options = options || {};
+        let creature = new Creature();
+
+        _.times(options.numParts || 5, () => Creature.AddRandomPart(creature));
+
+        let mindSize = _.random(creature.sensors.length, creature.triggers.length);
+        Network.RandomlyPopulate(creature.brain, [creature.sensors.length, mindSize, mindSize, creature.triggers.length])
+        Network.FullyConnect(creature.brain);
+
+        // maintain JSON serialization capabilities until UTs are in place
+        creature.brain = Network.FromJSON(JSON.stringify(creature.brain.toJSON()));
+
+        return creature;
     }
 }
 

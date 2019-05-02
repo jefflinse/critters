@@ -48,7 +48,7 @@ class Simulation {
     }
 
     _addIndividual(cloneFrom) {
-        let individual = cloneFrom !== undefined ? cloneFrom.clone() : new Creature();
+        let individual = cloneFrom !== undefined ? cloneFrom.clone() : Creature.CreateRandom();
         let position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
         individual.setPosition(position);
 
