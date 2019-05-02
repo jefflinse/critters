@@ -77,7 +77,7 @@ class Part extends PhysicalObject {
     }
     
     static AddRandomPart(part) {
-        let position = part.position.copy().add(new Vector().random().setMagnitude(part.radius * 2));
+        let position = part.position.copy().add(Vector.RandomUnit().setMagnitude(part.radius * 2));
         let newPart = new Part(position);
         let muscle = new Muscle(part, newPart);
         part.muscles.push(muscle);
