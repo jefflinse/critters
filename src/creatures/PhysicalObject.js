@@ -14,6 +14,10 @@ class PhysicalObject {
         return this.physics.position;
     }
 
+    set position(position) {
+        this.physics.position = position.copy();
+    }
+
     applyForceFromCenter(force) {
         Matter.Body.applyForce(this.physics, this.position, force);
     }

@@ -37,21 +37,9 @@ class Creature {
         }, []);
     }
 
-    addPart(position) {
-        let part;
-        let muscle;
-        if (this.parts.length === 0) {
-            part = Part.Create(position);
-        } else {
-            [part, muscle] = _.sample(this.parts).addPart();
-        }
-
+    addPart(part) {
         this.parts.push(part);
         Composite.add(this.physics, part.physics);
-
-        if (muscle) {
-            Composite.add(this.physics, muscle.physics);
-        }
     }
 
     clone() {
@@ -95,7 +83,15 @@ class Creature {
 
     static CreateRandom() {
         let creature = new Creature();
-        _.times(3, () => creature.addPart());
+        _.times(3, () => {
+            let parentPart = creature.parts.length > 0 ? _.sample(creature.parts) : undefined;
+            let part = Part.CreateRandom();
+            creature.addPart(part);
+            if (parentPart !== undefined) {
+                let muscle = parentPart.connectTo(part);
+                Composite.add(creature.physics, muscle.physics);
+            }
+        });
 
         let numSensors = creature.sensors.length;
         let numTriggers = creature.triggers.length;

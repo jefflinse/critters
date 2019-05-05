@@ -37,12 +37,11 @@ class Part extends PhysicalObject {
         this.applyForceFromCenter(new Vector().random().setMagnitude(.01));
     }
 
-    addPart() {
-        let position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 2));
-        let part = Part.Create(position);
+    connectTo(part) {
+        part.position = this.position.copy().add(new Vector().random().setMagnitude(this.radius * 2));
         let muscle = new Muscle(this, part);
         this.muscles.push(muscle);
-        return [part, muscle];
+        return muscle;
     }
 
     render(graphics) {
@@ -65,8 +64,8 @@ class Part extends PhysicalObject {
         }
     }
 
-    static Create(position, radius) {
-        return new Part(position || new Vector(0, 0), radius || 7);
+    static CreateRandom() {
+        return new Part(new Vector(0, 0), 7);
     }
 }
 
