@@ -11,7 +11,7 @@ class Part extends PhysicalObject {
 
     constructor(position) {
         position = position || new Vector(0, 0);
-        let radius = 7;
+        let radius = 10;
         super(Bodies.polygon(position.x, position.y, _.random(3, 6), radius, {
             frictionAir: .45,
         }));
