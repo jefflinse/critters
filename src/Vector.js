@@ -116,7 +116,13 @@ class Vector {
 	}
 
 	toString() {
-		return '(' + this.x + ', ' + this.y + ')';
+		return '(' + this.x + ',' + this.y + ')';
+	}
+
+	static FromString(str) {
+		str = str.substring(1, str.length - 1);
+		let parts = str.split(',');
+		return new Vector(parseFloat(parts[0]), parseFloat(parts[1]));
 	}
 }
 
