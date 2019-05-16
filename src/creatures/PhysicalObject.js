@@ -3,9 +3,11 @@ import Vector from '../Vector';
 
 class PhysicalObject {
 
-    constructor(physics) {
-        this.physics = physics;
+    constructor() {
+        this.physics = undefined;
+    }
 
+    initializePhysics() {
         // upgrade Matter's vector implementation to use our Vector class
         this.physics.position = new Vector(this.physics.position.x, this.physics.position.y);;
     }
@@ -20,6 +22,14 @@ class PhysicalObject {
 
     applyForceFromCenter(force) {
         Matter.Body.applyForce(this.physics, this.position, force);
+    }
+
+    getRelativePositionFrom(otherObject) {
+        return this.position.subtract(otherObject.position);
+    }
+
+    setRelativePositionFrom(otherObject, relativePosition) {
+        this.position = otherObject.position.add(relativePosition);
     }
 }
 

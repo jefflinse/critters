@@ -9,15 +9,16 @@ const Bodies = Matter.Bodies;
 let nextPartId = 1;
 class Part extends PhysicalObject {
 
-    constructor(position) {
-        position = position || new Vector(0, 0);
-        let radius = 10;
-        super(Bodies.polygon(position.x, position.y, _.random(3, 6), radius, {
-            frictionAir: .45,
-        }));
-
+    constructor() {
+        super();
         this.id = nextPartId++;
-        this.radius = radius;
+        let position = new Vector(0, 0);
+        this.radius = 10;
+
+        // TODO: this makes cloning inaccurate
+        this.physics = Bodies.polygon(position.x, position.y, _.random(3, 6), this.radius, {
+            frictionAir: .45,
+        });
 
         // each part only "owns" the muscles it created when adding child parts
         this.muscles = [];
@@ -51,6 +52,8 @@ class Part extends PhysicalObject {
         this.da = 0;
         this.movement = 0;
 
+        this.initializePhysics();
+
         // give the part an random push on birth
         this.applyForceFromCenter(Vector.RandomUnit().setMagnitude(.01));
     }
@@ -83,17 +86,17 @@ class Part extends PhysicalObject {
         return {
             id: this.id,
             radius: this.radius,
+            relativePosition: this.getRelativePositionFrom().toString(),
             muscles: this.muscles.map(muscle => muscle.id),
         }
     }
 
     static CreateRandom() {
-        return new Part(new Vector(0, 0), 7);
+        return new Part();
     }
     
     static AddRandomPart(part) {
-        let position = part.position.copy().add(Vector.RandomUnit().setMagnitude(part.radius * 2));
-        let newPart = new Part(position);
+        let newPart = new Part();
         let muscle = new Muscle(part, newPart);
         part.muscles.push(muscle);
         return [newPart, muscle];
