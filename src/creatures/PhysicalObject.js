@@ -13,7 +13,7 @@ class PhysicalObject {
     }
 
     get position() {
-        return this.physics.position;
+        return this.physics.position.copy();
     }
 
     set position(position) {
@@ -25,11 +25,11 @@ class PhysicalObject {
     }
 
     getRelativePositionFrom(otherObject) {
-        return this.position.subtract(otherObject.position);
+        return this.position.copy().subtract(otherObject.position);
     }
 
     setRelativePositionFrom(otherObject, relativePosition) {
-        this.position = otherObject.position.add(relativePosition);
+        this.position = otherObject.position.copy().add(relativePosition);
     }
 }
 
