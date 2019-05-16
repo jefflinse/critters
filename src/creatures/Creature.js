@@ -13,12 +13,12 @@ class Creature {
         this.id = nextCreatureId++;
         this.parts = [];
         this.physics = Composite.create();
-
         this.movement = 0;
+        this.brain = new Network();
     }
 
     get fitness() {
-        return this.movement;
+        return this.parts.reduce((movement, part) => movement + part.movement);
     }
 
     get position() {
@@ -43,7 +43,8 @@ class Creature {
     }
 
     clone() {
-        return Creature.FromJSON(JSON.stringify(this.toJSON()));
+        // return Creature.FromJSON(JSON.stringify(this.toJSON()));
+        return Creature.CreateRandom();
     }
 
     render(graphics) {
@@ -81,6 +82,23 @@ class Creature {
         }
     }
 
+    static AddRandomPart(creature) {
+        let part;
+        let muscle;
+        if (creature.parts.length === 0) {
+            part = new Part();
+        } else {
+            [part, muscle] = Part.AddRandomPart(_.sample(creature.parts));
+        }
+
+        creature.parts.push(part);
+        Composite.add(creature.physics, part.physics);
+
+        if (muscle) {
+            Composite.add(creature.physics, muscle.physics);
+        }
+    }
+
     static CreateRandom() {
         let creature = new Creature();
         _.times(3, () => {
@@ -97,7 +115,7 @@ class Creature {
         let numTriggers = creature.triggers.length;
         let mindSize = _.random(numSensors, numTriggers);
         creature.brain = new Network();
-        Network.RandomlyPopulate(creature.brain, [numSensors, mindSize, numTriggers])
+        Network.RandomlyPopulate(creature.brain, [numSensors, mindSize, numTriggers]);
         Network.FullyConnect(creature.brain);
 
         // maintain JSON serialization capabilities until UTs are in place

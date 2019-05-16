@@ -109,10 +109,11 @@ class Vector {
 		return new Vector(this.x, this.y);
 	}
 
-	random() {
-		this.set(1, 1);
-		this.setAngle(Math.random() * Math.PI * 2);
-		return this;
+	static RandomUnit() {
+		let vector = new Vector();
+		vector.set(1, 0);
+		vector.setAngle(Math.random() * Math.PI * 2);
+		return vector;
 	}
 
 	toString() {

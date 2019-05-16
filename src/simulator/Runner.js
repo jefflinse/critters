@@ -1,4 +1,4 @@
-class Simulator {
+class Runner {
 
     constructor(simulation) {
         this.simulation = simulation;
@@ -43,4 +43,4 @@ class Simulator {
     }
 }
 
-export default Simulator;
+export default Runner;

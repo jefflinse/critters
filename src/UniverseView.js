@@ -7,7 +7,7 @@ class UniverseView extends Component {
 
     componentWillMount() {
         this.setState({
-            simulator: null,
+            runner: null,
         });
     }
 
@@ -22,12 +22,12 @@ class UniverseView extends Component {
     }
 
     onCanvasMouseDown() {
-        // this.state.simulator.pause();
+        // this.state.runner.pause();
     }
 
     onCanvasMouseUp() {
-        // this.state.simulator.pause();
-        // this.state.simulator.start();
+        // this.state.runner.pause();
+        // this.state.runner.start();
     }
 
     render() {
