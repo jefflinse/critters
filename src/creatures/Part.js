@@ -96,11 +96,10 @@ class Part extends PhysicalObject {
         return new Part();
     }
     
-    static AddRandomPart(part) {
-        let newPart = new Part();
-        let muscle = new Muscle(part, newPart);
-        part.muscles.push(muscle);
-        return [newPart, muscle];
+    static AddRandomPart() {
+        let part = new Part();
+        let muscle = this.connectTo(part);
+        return [part, muscle];
     }
 }
 
