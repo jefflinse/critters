@@ -25,7 +25,7 @@ class PhysicalObject {
     }
 
     getRelativePositionFrom(otherObject) {
-        return this.position.copy().subtract(otherObject.position);
+        return this.position.subtract(otherObject.position);
     }
 
     setRelativePositionFrom(otherObject, relativePosition) {
