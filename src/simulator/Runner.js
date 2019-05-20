@@ -5,7 +5,7 @@ class Runner {
         this.state = 'stopped';
         this.ticks = 1;
         this.ticksPerSecond = 60;
-        this.secondsPerGeneration = 10;
+        this.secondsPerGeneration = 3;
         this.ticksPerGeneration = this.ticksPerSecond * this.secondsPerGeneration;
     }
 
