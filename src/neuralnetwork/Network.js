@@ -133,20 +133,20 @@ class Network {
     }
 
     static FromJSON(json) {
-        let jsonData = JSON.parse(json);
+        let data = JSON.parse(json);
         let network = new Network();
         
         // heuristic: we're assuming the created biases are the same
-        network.bias.id = jsonData.bias.id;
+        network.bias.id = data.bias;
 
-        let neurons = jsonData.neurons.map(neuronJson => Neuron.FromJSON(neuronJson));
+        let neurons = data.neurons.map(neuronJson => Neuron.FromJSON(neuronJson));
         let idToNeuronMap = neurons.reduce((map, neuron) => {
             map[neuron.id] = neuron;
             return map;
         }, {});
 
-        network.layers = jsonData.layers.map((layerJson, index) => Layer.FromJSON(layerJson, index, idToNeuronMap));
-        jsonData.connections.forEach(connectionJson => Connection.FromJSON(connectionJson, idToNeuronMap));
+        network.layers = data.layers.map((layerJson, index) => Layer.FromJSON(layerJson, index, idToNeuronMap));
+        data.connections.forEach(connectionJson => Connection.FromJSON(connectionJson, idToNeuronMap));
 
         return network;
     }
