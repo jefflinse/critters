@@ -54,9 +54,8 @@ class Part extends PhysicalObject {
     toJSON() {
         return {
             id: this.id,
+            sides: this.sides,
             radius: this.radius,
-            relativePosition: this.getRelativePositionFrom().toString(),
-            muscles: this.muscles.map(muscle => muscle.id),
         }
     }
 

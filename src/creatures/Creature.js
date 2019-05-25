@@ -96,6 +96,7 @@ class Creature {
         return {
             id: this.id,
             parts: this.parts.map(part => part.toJSON()),
+            muscles: this.muscles.map(muscle => muscle.toJSON()),
             brain: this.brain.toJSON(),
         }
     }
