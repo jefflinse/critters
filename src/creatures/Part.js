@@ -9,19 +9,17 @@ const Bodies = Matter.Bodies;
 let nextPartId = 1;
 class Part extends PhysicalObject {
 
-    constructor() {
+    constructor(options) {
         super();
-        this.id = nextPartId++;
-        let position = new Vector(0, 0);
-        this.radius = 10;
+        options = options || {};
+        this.id = options.id || nextPartId++;
+        let position = options.position || new Vector(0, 0);
+        this.sides = options.sides || _.random(3, 6);
+        this.radius = options.radius || 10;
 
-        // TODO: this makes cloning inaccurate
-        this.physics = Bodies.polygon(position.x, position.y, _.random(3, 6), this.radius, {
+        this.physics = Bodies.polygon(position.x, position.y, this.sides, this.radius, {
             frictionAir: .45,
         });
-
-        // each part only "owns" the muscles it created when adding child parts
-        this.muscles = [];
         
         this.sensors = [
             () => this.physics.speed,
@@ -57,14 +55,7 @@ class Part extends PhysicalObject {
         this.applyForceFromCenter(Vector.RandomUnit().setMagnitude(.01));
     }
 
-    connectTo(part) {
-        let muscle = new Muscle(this, part);
-        this.muscles.push(muscle);
-        return muscle;
-    }
-
     render(graphics) {
-        this.muscles.forEach(muscle => muscle.render(graphics));
         let color = 'hsla(' +
             0 + ', ' +
             100 + '%, ' +
@@ -87,16 +78,6 @@ class Part extends PhysicalObject {
             relativePosition: this.getRelativePositionFrom().toString(),
             muscles: this.muscles.map(muscle => muscle.id),
         }
-    }
-
-    static CreateRandom() {
-        return new Part();
-    }
-    
-    static AddRandomPart() {
-        let part = new Part();
-        let muscle = this.connectTo(part);
-        return [part, muscle];
     }
 }
 
