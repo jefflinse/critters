@@ -15,7 +15,7 @@ class Muscle {
         this.length = options.length || 20;
 
         // heuristic: positions are always random
-        to.setRelativePositionFrom(from, Vector.RandomUnit().setMagnitude(this.length));
+        this.to.setRelativePositionFrom(this.from, Vector.RandomUnit().setMagnitude(this.length));
 
         this.physics = Constraint.create({
             bodyA: from.physics,

@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import Matter from 'matter-js';
-import Muscle from './Muscle';
 import PhysicalObject from './PhysicalObject';
 import Vector from '../Vector';
 
@@ -13,9 +12,9 @@ class Part extends PhysicalObject {
         super();
         options = options || {};
         this.id = options.id || nextPartId++;
-        let position = options.position || new Vector(0, 0);
         this.sides = options.sides || _.random(3, 6);
         this.radius = options.radius || 10;
+        let position = options.position || new Vector(0, 0);
         
         this.sensors = [];
         this.triggers = [];
@@ -57,6 +56,20 @@ class Part extends PhysicalObject {
             sides: this.sides,
             radius: this.radius,
         }
+    }
+
+    static FromJSON(json, useUniqueId = false) {
+        let data = JSON.parse(json);
+        let part = new Part({
+            id: useUniqueId ? nextPartId++ : data.id,
+            sides: data.sides,
+            radius: data.radius,
+        });
+
+        Part.SetDefaultSensors(part);
+        Part.SetDefaultTriggers(part);
+
+        return part;
     }
 
     static SetDefaultSensors(part) {

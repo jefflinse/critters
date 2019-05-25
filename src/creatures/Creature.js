@@ -10,13 +10,14 @@ const Composite = Matter.Composite;
 let nextCreatureId = 1;
 class Creature {
 
-    constructor() {
-        this.id = nextCreatureId++;
+    constructor(options) {
+        options = options || {};
+        this.id = options.id || nextCreatureId++;
         this.parts = [];
         this.muscles = [];
         this.physics = Composite.create();
         this.movement = 0;
-        this.brain = new Network();
+        this.brain = options.brain || new Network();
     }
 
     get fitness() {
@@ -47,8 +48,7 @@ class Creature {
     }
 
     clone() {
-        // return Creature.FromJSON(JSON.stringify(this.toJSON()));
-        return Creature.CreateRandom();
+        return Creature.FromJSON(JSON.stringify(this.toJSON()), true);
     }
 
     initializeBrain() {
@@ -119,6 +119,33 @@ class Creature {
     static CreateRandom() {
         let creature = new Creature();
         _.times(3, () => Creature.AddRandomPart(creature));
+        creature.initializeBrain();
+
+        return creature;
+    }
+
+    static FromJSON(json, useUniqueId = false) {
+        let data = JSON.parse(json)
+        let creature = new Creature({
+            id: useUniqueId ? nextCreatureId++ : data.id,
+            brain: Network.FromJSON(JSON.stringify(data.brain)),
+        });
+
+        let partsMap = data.parts.reduce((map, partData) => {
+            map[partData.id] = Part.FromJSON(JSON.stringify(partData), true);
+            creature.addPart(map[partData.id]);
+            return map;
+        }, {});
+
+        data.muscles.forEach(muscleData => {
+            let from = partsMap[muscleData.from];
+            let to = partsMap[muscleData.to];
+            creature.addMuscle(new Muscle(from, to, {
+                id: muscleData.id,
+                length: muscleData.length,
+            }));
+        });
+
         creature.initializeBrain();
 
         return creature;
