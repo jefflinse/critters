@@ -7,12 +7,14 @@ const Constraint = Matter.Constraint;
 let nextMuscleId = 1;
 class Muscle {
 
-    constructor(from, to) {
-        this.id = nextMuscleId++;
+    constructor(from, to, options) {
+        options = options || {};
+        this.id = options.id || nextMuscleId++;
         this.from = from;
         this.to = to;
-        this.length = 20;
+        this.length = options.length || 20;
 
+        // heuristic: positions are always random
         to.setRelativePositionFrom(from, Vector.RandomUnit().setMagnitude(this.length));
 
         this.physics = Constraint.create({
