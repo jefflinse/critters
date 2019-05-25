@@ -102,6 +102,9 @@ class Creature {
 
     static AddRandomPart(creature) {
         let part = new Part();
+        Part.SetDefaultSensors(part);
+        Part.SetDefaultTriggers(part);
+        
         if (creature.parts.length > 0) {
             let muscle = new Muscle(_.sample(creature.parts), part);
             creature.addMuscle(muscle);

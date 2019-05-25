@@ -21,27 +21,8 @@ class Part extends PhysicalObject {
             frictionAir: .45,
         });
         
-        this.sensors = [
-            () => this.physics.speed,
-            () => this.physics.angle,
-            () => this.physics.angularSpeed,
-            () => this.ticks,
-        ];
-
-        this.triggers = [
-            (value) => this.physics.frictionAir = _.clamp(this.physics.frictionAir + (value * .01), 0, .9),
-            (value) => this.dm = _.clamp(value, 0, 1),
-            (value) => this.da = _.clamp(value, -1, 1),
-            (value) => {
-                this.ticks++;
-                if (this.ticks % _.floor(value * 20) === 0) {
-                    this.applyForceFromCenter(new Vector(1, 1)
-                        .setAngle(Math.PI * 2 *  this.da)
-                        .setMagnitude(.0005 * this.dm));
-                    this.ticks = 0;
-                }
-            },
-        ];
+        this.sensors = [];
+        this.triggers = [];
 
         // there's a better way to do this
         this.ticks = 0;
@@ -78,6 +59,32 @@ class Part extends PhysicalObject {
             relativePosition: this.getRelativePositionFrom().toString(),
             muscles: this.muscles.map(muscle => muscle.id),
         }
+    }
+
+    static SetDefaultSensors(part) {
+        part.sensors = [
+            () => part.physics.speed,
+            () => part.physics.angle,
+            () => part.physics.angularSpeed,
+            () => part.ticks,
+        ];
+    }
+
+    static SetDefaultTriggers(part) {
+        part.triggers = [
+            (value) => part.physics.frictionAir = _.clamp(part.physics.frictionAir + (value * .01), 0, .9),
+            (value) => part.dm = _.clamp(value, 0, 1),
+            (value) => part.da = _.clamp(value, -1, 1),
+            (value) => {
+                part.ticks++;
+                if (part.ticks % _.floor(value * 20) === 0) {
+                    part.applyForceFromCenter(new Vector(1, 1)
+                        .setAngle(Math.PI * 2 *  part.da)
+                        .setMagnitude(.0005 * part.dm));
+                    part.ticks = 0;
+                }
+            },
+        ];
     }
 }
 
