@@ -24,18 +24,17 @@ class Part extends PhysicalObject {
         this.muscles = [];
         
         this.sensors = [
-            (() => this.physics.speed).bind(this),
-            (() => this.physics.angle).bind(this),
-            (() => this.physics.angularSpeed).bind(this),
-            (() => this.ticks).bind(this),
+            () => this.physics.speed,
+            () => this.physics.angle,
+            () => this.physics.angularSpeed,
+            () => this.ticks,
         ];
 
         this.triggers = [
-            ((value) => this.physics.frictionAir = Math.min(Math.max(
-                this.physics.frictionAir + (value * .01), 0), .9)).bind(this),
-            ((value) => this.dm = Math.min(Math.max(value, 0), 1)).bind(this),
-            ((value) => this.da = Math.min(Math.max(value, -1), 1)).bind(this),
-            ((value) => {
+            (value) => this.physics.frictionAir = _.clamp(this.physics.frictionAir + (value * .01), 0, .9),
+            (value) => this.dm = _.clamp(value, 0, 1),
+            (value) => this.da = _.clamp(value, -1, 1),
+            (value) => {
                 this.ticks++;
                 if (this.ticks % _.floor(value * 20) === 0) {
                     this.applyForceFromCenter(new Vector(1, 1)
@@ -43,7 +42,7 @@ class Part extends PhysicalObject {
                         .setMagnitude(.0005 * this.dm));
                     this.ticks = 0;
                 }
-            }).bind(this),
+            },
         ];
 
         // there's a better way to do this
