@@ -12,10 +12,7 @@ class Muscle {
         this.id = options.id || nextMuscleId++;
         this.from = from;
         this.to = to;
-        this.length = options.length || 20;
-
-        // heuristic: positions are always random
-        this.to.setRelativePositionFrom(this.from, Vector.RandomUnit().setMagnitude(this.length));
+        this.length = options.length || 25;
 
         this.physics = Constraint.create({
             bodyA: from.physics,

@@ -17,7 +17,7 @@ class PhysicalObject {
     }
 
     set position(position) {
-        this.physics.position = position.copy();
+        this.physics.position = position;
     }
 
     applyForceFromCenter(force) {
@@ -29,7 +29,7 @@ class PhysicalObject {
     }
 
     setRelativePositionFrom(otherObject, relativePosition) {
-        this.position = otherObject.position.copy().add(relativePosition);
+        this.position = otherObject.position.add(relativePosition);
     }
 }
 
