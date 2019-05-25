@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import Matter from 'matter-js';
-import Vector from '../Vector';
 
 const Constraint = Matter.Constraint;
 
