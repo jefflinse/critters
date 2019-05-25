@@ -57,9 +57,7 @@ class Part extends PhysicalObject {
         this.applyForceFromCenter(Vector.RandomUnit().setMagnitude(.01));
     }
 
-    connectTo(part, relativePosition) {
-        relativePosition = relativePosition || Vector.RandomUnit().setMagnitude(this.radius * 2);
-        part.setRelativePositionFrom(this, relativePosition);
+    connectTo(part) {
         let muscle = new Muscle(this, part);
         this.muscles.push(muscle);
         return muscle;

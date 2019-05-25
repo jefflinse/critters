@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Matter from 'matter-js';
+import Vector from '../Vector';
 
 const Constraint = Matter.Constraint;
 
@@ -10,12 +11,14 @@ class Muscle {
         this.id = nextMuscleId++;
         this.from = from;
         this.to = to;
+        this.length = 20;
 
-        let length = this.from.position.distanceBetween(this.to.position);
+        to.setRelativePositionFrom(from, Vector.RandomUnit().setMagnitude(this.length));
+
         this.physics = Constraint.create({
             bodyA: from.physics,
             bodyB: to.physics,
-            length: length,
+            length: this.length,
             stiffness: .2,
             damping: .05,
         });
