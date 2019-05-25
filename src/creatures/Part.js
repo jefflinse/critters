@@ -16,10 +16,6 @@ class Part extends PhysicalObject {
         let position = options.position || new Vector(0, 0);
         this.sides = options.sides || _.random(3, 6);
         this.radius = options.radius || 10;
-
-        this.physics = Bodies.polygon(position.x, position.y, this.sides, this.radius, {
-            frictionAir: .45,
-        });
         
         this.sensors = [];
         this.triggers = [];
@@ -30,6 +26,9 @@ class Part extends PhysicalObject {
         this.da = 0;
         this.movement = 0;
 
+        this.physics = Bodies.polygon(position.x, position.y, this.sides, this.radius, {
+            frictionAir: .45,
+        });
         this.initializePhysics();
 
         // give the part an random push on birth
