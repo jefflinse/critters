@@ -132,22 +132,6 @@ class Network {
         }
     }
 
-    static FromJSON(json) {
-        let data = JSON.parse(json);
-        let network = new Network();
-
-        let neurons = data.neurons.map(neuronJson => Neuron.FromJSON(neuronJson));
-        let idToNeuronMap = neurons.reduce((map, neuron) => {
-            map[neuron.id] = neuron;
-            return map;
-        }, {});
-
-        network.layers = data.layers.map((layerJson, index) => Layer.FromJSON(layerJson, index, idToNeuronMap));
-        data.connections.forEach(connectionJson => Connection.FromJSON(connectionJson, idToNeuronMap));
-
-        return network;
-    }
-
     toJSON() {
         return {
             layers: this.layers.map(layer => layer.toJSON()),
@@ -191,6 +175,22 @@ class Network {
 
     _refreshLayerOrdinals() {
         this.layers.forEach((layer, index) => layer.ordinal = index);
+    }
+
+    static FromJSON(json) {
+        let data = JSON.parse(json);
+        let network = new Network();
+
+        let neurons = data.neurons.map(neuronJson => Neuron.FromJSON(neuronJson));
+        let idToNeuronMap = neurons.reduce((map, neuron) => {
+            map[neuron.id] = neuron;
+            return map;
+        }, {});
+
+        network.layers = data.layers.map((layerJson, index) => Layer.FromJSON(layerJson, index, idToNeuronMap));
+        data.connections.forEach(connectionJson => Connection.FromJSON(connectionJson, idToNeuronMap));
+
+        return network;
     }
 
     static FullyConnect(network) {
