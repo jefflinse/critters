@@ -135,9 +135,6 @@ class Network {
     static FromJSON(json) {
         let data = JSON.parse(json);
         let network = new Network();
-        
-        // heuristic: we're assuming the created biases are the same
-        network.bias.id = data.bias;
 
         let neurons = data.neurons.map(neuronJson => Neuron.FromJSON(neuronJson));
         let idToNeuronMap = neurons.reduce((map, neuron) => {
@@ -153,7 +150,6 @@ class Network {
 
     toJSON() {
         return {
-            bias: this.bias.id,
             layers: this.layers.map(layer => layer.toJSON()),
             neurons: this.neurons.map(neuron => neuron.toJSON()),
             connections: this.connections.map(connection => connection.toJSON()),
@@ -173,10 +169,11 @@ class Network {
     }
 
     _createBiasNeuron() {
-        let bias = new Neuron();
-        bias.activationFunction = AF.Identity;
-        bias.value = 1;
-        return bias;
+        return new Neuron({
+            id: 'bias',
+            activationFunction: AF.Identity,
+            value: 1,
+        });
     }
 
     _chooseRandomLayer(mustNotBeEmpty = false, exclusions = []) {

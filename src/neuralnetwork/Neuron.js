@@ -13,13 +13,14 @@ const ActivationFuntionMap = {
 let nextNeuronId = 1;
 class Neuron {
 
-    constructor() {
-        this.id = nextNeuronId++;
+    constructor(options) {
+        options = options || {};
+        this.id = options.id || nextNeuronId++;
         this.inputs = [];
         this.outputs = [];
-        this.activationFunction = this.getRandomActivationFunction();
+        this.activationFunction = options.activationFunction || this.getRandomActivationFunction();
         this.value = 0;
-        this.layer = undefined;
+        this.layer = options.layer || undefined;
         this.ordinal = undefined;
     }
 
@@ -70,12 +71,10 @@ class Neuron {
     }
 
     static FromJSON(json) {
-        let neuron = new Neuron();
-        neuron.id = json.id;
-        neuron.value = json.value;
-        neuron.activationFunction = this.ActivationFunctionFromString(json.af);
-
-        return neuron;
+        return new Neuron({
+            id: json.id,
+            activationFunction: this.ActivationFunctionFromString(json.af),
+        });
     }
 }
 

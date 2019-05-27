@@ -23,8 +23,9 @@ class Layer {
     }
 
     addNeuron() {
-        let neuron = new Neuron(this);
-        neuron.layer = this;
+        let neuron = new Neuron({
+            layer: this,
+        });
 
         if (this.ordinal === 0) {
             neuron.activationFunction = ActivationFunctions.SoftSign;
