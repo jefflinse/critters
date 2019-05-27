@@ -47,7 +47,7 @@ class Part extends PhysicalObject {
     }
 
     tick() {
-        this.movement += this.physics.movement;
+        this.movement += this.physics.speed;
     }
 
     toJSON() {
