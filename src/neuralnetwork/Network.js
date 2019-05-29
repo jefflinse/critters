@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import AF from 'activation-functions';
-import Layer from './Layer'
+import Layer from './Layer';
 import Vector from '../Vector';
 import Neuron from './Neuron';
 import Connection from './Connection';
@@ -80,10 +80,10 @@ class Network {
         return from.projectTo(to);
     }
 
-    render(graphics, position, nodeRadius, nodeDistance, layerDistance, connectionLineWeight) {
+    render(graphics, position, nodeRadius, nodeDistance, layerDistance) {
         const connections = this.layers.reduce(
             (layerConnections, layer) => layerConnections.concat(layer.neurons.reduce(
-            (neuronConnections, neuron) => neuronConnections.concat(neuron.outputs), [])), []);
+                (neuronConnections, neuron) => neuronConnections.concat(neuron.outputs), [])), []);
 
         // draw connections (first, so they appear behind nodes)
         for (let c = 0; c < connections.length; c++) {
@@ -202,7 +202,7 @@ class Network {
     static RandomlyConnect(network, numConnections = 0) {
         if (numConnections === 0) {
             let maxPossibleConnections = network.layers.reduce((product, layer) => product * layer.size, 1);
-            numConnections = _.random(1, maxPossibleConnections)
+            numConnections = _.random(1, maxPossibleConnections);
         }
 
         for (let i = 0; i < numConnections; i++) {
