@@ -55,7 +55,7 @@ class Creature {
         this.parts.forEach(part => part.render(graphics));
         this.muscles.forEach(muscle => muscle.render(graphics));
         if (showNetwork) {
-            this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+            // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
         }
     }
 
