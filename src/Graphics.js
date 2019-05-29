@@ -15,9 +15,9 @@ class Graphics {
         this.ctx.restore();
     }
 
-    drawBackground() {
+    drawBackground(props) {
         this.drawRectangle(0, 0, this.width, this.height, {
-            fillStyle: '#000000',
+            fillStyle: props.fillStyle || '#000000',
         });
     }
 

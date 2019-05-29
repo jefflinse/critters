@@ -40,6 +40,12 @@ class Part extends PhysicalObject {
             100 + '%, ' +
             (100 - (this.dm * 50)) + '%)';
         
+        // shadow
+        graphics.drawPolygon(this.physics.vertices.map(v => { return { x: v.x + 3, y: v.y + 3 }; }), {
+            fillStyle: "#000000",
+            globalAlpha: .2,
+        });
+
         graphics.drawPolygon(this.physics.vertices, {
             fillStyle: color,
             globalAlpha: .25 + (.75 * this.physics.frictionAir),

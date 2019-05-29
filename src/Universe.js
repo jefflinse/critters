@@ -39,7 +39,9 @@ class Universe {
     }
 
     render() {
-        this.graphics.drawBackground();
+        this.graphics.drawBackground({
+            fillStyle: "#444444"
+        });
         this.individuals.alive.forEach(individual => individual.render(this.graphics));
     }
 
