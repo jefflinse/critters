@@ -8,7 +8,7 @@ const ActivationFuntionMap = {
     'sigmoid': AF.Sigmoid,
     'softsign': AF.SoftSign,
     // 'tanh': Math.tanh,
-}
+};
 
 let nextNeuronId = 1;
 class Neuron {
@@ -53,7 +53,7 @@ class Neuron {
             id: this.id,
             value: preserveValues ? this.value : 0,
             af: stringFromActivationFunction(this.activationFunction),
-        }
+        };
 
         function stringFromActivationFunction(af) {
             for (let key in ActivationFuntionMap) {

@@ -9,7 +9,7 @@ class PhysicalObject {
 
     initializePhysics() {
         // upgrade Matter's vector implementation to use our Vector class
-        this.physics.position = new Vector(this.physics.position.x, this.physics.position.y);;
+        this.physics.position = new Vector(this.physics.position.x, this.physics.position.y);
     }
 
     get position() {

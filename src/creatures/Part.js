@@ -42,7 +42,7 @@ class Part extends PhysicalObject {
         
         // shadow
         graphics.drawPolygon(this.physics.vertices.map(v => { return { x: v.x + 3, y: v.y + 3 }; }), {
-            fillStyle: "#000000",
+            fillStyle: '#000000',
             globalAlpha: .2,
         });
 
@@ -61,7 +61,7 @@ class Part extends PhysicalObject {
             id: this.id,
             sides: this.sides,
             radius: this.radius,
-        }
+        };
     }
 
     static FromJSON(json, useUniqueId = false) {

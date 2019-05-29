@@ -58,7 +58,7 @@ class Layer {
     toJSON() {
         return {
             neurons: this.neurons.map(neuron => neuron.id),
-        }
+        };
     }
 
     _refreshNeuronOrdinals() {

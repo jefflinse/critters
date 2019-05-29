@@ -85,7 +85,7 @@ class Creature {
             parts: this.parts.map(part => part.toJSON()),
             muscles: this.muscles.map(muscle => muscle.toJSON()),
             brain: this.brain.toJSON(),
-        }
+        };
     }
 
     static AddRandomPart(creature) {
@@ -119,7 +119,7 @@ class Creature {
     }
 
     static FromJSON(json, useUniqueId = false) {
-        let data = JSON.parse(json)
+        let data = JSON.parse(json);
         let creature = new Creature({
             id: useUniqueId ? nextCreatureId++ : data.id,
             brain: Network.FromJSON(JSON.stringify(data.brain)),

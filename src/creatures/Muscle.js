@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 import Matter from 'matter-js';
 
 const Constraint = Matter.Constraint;
@@ -39,7 +39,7 @@ class Muscle {
             from: this.from.id,
             to: this.to.id,
             length: this.physics.length,
-        }
+        };
     }
 }
 
