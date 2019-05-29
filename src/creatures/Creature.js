@@ -21,7 +21,7 @@ class Creature {
     }
 
     get fitness() {
-        return this.parts.reduce((movement, part) => movement + part.movement);
+        return this.movement;
     }
 
     get position() {
@@ -51,19 +51,6 @@ class Creature {
         return Creature.FromJSON(JSON.stringify(this.toJSON()), true);
     }
 
-    initializeBrain() {
-        let numSensors = this.sensors.length;
-        let numTriggers = this.triggers.length;
-        let mindSize = _.random(numSensors, numTriggers);
-
-        // TODO: make network topology dynamic
-        Network.RandomlyPopulate(this.brain, [numSensors, mindSize, numTriggers]);
-        Network.FullyConnect(this.brain);
-
-        // maintain JSON serialization capabilities until UTs are in place
-        this.brain = Network.FromJSON(JSON.stringify(this.brain.toJSON()));
-    }
-
     render(graphics) {
         this.parts.forEach(part => part.render(graphics));
         this.muscles.forEach(muscle => muscle.render(graphics));
@@ -89,7 +76,7 @@ class Creature {
         });
 
         this.parts.forEach(part => part.tick());
-        this.movement += this.parts.reduce((movement, part) => movement + part.movement);
+        this.movement += this.parts.reduce((movement, part) => movement + part.movement, 0);
     }
 
     toJSON() {
@@ -118,8 +105,15 @@ class Creature {
 
     static CreateRandom() {
         let creature = new Creature();
-        _.times(3, () => Creature.AddRandomPart(creature));
-        creature.initializeBrain();
+        _.times(4, () => Creature.AddRandomPart(creature));
+
+        let numSensors = creature.sensors.length;
+        let numTriggers = creature.triggers.length;
+        let mindSize = _.random(numSensors, numTriggers);
+
+        // TODO: make network topology dynamic
+        Network.RandomlyPopulate(creature.brain, [numSensors, mindSize, numTriggers]);
+        Network.FullyConnect(creature.brain);
 
         return creature;
     }
@@ -145,8 +139,6 @@ class Creature {
                 length: muscleData.length,
             }));
         });
-
-        creature.initializeBrain();
 
         return creature;
     }

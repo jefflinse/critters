@@ -10,15 +10,15 @@ class Simulation {
             alive: []
         };
 
-        this.maxPopulation = 25;
-        this.reproductionPercentile = .5;
+        this.maxPopulation = 12;
+        this.reproductionPercentile = .33;
 
         this.reset();
         this._generateRandomPopulation(this.maxPopulation);
     }
 
     nextGeneration() {
-        let best = this.population.alive.sort((a, b) => a.fitness - b.fitness);
+        let best = this.population.alive.sort((a, b) => b.fitness - a.fitness);
         let numAllowedToLive = Math.floor(this.maxPopulation * this.reproductionPercentile);
         while (best.length > numAllowedToLive) {
             let removed = best.pop();
@@ -35,10 +35,7 @@ class Simulation {
     }
 
     reset() {
-        this.population = {
-            alive: [],
-        };
-
+        this.population.alive = [];
         this.universe.setup(this.population);
     }
 
