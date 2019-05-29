@@ -83,7 +83,6 @@ class Part extends PhysicalObject {
             () => part.physics.speed,
             () => part.physics.angle,
             () => part.physics.angularSpeed,
-            () => part.ticks,
         ];
     }
 

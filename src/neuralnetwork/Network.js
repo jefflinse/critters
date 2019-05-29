@@ -206,7 +206,7 @@ class Network {
         }
 
         for (let i = 0; i < numConnections; i++) {
-            this.AddRandomConnection(network);
+            network.addRandomConnection(network);
         }
     }
 
