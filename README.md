@@ -1,68 +1,43 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Critters is a natural selection simulator using neural networks and simple 2D physics.
 
-## Available Scripts
+Latest build: https://jefflinse.github.io/critters
 
-In the project directory, you can run:
+## Overview
+The "critters" in the simulation are 2D physical objects whose neural networks take in information from the environment and control the movement and behaviors of their parts. Critters evolve their fitness for the environment over time; the most fit individuals in a generation are cloned (with mutations) to produce the subsequent generation.
 
-### `npm start`
+## Run
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To run locally:
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+    git clone https://github.com/jefflinse/critters
+    cd critters
+    npm install
+    npm start
 
-### `npm test`
+## Components
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The project is composed of three main components:
 
-### `npm run build`
+### Simulator
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The simulator handles the control and general workflow of the simulation. A simulation can be started, paused, stopped, and reset. Each simulation consists of a Universe, Individuals that exist in the Universe, and Generations, which provide the ability for Individuals to evolve over time.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### Neural Network
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The neural network component is a lightweight neural network implementation with a focus on the ability to dynamically modify a network.
 
-### `npm run eject`
+### Creatures
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The creatures component provides Individuals with physical traits, such as Parts and Muscles, that exist in the Universe as simple 2D "physical" objects.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Roadmap
+There is no defined roadmap or schedule for this project. Generally speaking, the project is currently guided by the following:
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Improvements and optimizations to the neural network and simulation code;
+- Adding new sensory and motor capabilities to creatures and parts;
+- Better looking graphics and interations;
+- Adding user controls to configure, customize, and control simulations;
+- Adding badly-needed unit tests.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Contibuting
+Critters is largely just a pet project I work on for fun in my free time, but if there's something you're itching to add or fix, please feel free to submit pull requests!
