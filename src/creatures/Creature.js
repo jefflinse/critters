@@ -61,7 +61,7 @@ class Creature {
         this.parts.forEach(part => part.render(graphics));
         this.muscles.forEach(muscle => muscle.render(graphics));
         if (showNetwork) {
-            this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+            this.brain.render(graphics, new Vector(25, 25), 10, 20, 20);
         }
     }
 
@@ -115,11 +115,11 @@ class Creature {
 
         let numSensors = creature.sensors.length;
         let numTriggers = creature.triggers.length;
-        let mindSize = _.random(numSensors, numTriggers);
+        let mindSize = _.random(0, Math.max(numSensors, numTriggers));
 
         // TODO: make network topology dynamic
         Network.RandomlyPopulate(creature.brain, [numSensors, mindSize, numTriggers]);
-        Network.FullyConnect(creature.brain);
+        Network.RandomlyConnect(creature.brain);
 
         return creature;
     }

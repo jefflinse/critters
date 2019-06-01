@@ -88,12 +88,22 @@ class Network {
             }
         });
 
+        // add random connections
+        if (_.random(true) < .1) {
+            _.times(1, this.addRandomConnection.bind(this));
+        }
+
         // change existing activation functions
         this.neurons.forEach(neuron => {
             if (_.random(true) < .1) {
                 neuron.mutate();
             }
         });
+
+        // add random neurons in hidden layers
+        if (_.random(true) < .1) {
+            this._chooseRandomLayer(false, [this.inputs.ordinal, this.outputs.ordinal]).addNeuron();
+        }
     }
 
     render(graphics, position, nodeRadius, nodeDistance, layerDistance) {
@@ -119,6 +129,7 @@ class Network {
             graphics.drawLine(from, to, {
                 lineWidth: 1, // + (connections[c].weight * (connectionLineWeight - 1)),
                 strokeStyle: '#FFFFFF',
+                globalAlpha: connections[c].weight,
             });
         }
 
@@ -128,19 +139,22 @@ class Network {
             for (let n = 0; n < this.layers[l].size; n++) {
                 let intensity = Math.floor(256 * Math.abs(this.layers[l].neurons[n].value));
                 let nodeColor = 'rgb(' + [intensity, intensity, intensity].join(',') + ')';
-                let textColor = 'rgb(' + [255 - intensity, 255 - intensity, 255 - intensity].join(',') + ')';
                 graphics.drawCircle(currentPosition, nodeRadius, {
                     lineWidth: 2,
                     strokeStyle: '#FFFFFF',
                     fillStyle: nodeColor,
                 });
-                graphics.writeText(currentPosition.x, currentPosition.y,
-                    this.layers[l].neurons[n].value.toFixed(2), {
-                        font: '12px sans-serif',
-                        fillStyle: textColor,
-                        textAlign: 'center',
-                        textBaseline: 'middle',
-                    });
+
+                if (nodeRadius >= 15) {
+                    let textColor = 'rgb(' + [255 - intensity, 255 - intensity, 255 - intensity].join(',') + ')';
+                    graphics.writeText(currentPosition.x, currentPosition.y,
+                        this.layers[l].neurons[n].value.toFixed(2), {
+                            font: '12px sans-serif',
+                            fillStyle: textColor,
+                            textAlign: 'center',
+                            textBaseline: 'middle',
+                        });
+                }
                 currentPosition.y += 2 * nodeRadius + nodeDistance;
             }
             currentPosition.y = position.y + nodeRadius;
@@ -217,7 +231,11 @@ class Network {
 
     static RandomlyConnect(network, numConnections = 0) {
         if (numConnections === 0) {
-            let maxPossibleConnections = network.layers.reduce((product, layer) => product * layer.size, 1);
+            let maxPossibleConnections = 0;
+            for (let i = 0; i < network.layers.length - 1; i++) {
+                maxPossibleConnections += network.layers[i].size * network.layers[i + 1].size;
+            }
+
             numConnections = _.random(1, maxPossibleConnections);
         }
 
