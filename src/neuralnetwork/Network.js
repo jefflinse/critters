@@ -80,6 +80,22 @@ class Network {
         return from.projectTo(to);
     }
 
+    mutate() {
+        // change existing connection weights
+        this.connections.forEach(connection => {
+            if (_.random(true) < .7) {
+                connection.mutate();
+            }
+        });
+
+        // change existing activation functions
+        this.neurons.forEach(neuron => {
+            if (_.random(true) < .1) {
+                neuron.mutate();
+            }
+        });
+    }
+
     render(graphics, position, nodeRadius, nodeDistance, layerDistance) {
         const connections = this.layers.reduce(
             (layerConnections, layer) => layerConnections.concat(layer.neurons.reduce(

@@ -48,14 +48,20 @@ class Creature {
     }
 
     clone() {
-        return Creature.FromJSON(JSON.stringify(this.toJSON()), true);
+        let creature = Creature.FromJSON(JSON.stringify(this.toJSON()), true);
+        creature.mutate();
+        return creature;
+    }
+
+    mutate() {
+        this.brain.mutate();
     }
 
     render(graphics, showNetwork = false) {
         this.parts.forEach(part => part.render(graphics));
         this.muscles.forEach(muscle => muscle.render(graphics));
         if (showNetwork) {
-            // this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
+            this.brain.render(graphics, new Vector(100, 100), 15, 30, 30, 4);
         }
     }
 

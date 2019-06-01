@@ -1,9 +1,15 @@
+import _ from 'lodash';
+
 class Connection {
 
     constructor(from, to, weight) {
         this.from = from;
         this.to = to;
         this.weight = weight;
+    }
+
+    mutate() {
+        this.weight += _.random(-.1, .1, true);
     }
 
     get value() {
