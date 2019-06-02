@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Matter from 'matter-js';
+import Config from '../Config';
 import PhysicalObject from './PhysicalObject';
 import Vector from '../Vector';
 
@@ -12,8 +13,8 @@ class Part extends PhysicalObject {
         super();
         options = options || {};
         this.id = options.id || nextPartId++;
-        this.sides = options.sides || _.random(3, 6);
-        this.radius = options.radius || 10;
+        this.sides = options.sides || _.random(3, Config.Creature.Part.MaxSides);
+        this.radius = options.radius || Config.Creature.Part.Radius;
         let position = options.position || new Vector(0, 0);
         
         this.sensors = [];

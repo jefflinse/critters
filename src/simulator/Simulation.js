@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Config from '../Config';
 import Creature from '../creatures/Creature';
 import Vector from '../Vector';
 
@@ -10,9 +11,7 @@ class Simulation {
             alive: []
         };
 
-        this.maxPopulation = 12;
-        this.reproductionPercentile = .33;
-
+        this._refreshConfiguration();
         this.reset();
         this._generateRandomPopulation(this.maxPopulation);
     }
@@ -58,6 +57,11 @@ class Simulation {
         for (let i = 0; i < size; i++) {
             this._addIndividual();
         }
+    }
+
+    _refreshConfiguration() {
+        this.maxPopulation = Config.Simulation.MaxPopulation;
+        this.reproductionPercentile = Config.Simulation.ReproductionPercentile;
     }
 }
 

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Config from '../Config';
 import Matter from 'matter-js';
 import Muscle from './Muscle';
 import Network from '../neuralnetwork/Network';
@@ -69,11 +70,11 @@ class Creature {
     mutate() {
         this.brain.mutate();
 
-        if (_.random(true) < .2) {
+        if (_.random(true) < Config.ChanceOf.PartGeneration) {
             Creature.AddRandomPart(this);
         }
 
-        if (_.random(true) < .2) {
+        if (_.random(true) < Config.ChanceOf.MuscleGeneration) {
             Creature.AddRandomMuscle(this);
         }
     }

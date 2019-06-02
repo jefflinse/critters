@@ -1,3 +1,6 @@
+import Config from './Config';
+// 'React' needs to be in scope to use JSX
+// eslint-disable-next-line no-unused-vars
 import React, { Component } from 'react';
 import Runner from './simulator/Runner';
 import Simulation from './simulator/Simulation';
@@ -7,6 +10,7 @@ class UniverseView extends Component {
 
     componentWillMount() {
         this.setState({
+            config: null,
             runner: null,
         });
     }
@@ -16,7 +20,7 @@ class UniverseView extends Component {
         let universe = new Universe(canvas);
         let simulation = new Simulation(universe);
         let runner = new Runner(simulation);
-        this.setState({ runner: runner }, () => {
+        this.setState({ config: Config, runner: runner }, () => {
             this.state.runner.start();
         });
     }

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import AF from 'activation-functions';
+import Config from '../Config';
 import Layer from './Layer';
 import Vector from '../Vector';
 import Neuron from './Neuron';
@@ -84,25 +85,25 @@ class Network {
     mutate() {
         // change existing connection weights
         this.connections.forEach(connection => {
-            if (_.random(true) < .5) {
+            if (_.random(true) < Config.ChanceOf.ConnectionWeightChange) {
                 connection.mutate();
             }
         });
 
         // add random connections
-        if (_.random(true) < .5) {
+        if (_.random(true) < Config.ChanceOf.ConnectionGeneration) {
             _.times(1, this.addRandomConnection.bind(this));
         }
 
         // change existing activation functions
         this.neurons.forEach(neuron => {
-            if (_.random(true) < .5) {
+            if (_.random(true) < Config.ChanceOf.ActivationFunctionChange) {
                 neuron.mutate();
             }
         });
 
         // add random neurons in hidden layers
-        if (_.random(true) < .5) {
+        if (_.random(true) < Config.ChanceOf.NeuronGeneration) {
             let layer;
             if (this.layers.length < 3) {
                 layer = this.addLayer();

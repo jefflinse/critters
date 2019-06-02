@@ -1,3 +1,4 @@
+import Config from './Config';
 import Graphics from './Graphics';
 import Matter from 'matter-js';
 
@@ -40,7 +41,7 @@ class Universe {
 
     render() {
         this.graphics.drawBackground({
-            fillStyle: '#444444',
+            fillStyle: Config.Universe.BackgroundColor,
         });
         this.individuals.alive.forEach((individual, i) => individual.render(this.graphics, !i));
     }

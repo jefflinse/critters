@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import Config from '../Config';
 
 class Connection {
 
@@ -9,7 +9,7 @@ class Connection {
     }
 
     mutate() {
-        this.weight += _.random(-.1, .1, true);
+        this.weight += Config.Fluxuation.RandomConnectionWeightChange();
     }
 
     get value() {

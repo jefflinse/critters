@@ -1,12 +1,12 @@
+import Config from '../Config';
+
 class Runner {
 
     constructor(simulation) {
         this.simulation = simulation;
         this.state = 'stopped';
         this.ticks = 1;
-        this.ticksPerSecond = 60;
-        this.secondsPerGeneration = 5;
-        this.ticksPerGeneration = this.ticksPerSecond * this.secondsPerGeneration;
+        this._refreshConfiguration();
     }
 
     start() {
@@ -31,6 +31,12 @@ class Runner {
         } else {
             this.pause();
         }
+    }
+
+    _refreshConfiguration() {
+        this.ticksPerSecond = Config.Runner.TicksPerSecond;
+        this.secondsPerGeneration = Config.Runner.SecondsPerGeneration;
+        this.ticksPerGeneration = this.ticksPerSecond * this.secondsPerGeneration;
     }
 
     _tick() {
