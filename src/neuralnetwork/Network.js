@@ -56,7 +56,14 @@ class Network {
 
     addLayer(isInput = false) {
         let layer = new Layer(isInput ? undefined : this.bias);
-        this.layers.push(layer);
+        if (this.layers.length < 2) {
+            this.layers.push(layer);
+        } else if (this.layers.length === 2) {
+            this.layers.splice(1, 0, layer);
+        } else {
+            this.layers.splice(this.layers.length - 2, 0, layer);
+        }
+        
         this._refreshLayerOrdinals();
         return layer;
     }
@@ -68,13 +75,7 @@ class Network {
             let otherLayer = this._chooseRandomLayer(true, [layer.ordinal]);
             let neuron = layer.chooseRandomNeuron();
             let otherNeuron = otherLayer.chooseRandomNeuron();
-            if (otherLayer.ordinal > layer.ordinal) {
-                from = neuron;
-                to = otherNeuron;
-            } else {
-                from = otherNeuron;
-                to = neuron;
-            }
+            [from, to] = otherLayer.ordinal > layer.ordinal ? [neuron, otherNeuron] : [otherNeuron, neuron];
         } while (from.isProjectedTo(to)); // disallow multiple connections between the same two neurons
 
         return from.projectTo(to);
@@ -83,26 +84,33 @@ class Network {
     mutate() {
         // change existing connection weights
         this.connections.forEach(connection => {
-            if (_.random(true) < .7) {
+            if (_.random(true) < .5) {
                 connection.mutate();
             }
         });
 
         // add random connections
-        if (_.random(true) < .1) {
+        if (_.random(true) < .5) {
             _.times(1, this.addRandomConnection.bind(this));
         }
 
         // change existing activation functions
         this.neurons.forEach(neuron => {
-            if (_.random(true) < .1) {
+            if (_.random(true) < .5) {
                 neuron.mutate();
             }
         });
 
         // add random neurons in hidden layers
-        if (_.random(true) < .1) {
-            this._chooseRandomLayer(false, [this.inputs.ordinal, this.outputs.ordinal]).addNeuron();
+        if (_.random(true) < .5) {
+            let layer;
+            if (this.layers.length < 3) {
+                layer = this.addLayer();
+            } else {
+                layer = this._chooseRandomLayer(false, [this.inputs.ordinal, this.outputs.ordinal]);
+            }
+            
+            layer.addNeuron();
         }
     }
 
@@ -244,7 +252,7 @@ class Network {
         }
     }
 
-    static RandomlyPopulate(network, topology) {
+    static Populate(network, topology) {
         if (topology.length < 2) {
             throw new Error('Invalid topology; must contain at least 2 layers (received ' + topology.length + ')');
         }

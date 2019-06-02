@@ -17,7 +17,11 @@ class Creature {
         this.muscles = [];
         this.physics = Composite.create();
         this.movement = 0;
-        this.brain = options.brain || new Network();
+        this.brain = options.brain;
+        if (this.brain === undefined) {
+            this.brain = new Network();
+            Network.Populate(this.brain, [0, 0]);
+        }
     }
 
     get fitness() {
@@ -40,11 +44,20 @@ class Creature {
     addMuscle(muscle) {
         this.muscles.push(muscle);
         Composite.add(this.physics, muscle.physics);
+        while (this.brain.outputs.size < this.triggers.length) {
+            this.brain.outputs.addNeuron();
+        }
     }
 
     addPart(part) {
         this.parts.push(part);
         Composite.add(this.physics, part.physics);
+        while (this.brain.inputs.size < this.sensors.length) {
+            this.brain.inputs.addNeuron();
+        }
+        while (this.brain.outputs.size < this.triggers.length) {
+            this.brain.outputs.addNeuron();
+        }
     }
 
     clone() {
@@ -55,6 +68,14 @@ class Creature {
 
     mutate() {
         this.brain.mutate();
+
+        if (_.random(true) < .2) {
+            Creature.AddRandomPart(this);
+        }
+
+        if (_.random(true) < .2) {
+            Creature.AddRandomMuscle(this);
+        }
     }
 
     render(graphics, showNetwork = false) {
@@ -94,6 +115,52 @@ class Creature {
         };
     }
 
+    _chooseRandomPart(exclusions = []) {
+        let searchSpace = this.parts.map(part => part.id);
+        searchSpace = _.difference(searchSpace, exclusions);
+
+        let partId = _.sample(searchSpace);
+        return this.parts.find(part => part.id === partId);
+    }
+
+    static AddRandomMuscle(creature) {
+        let maxMuscles = creature.parts.length * (creature.parts.length - 1) / 2;
+        if (creature.parts.length < 2 || creature.muscles.length === maxMuscles) {
+            return undefined;
+        }
+
+        let from = creature._chooseRandomPart();
+        let exclusions = [from.id];
+        let to = creature._chooseRandomPart(exclusions);
+        while (to === from || hasMuscle(from, to)) {
+            addExclusion(to);
+            if (exclusions.length === creature.parts.length) {
+                exclusions = [from.id];
+                from = creature._chooseRandomPart(exclusions);
+            } else {
+                to = creature._chooseRandomPart(exclusions);
+            }
+        }
+
+        let muscle = new Muscle(from, to);
+        creature.addMuscle(muscle);
+
+        return muscle;
+
+        function addExclusion(part) {
+            if (part !== undefined) {
+                exclusions.push(part.id);
+            }
+        }
+
+        function hasMuscle(from, to) {
+            return creature.muscles.reduce((exists, muscle) =>
+                exists ||
+                (muscle.from === from && muscle.to === to) ||
+                (muscle.from === to && muscle.to === from), false);
+        }
+    }
+
     static AddRandomPart(creature) {
         let part = new Part();
         Part.SetDefaultSensors(part);
@@ -112,14 +179,8 @@ class Creature {
     static CreateRandom() {
         let creature = new Creature();
         _.times(4, () => Creature.AddRandomPart(creature));
-
-        let numSensors = creature.sensors.length;
-        let numTriggers = creature.triggers.length;
-        let mindSize = _.random(0, Math.max(numSensors, numTriggers));
-
-        // TODO: make network topology dynamic
-        Network.RandomlyPopulate(creature.brain, [numSensors, mindSize, numTriggers]);
-        Network.RandomlyConnect(creature.brain);
+        _.times(_.random(1, creature.sensors.length * creature.triggers.length),
+            () => creature.brain.addRandomConnection());
 
         return creature;
     }
