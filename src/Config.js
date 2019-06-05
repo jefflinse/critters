@@ -8,9 +8,6 @@ class Config {
 
     static get Defaults() {
         return {
-            Brain: {
-                Type: 'dynamic', // or static
-            },
             ChanceOf: {
                 ActivationFunctionChange: .5,
                 ConnectionWeightChange: .5,
@@ -20,11 +17,10 @@ class Config {
                 PartGeneration: .5,
             },
             Creature: {
-                AngularMaxSpeed: Math.PI / 3,
-                LinearMaxSpeed: 5,
                 StartingParts: 1,
                 Part: {
                     MaxSides: 12,
+                    MinSides: 3,
                     Radius: 7,
                 },
             },

@@ -179,7 +179,7 @@ class Creature {
 
     static CreateRandom() {
         let creature = new Creature();
-        _.times(4, () => Creature.AddRandomPart(creature));
+        _.times(Config.Creature.StartingParts, () => Creature.AddRandomPart(creature));
         _.times(_.random(1, creature.sensors.length * creature.triggers.length),
             () => creature.brain.addRandomConnection());
 

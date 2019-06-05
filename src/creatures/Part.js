@@ -13,7 +13,7 @@ class Part extends PhysicalObject {
         super();
         options = options || {};
         this.id = options.id || nextPartId++;
-        this.sides = options.sides || _.random(3, Config.Creature.Part.MaxSides);
+        this.sides = options.sides || _.random(Config.Creature.Part.MinSides, Config.Creature.Part.MaxSides);
         this.radius = options.radius || Config.Creature.Part.Radius;
         let position = options.position || new Vector(0, 0);
         
