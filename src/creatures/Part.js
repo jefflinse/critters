@@ -27,7 +27,7 @@ class Part extends PhysicalObject {
         this.movement = 0;
 
         this.physics = Bodies.polygon(position.x, position.y, this.sides, this.radius, {
-            frictionAir: .45,
+            frictionAir: Config.Creature.Part.FrictionAir,
         });
         this.initializePhysics();
 
@@ -42,7 +42,10 @@ class Part extends PhysicalObject {
             (100 - (this.dm * 50)) + '%)';
         
         // shadow
-        graphics.drawPolygon(this.physics.vertices.map(v => { return { x: v.x + 3, y: v.y + 3 }; }), {
+        let shadowOffset = Config.Creature.Part.ShadowOffset;
+        graphics.drawPolygon(this.physics.vertices.map(v => {
+            return { x: v.x + shadowOffset, y: v.y + shadowOffset };
+        }), {
             fillStyle: '#000000',
             globalAlpha: .2,
         });

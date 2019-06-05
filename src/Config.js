@@ -22,6 +22,8 @@ class Config {
                     MaxSides: 12,
                     MinSides: 3,
                     Radius: 7,
+                    FrictionAir: .45,
+                    ShadowOffset: 3,
                 },
             },
             Fluxuation: {
