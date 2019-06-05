@@ -29,7 +29,7 @@ class Config {
                 },
             },
             Fluxuation: {
-                RandomConnectionWeightChange: () => Config.PlusOrMinusMax(.5),
+                RandomConnectionWeightChange: () => _.random(-.5, .5),
             },
             Runner: {
                 TicksPerSecond: 60,
@@ -43,10 +43,6 @@ class Config {
                 BackgroundColor: '#444444',
             },
         };
-    }
-
-    static PlusOrMinusMax(value) {
-        return (Math.random() * value * 2) - value;
     }
 }
 
