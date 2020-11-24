@@ -17,7 +17,7 @@ class PhysicalObject {
     }
 
     set position(position) {
-        this.physics.position = position;
+        Matter.Body.setPosition(this.physics, position);
     }
 
     applyForceFromCenter(force) {

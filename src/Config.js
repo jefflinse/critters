@@ -8,14 +8,6 @@ class Config {
 
     static get Defaults() {
         return {
-            ChanceOf: {
-                ActivationFunctionChange: .5,
-                ConnectionWeightChange: .5,
-                ConnectionGeneration: .5,
-                MuscleGeneration: .5,
-                NeuronGeneration: .5,
-                PartGeneration: .5,
-            },
             Creature: {
                 StartingParts: 1,
                 Part: {
@@ -23,22 +15,19 @@ class Config {
                     MinSides: 3,
                     Radius: 7,
                     FrictionAir: .45,
-                    ShadowOffset: 3,
+                    ShadowOffset: 2,
                 },
-            },
-            Fluxuation: {
-                RandomConnectionWeightChange: () => _.random(-.5, .5),
             },
             Runner: {
                 TicksPerSecond: 60,
-                SecondsPerGeneration: 5,
+                SecondsPerGeneration: 3,
             },
             Simulation: {
                 MaxPopulation: 12,
                 ReproductionPercentile: .3,
             },
             Universe: {
-                BackgroundColor: '#444444',
+                BackgroundColor: '#C0C0C0',
             },
         };
     }

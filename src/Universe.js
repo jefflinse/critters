@@ -34,7 +34,7 @@ class Universe {
     }
 
     tick() {
-        this.individuals.alive.forEach(individual => individual.tick());
+        this.individuals.forEach(individual => individual.tick());
         Engine.update(this.physics, 1000 / 60);
         this.render();
     }
@@ -43,15 +43,11 @@ class Universe {
         this.graphics.drawBackground({
             fillStyle: Config.Universe.BackgroundColor,
         });
-        this.individuals.alive.forEach((individual, i) => individual.render(this.graphics, !i));
+        this.individuals.forEach((individual, i) => individual.render(this.graphics, !i));
     }
 
     reset() {
-        this.individuals = {
-            alive: [],
-            dead: [],
-        };
-
+        this.individuals = [];
         this.food = [];
     }
 

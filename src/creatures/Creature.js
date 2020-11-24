@@ -1,214 +1,139 @@
 import _ from 'lodash';
-import Config from '../Config';
 import Matter from 'matter-js';
+import Neataptic from 'neataptic';
 import Muscle from './Muscle';
-import Network from '../neuralnetwork/Network';
 import Part from './Part';
-import Vector from '../Vector';
 
 const Composite = Matter.Composite;
 
-let nextCreatureId = 1;
 class Creature {
 
-    constructor(options) {
-        options = options || {};
-        this.id = options.id || nextCreatureId++;
-        this.parts = [];
-        this.muscles = [];
-        this.physics = Composite.create();
-        this.movement = 0;
-        this.brain = options.brain;
-        if (this.brain === undefined) {
-            this.brain = new Network();
-            Network.Populate(this.brain, [0, 0]);
-        }
+    constructor() {
+        this.color = 'black'
+        this.physics = Composite.create()
+
+        this.parts = []
+        this.muscles = []
+        this.brain = null
     }
 
     get fitness() {
-        return this.movement;
+        return _.random(0, 10, true)
     }
 
     get position() {
-        return this.parts[0].position;
+        return this.parts[0].position
     }
 
-    get sensors() {
-        return this.parts.reduce((s, part) => s.concat(part.sensors), []);
-    }
-
-    get triggers() {
-        return this.parts.reduce((partTriggers, part) => partTriggers.concat(part.triggers), [])
-            .concat(this.muscles.reduce((muscleTriggers, muscle) => muscleTriggers.concat(muscle.triggers), []));
-    }
-
-    addMuscle(muscle) {
-        this.muscles.push(muscle);
-        Composite.add(this.physics, muscle.physics);
-        while (this.brain.outputs.size < this.triggers.length) {
-            this.brain.outputs.addNeuron();
-        }
+    set position(position) {
+        let prior = this.position.copy()
+        let delta = position.subtract(prior)
+        this.parts.forEach(p => p.position = p.position.add(delta))
     }
 
     addPart(part) {
-        this.parts.push(part);
-        Composite.add(this.physics, part.physics);
-        while (this.brain.inputs.size < this.sensors.length) {
-            this.brain.inputs.addNeuron();
-        }
-        while (this.brain.outputs.size < this.triggers.length) {
-            this.brain.outputs.addNeuron();
-        }
+        this.parts.push(part)
+        Composite.add(this.physics, part.physics)
+    }
+
+    addMuscle(muscle) {
+        this.muscles.push(muscle)
+        Composite.add(this.physics, muscle.physics)
     }
 
     clone() {
-        let creature = Creature.FromJSON(JSON.stringify(this.toJSON()), true);
-        creature.mutate();
-        return creature;
+        return Creature.FromJSON(this.toJSON())
     }
 
-    mutate() {
-        this.brain.mutate();
-
-        if (_.random(true) < Config.ChanceOf.PartGeneration) {
-            Creature.AddRandomPart(this);
-        }
-
-        if (_.random(true) < Config.ChanceOf.MuscleGeneration) {
-            Creature.AddRandomMuscle(this);
-        }
-    }
-
-    render(graphics, showNetwork = false) {
-        this.parts.forEach(part => part.render(graphics));
-        this.muscles.forEach(muscle => muscle.render(graphics));
-        if (showNetwork) {
-            this.brain.render(graphics, new Vector(25, 25), 10, 20, 20);
-        }
-    }
-
-    setPosition(position) {
-        // instantly set the position of the creature, without affecting physics
-
-        // heuristic: if there are no parts, just use (0, 0)
-        let currentPosition = this.parts.length > 0 ? this.position : new Vector(0, 0);
-
-        let relativePosition = position.copy().subtract(currentPosition);
-        Matter.Composite.translate(this.physics, relativePosition);
+    render(graphics) {
+        this.muscles.forEach(m => m.render(graphics))
+        this.parts.forEach(p => p.render(graphics))
     }
 
     tick() {
-        let neuralData = this.brain.activate(this.sensors.map(sensor => sensor()));
-        _.times(neuralData.length, i => {
-            this.triggers[i](neuralData[i]);
-        });
-
-        this.parts.forEach(part => part.tick());
-        this.movement += this.parts.reduce((movement, part) => movement + part.movement, 0);
+        this.muscles.forEach(m => m.tick())
+        this.parts.forEach(p => p.tick())
     }
 
     toJSON() {
-        return {
-            id: this.id,
-            parts: this.parts.map(part => part.toJSON()),
-            muscles: this.muscles.map(muscle => muscle.toJSON()),
+        let json = {
+            color: this.color,
             brain: this.brain.toJSON(),
-        };
+            parts: [],
+            muscles: [],
+        }
+
+        for (let i = 0; i < this.parts.length; i++) {
+            this.parts[i].index = i
+            json.parts.push({
+                radius: this.parts[i].radius,
+                color: this.parts[i].color,
+            })
+        }
+
+        for (let i = 0; i < this.muscles.length; i++) {
+            json.muscles.push({
+                length: this.muscles[i].length,
+                from: this.muscles[i].from.index,
+                to: this.muscles[i].to.index,
+            })
+        }
+
+        return json
     }
 
-    _chooseRandomPart(exclusions = []) {
-        let searchSpace = this.parts.map(part => part.id);
-        searchSpace = _.difference(searchSpace, exclusions);
-
-        let partId = _.sample(searchSpace);
-        return this.parts.find(part => part.id === partId);
-    }
-
-    static AddRandomMuscle(creature) {
-        let maxMuscles = creature.parts.length * (creature.parts.length - 1) / 2;
-        if (creature.parts.length < 2 || creature.muscles.length === maxMuscles) {
-            return undefined;
-        }
-
-        let from = creature._chooseRandomPart();
-        let exclusions = [from.id];
-        let to = creature._chooseRandomPart(exclusions);
-        while (to === from || hasMuscle(from, to)) {
-            addExclusion(to);
-            if (exclusions.length === creature.parts.length) {
-                exclusions = [from.id];
-                from = creature._chooseRandomPart(exclusions);
-            } else {
-                to = creature._chooseRandomPart(exclusions);
-            }
-        }
-
-        let muscle = new Muscle(from, to);
-        creature.addMuscle(muscle);
-
-        return muscle;
-
-        function addExclusion(part) {
-            if (part !== undefined) {
-                exclusions.push(part.id);
-            }
-        }
-
-        function hasMuscle(from, to) {
-            return creature.muscles.reduce((exists, muscle) =>
-                exists ||
-                (muscle.from === from && muscle.to === to) ||
-                (muscle.from === to && muscle.to === from), false);
-        }
-    }
-
-    static AddRandomPart(creature) {
-        let part = new Part();
-        Part.SetDefaultSensors(part);
-        Part.SetDefaultTriggers(part);
-        
-        if (creature.parts.length > 0) {
-            let muscle = new Muscle(_.sample(creature.parts), part);
-            creature.addMuscle(muscle);
-        }
-
-        creature.addPart(part);
-
-        return part;
-    }
-
-    static CreateRandom() {
+    static CreateRandom(minParts = 3, maxParts = 3, muscleDensity = 0.0) {
         let creature = new Creature();
-        _.times(Config.Creature.StartingParts, () => Creature.AddRandomPart(creature));
-        _.times(_.random(1, creature.sensors.length * creature.triggers.length),
-            () => creature.brain.addRandomConnection());
+        creature.color = `hsla(${_.random(0, 360)}, 100%, 50%, 1)`
+        creature.addPart(Part.CreateRandom(creature.color))
+        _.times(_.random(minParts - 1, maxParts - 1), () => {
+            let part = Part.CreateRandom(creature.color)
+            let muscle = Muscle.CreateRandom()
+            muscle.connect(_.sample(creature.parts), part)
+            creature.addPart(part)
+            creature.addMuscle(muscle)
+        })
 
-        return creature;
+        // muscle density == 0 means P-1 muscles, the minimum required to keep everything connected
+        // muscle density == 1 means all parts are fully connected to all other parts
+        let currentMuscles = creature.muscles.length
+        let maxMuscles = creature.parts.length * (creature.parts.length - 1) / 2
+        let maxAdditionalMuscles = maxMuscles - currentMuscles
+        let numMusclesToAdd = _.floor(maxAdditionalMuscles * muscleDensity)
+        _.times(numMusclesToAdd, () => {
+            // no self-connected parts
+            let from, to = null
+            do {
+                from = _.sample(creature.parts)
+                to = _.sample(creature.parts)
+            } while (from === to);
+
+            let muscle = Muscle.CreateRandom()
+            muscle.connect(from, to)
+            creature.addMuscle(muscle)
+        })
+
+        creature.brain = Neataptic.architect.Random(creature.parts.length, 0, creature.muscles.length)
+
+        return creature
     }
 
-    static FromJSON(json, useUniqueId = false) {
-        let data = JSON.parse(json);
-        let creature = new Creature({
-            id: useUniqueId ? nextCreatureId++ : data.id,
-            brain: Network.FromJSON(JSON.stringify(data.brain)),
-        });
+    static FromJSON(json) {
+        let creature = new Creature()
+        creature.color = json.color
+        creature.brain = Neataptic.Network.fromJSON(json.brain)
+        json.parts.forEach(jp => {
+            let part = new Part(jp.radius)
+            part.color = creature.color
+            creature.addPart(part)
+        })
+        json.muscles.forEach(jm => {
+            let muscle = new Muscle(jm.length)
+            muscle.connect(creature.parts[jm.from], creature.parts[jm.to])
+            creature.addMuscle(muscle)
+        })
 
-        let partsMap = data.parts.reduce((map, partData) => {
-            map[partData.id] = Part.FromJSON(JSON.stringify(partData), true);
-            creature.addPart(map[partData.id]);
-            return map;
-        }, {});
-
-        data.muscles.forEach(muscleData => {
-            let from = partsMap[muscleData.from];
-            let to = partsMap[muscleData.to];
-            creature.addMuscle(new Muscle(from, to, {
-                id: muscleData.id,
-                length: muscleData.length,
-            }));
-        });
-
-        return creature;
+        return creature
     }
 }
 

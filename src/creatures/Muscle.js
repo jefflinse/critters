@@ -1,29 +1,34 @@
-import _ from 'lodash';
-import Matter from 'matter-js';
+import _ from 'lodash'
+import Matter from 'matter-js'
+import Vector from '../Vector'
 
-const Constraint = Matter.Constraint;
+const Constraint = Matter.Constraint
 
-let nextMuscleId = 1;
 class Muscle {
 
-    constructor(from, to, options) {
-        options = options || {};
-        this.id = options.id || nextMuscleId++;
-        this.from = from;
-        this.to = to;
-        this.length = options.length || 25;
+    constructor(length) {
+        this.length = length
+        this.from = null
+        this.to = null
+    }
 
+    connect(from, to) {
+        this.from = from
+        this.to = to
+
+        // make sure it's at least long enough
+        this.length = Math.max(this.length, this.from.radius + this.to.radius)
+
+        this.to.position = this.from.position.copy().add(
+            Vector.RandomUnit().setMagnitude(this.length)
+        )
         this.physics = Constraint.create({
-            bodyA: from.physics,
-            bodyB: to.physics,
+            bodyA: this.from.physics,
+            bodyB: this.to.physics,
             length: this.length,
             stiffness: .2,
             damping: .05,
         });
-
-        this.triggers = [
-            (value) => this.physics.stiffness =  _.clamp(this.physics.stiffness + (value * .01), .01, .5)
-        ];
     }
 
     render(graphics) {
@@ -32,14 +37,13 @@ class Muscle {
             strokeStyle: '#AAAAFF'
         });
     }
+    
+    tick() {
+        
+    }
 
-    toJSON() {
-        return {
-            id: this.id,
-            from: this.from.id,
-            to: this.to.id,
-            length: this.physics.length,
-        };
+    static CreateRandom() {
+        return new Muscle(_.random(5, 10))
     }
 }
 

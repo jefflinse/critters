@@ -7,9 +7,8 @@ class Simulation {
 
     constructor(universe) {
         this.universe = universe;
-        this.population = {
-            alive: []
-        };
+        
+        this.population = [];
 
         this._refreshConfiguration();
         this.reset();
@@ -17,45 +16,43 @@ class Simulation {
     }
 
     nextGeneration() {
-        let best = this.population.alive.sort((a, b) => b.fitness - a.fitness);
+        let best = this.population.sort((a, b) => b.fitness - a.fitness);
         let numAllowedToLive = Math.floor(this.maxPopulation * this.reproductionPercentile);
         while (best.length > numAllowedToLive) {
-            let removed = best.pop();
-            this.universe.onIndividualRemoved(removed);
+            this.universe.onIndividualRemoved(best.pop());
         }
 
         this.reset();
-        this.population.alive = best;
+        this.population = best;
         let numSurvivors = best.length, i = 0;
         while (best.length < this.maxPopulation) {
-            this._addIndividual(best[i % numSurvivors]);
+            let newIndividual = best[i % numSurvivors].clone()
+            newIndividual.position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
+            this._addIndividual(newIndividual);
             i++;
         }
     }
 
     reset() {
-        this.population.alive = [];
         this.universe.setup(this.population);
     }
 
     tick(ticksPerSecond) {
-        this.population.alive.forEach(individual => individual.tick());
+        this.population.forEach(individual => individual.tick());
         this.universe.tick(ticksPerSecond);
     }
 
-    _addIndividual(cloneFrom) {
-        let individual = cloneFrom !== undefined ? cloneFrom.clone() : Creature.CreateRandom();
-        let position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
-        individual.setPosition(position);
-
-        this.population.alive.push(individual);
+    _addIndividual(individual) {
+        this.population.push(individual);
         this.universe.onIndividualAdded(individual);
     }
 
     _generateRandomPopulation(size) {
         this.reset();
         for (let i = 0; i < size; i++) {
-            this._addIndividual();
+            let creature = Creature.CreateRandom();
+            creature.position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
+            this._addIndividual(creature);
         }
     }
 
