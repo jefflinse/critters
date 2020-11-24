@@ -9,6 +9,7 @@
     "activation-functions": "^1.0.0",
     "lodash": "^4.17.20",
     "matter-js": "^0.14.2",
+    "neataptic": "^1.4.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
