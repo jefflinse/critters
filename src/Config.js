@@ -11,9 +11,10 @@ class Config {
             Creature: {
                 MaxParts: 5,
                 ChanceOf: {
+                    BrainMutation: .2,
                     PartGain: .2,       // always spawn a part with exactly one connecting muscle
-                    MuscleGain: .2,     // no-op if the graph is already connected
                     PartLoss: .2,           // also causes all connected muscles to be lost
+                    MuscleGain: .2,     // no-op if the graph is already connected
                     MuscleLoss: .2,         // can also result in loss of part if only connection
                 },
                 Render: {
