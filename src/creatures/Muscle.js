@@ -39,7 +39,7 @@ class Muscle {
             bodyA: this.from.physics,
             bodyB: this.to.physics,
             stiffness: .5,
-            damping: 0.05,
+            damping: 0.01,
         });
 
         from.numMuscles++

@@ -19,9 +19,6 @@ class Config {
                     MuscleGain: 0,         // no-op if the graph is already connected
                     MuscleLoss: 0,         // can also result in loss of part if only connection
                 },
-                Render: {
-                    ShadowOffset: 2,
-                },
             },
             Part: {
                 MinRadius: 5,           // parts are always circles
@@ -30,6 +27,9 @@ class Config {
                 MaxSensors: 3,
                 MinTriggers: 0,
                 MaxTriggers: 3,
+                Render: {
+                    ShadowOffset: 2,
+                },
             },
             Muscle: {
                 MinSensors: 0,

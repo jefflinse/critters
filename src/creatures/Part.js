@@ -21,13 +21,11 @@ class Part extends PhysicalObject {
         ]
         this.triggers = [
             (value) => {
-                this.physics.frictionAir = _.clamp(this.physics.frictionAir + value, 0, 1)
-                this.alpha = this.physics.frictionAir
+                this.physics.frictionAir = _.clamp(this.physics.frictionAir + value, 0.1, 1)
             },
         ]
 
         // runtime-specific
-        this.alpha = .5
         this.numMuscles = 0
         this.physics = Bodies.circle(0, 0, this.radius, {});
         this.initializePhysics()
@@ -35,11 +33,10 @@ class Part extends PhysicalObject {
 
     render(graphics) {
         // shadow
-        let shadowOffset = Config.Creature.Render.ShadowOffset;
         graphics.drawCircle(
             {
-                x: this.position.x + shadowOffset,
-                y: this.position.y + shadowOffset,
+                x: this.position.x + Config.Part.Render.ShadowOffset,
+                y: this.position.y + Config.Part.Render.ShadowOffset,
             },
             this.radius,
             {
@@ -53,7 +50,7 @@ class Part extends PhysicalObject {
             this.radius,
             {
                 fillStyle: this.color,
-                globalAlpha: this.alpha,
+                globalAlpha: _.clamp(this.physics.frictionAir, .25, 1)
             },
         )
     }

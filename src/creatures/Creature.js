@@ -189,8 +189,6 @@ class Creature {
             .concat(this.muscles.reduce((mInputs, m) => mInputs.concat(m.sense()), []))
         let outputs = this.brain.network.activate(inputs)
 
-        console.log(`inputs: ${inputs.length}, outputs: ${outputs.length}`)
-
         // trigger the muscles and parts using outputs
         let outputIdx = 0
         this.muscles.forEach(m => {
