@@ -36,6 +36,9 @@ class Muscle {
             damping: 0,
         });
 
+        from.numMuscles++
+        to.numMuscles++
+
         return this
     }
 

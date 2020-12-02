@@ -58,10 +58,6 @@ class Creature {
         Composite.add(this.physics, part.physics)
         this.brain.addInputs(part.sensors.length)
         this.brain.addOutputs(part.triggers.length)
-
-        console.log("input nodes after +part: " + this.brain.numInputs)
-        console.log("output nodes after +part: " + this.brain.numOutputs)
-        console.log("total nodes after +part: " + this.brain.network.nodes.length)
     }
 
     removePart(part) {
@@ -85,10 +81,6 @@ class Creature {
 
         // remove the part from the creature
         this.parts.splice(partIdx, 1)
-
-        console.log("input nodes after -part: " + this.brain.numInputs)
-        console.log("output nodes after -part: " + this.brain.numOutputs)
-        console.log("total nodes after -part: " + this.brain.network.nodes.length)
     }
 
     addMuscle(muscle) {
@@ -101,10 +93,6 @@ class Creature {
         Composite.add(this.physics, muscle.physics)
         this.brain.addInputs(muscle.sensors.length)
         this.brain.addOutputs(muscle.triggers.length)
-
-        console.log("input nodes after +muscle: " + this.brain.numInputs)
-        console.log("output nodes after +muscle: " + this.brain.numOutputs)
-        console.log("total nodes after +muscle: " + this.brain.network.nodes.length)
     }
 
     removeMuscle(muscle) {
@@ -126,12 +114,11 @@ class Creature {
         this.brain.removeInputs(firstSensorIdx, muscle.sensors.length)
         this.brain.removeOutputs(firstTriggerIdx, muscle.triggers.length)
 
+        this.muscles[muscleIdx].from.numMuscles--
+        this.muscles[muscleIdx].to.numMuscles--
+
         // remove the muscle from the creature
         this.muscles.splice(muscleIdx, 1)
-
-        console.log("input nodes after -muscle: " + this.brain.numInputs)
-        console.log("output nodes after -muscle: " + this.brain.numOutputs)
-        console.log("total nodes after -muscle: " + this.brain.network.nodes.length)
     }
 
     clone() {
@@ -152,7 +139,10 @@ class Creature {
     mutate() {
         if (_.random(true) < Config.Creature.ChanceOf.PartGain) {
             if (this.parts.length < Config.Creature.MaxParts) {
-                this.addPart(Part.CreateRandom(this.color))
+                let part = Part.CreateRandom(this.color)
+                let muscle = Muscle.CreateRandom().connect(_.sample(this.parts), part)
+                this.addPart(part)
+                this.addMuscle(muscle)
             }
         }
 
@@ -169,8 +159,16 @@ class Creature {
         }
 
         if (_.random(true) < Config.Creature.ChanceOf.MuscleLoss) {
-            if (this.muscles.length > this.minMuscles)
-            this.removeMuscle(_.sample(this.muscles))
+            if (this.muscles.length > this.minMuscles) {
+                let toRemove = _.sample(this.muscles)
+                this.removeMuscle(toRemove)
+                if (toRemove.from.numMuscles === 0) {
+                    this.removePart(toRemove.from)
+                }
+                if (toRemove.to.numMuscles === 0) {
+                    this.removePart(toRemove.to)
+                }
+            }
         }
 
         if (_.random(true) < Config.Creature.ChanceOf.BrainMutation) {
