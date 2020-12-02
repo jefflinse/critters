@@ -33,7 +33,12 @@ class Brain {
             firstNonInputNodeIdx++
         }
 
-        let newInputNodes = _.range(num).map(_ => new Neataptic.Node('input'))
+        let newInputNodes = _.range(num).map(_ => {
+            let node = new Neataptic.Node('input')
+            node.mutate(methods.mutation.MOD_ACTIVATION) // random squash
+            return node
+        })
+
         newInputNodes.forEach(n => {
             that.network.nodes.splice(firstNonInputNodeIdx, 0, n)
             firstNonInputNodeIdx++
@@ -43,7 +48,13 @@ class Brain {
 
     addOutputs(num) {
         let that = this
-        let newOutputNodes = _.range(num).map(_ => new Neataptic.Node('output'))
+
+        let newOutputNodes = _.range(num).map(_ => {
+            let node = new Neataptic.Node('output')
+            node.mutate(methods.mutation.MOD_ACTIVATION) // random squash
+            return node
+        })
+
         newOutputNodes.forEach(n => {
             that.network.nodes.push(n)
             that.network.connect(n, that.network.nodes[_.random(0, that.network.nodes.length - newOutputNodes.length - 1)])

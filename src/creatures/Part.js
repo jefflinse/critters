@@ -21,6 +21,7 @@ class Part extends PhysicalObject {
         ]
 
         // runtime-specific
+        this.alpha = .5
         this.numMuscles = 0
         this.physics = Bodies.circle(0, 0, this.radius, {});
         this.initializePhysics()
