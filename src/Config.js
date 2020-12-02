@@ -9,25 +9,43 @@ class Config {
     static get Defaults() {
         return {
             Creature: {
-                StartingParts: 1,
-                Part: {
-                    MaxSides: 12,
-                    MinSides: 3,
-                    Radius: 7,
-                    FrictionAir: .45,
+                MaxParts: 5,
+                ChanceOf: {
+                    PartGain: .2,       // always spawn a part with exactly one connecting muscle
+                    MuscleGain: .2,     // no-op if the graph is already connected
+                    PartLoss: .2,           // also causes all connected muscles to be lost
+                    MuscleLoss: .2,         // can also result in loss of part if only connection
+                },
+                Render: {
                     ShadowOffset: 2,
                 },
             },
+            Part: {
+                MinRadius: 5,           // parts are always circles
+                MaxRadius: 10,          //
+                MinSensors: 0,
+                MaxSensors: 3,
+                MinTriggers: 0,
+                MaxTriggers: 3,
+            },
+            Muscle: {
+                MinLength: 10,          // muscles are always lines
+                MaxLength: 20,          //
+                MinSensors: 0,
+                MaxSensors: 3,
+                MinTriggers: 0,
+                MaxTriggers: 3,
+            },
             Runner: {
                 TicksPerSecond: 60,
-                SecondsPerGeneration: 3,
+                SecondsPerGeneration: 2,
             },
             Simulation: {
                 MaxPopulation: 12,
                 ReproductionPercentile: .3,
             },
             Universe: {
-                BackgroundColor: '#C0C0C0',
+                BackgroundColor: '#EEEEEE',
             },
         };
     }

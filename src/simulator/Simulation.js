@@ -16,21 +16,28 @@ class Simulation {
     }
 
     nextGeneration() {
-        let best = this.population.sort((a, b) => b.fitness - a.fitness);
-        let numAllowedToLive = Math.floor(this.maxPopulation * this.reproductionPercentile);
-        while (best.length > numAllowedToLive) {
-            this.universe.onIndividualRemoved(best.pop());
+        this.population.sort((a, b) => b.fitness - a.fitness);
+        let best = this.population[0];
+
+        // create next population
+        let nextPopulation = [];
+        nextPopulation.push(best.clone().scatter(this.universe.width, this.universe.height));
+        nextPopulation.push(best.clone().mutate().scatter(this.universe.width, this.universe.height));
+        for (let i = 2; i < this.population.length; i++) {
+            nextPopulation.push(this.population[i].clone().mutate().scatter(this.universe.width, this.universe.height));
         }
 
-        this.reset();
-        this.population = best;
-        let numSurvivors = best.length, i = 0;
-        while (best.length < this.maxPopulation) {
-            let newIndividual = best[i % numSurvivors].clone()
-            newIndividual.position = new Vector(_.random(0, this.universe.width), _.random(0, this.universe.height));
-            this._addIndividual(newIndividual);
-            i++;
+        // remove all old
+        while (this.population.length > 0) {
+            this.universe.onIndividualRemoved(this.population.pop())
         }
+
+        // add all new
+        nextPopulation.forEach(i => {
+            this._addIndividual(i)
+        })
+
+        this.reset();
     }
 
     reset() {

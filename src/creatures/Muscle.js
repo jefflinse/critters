@@ -6,10 +6,16 @@ const Constraint = Matter.Constraint
 
 class Muscle {
 
-    constructor(length) {
-        this.length = length
+    constructor() {
+        // inheritable
         this.from = null
         this.to = null
+        this.sensors = [
+            () => _.random(true)
+        ]
+        this.triggers = [
+            (value) => this.physics.length = _.clamp(this.physics.length + (value * .1), this.minLength, this.maxLength)
+        ]
     }
 
     connect(from, to) {
@@ -17,33 +23,40 @@ class Muscle {
         this.to = to
 
         // make sure it's at least long enough
-        this.length = Math.max(this.length, this.from.radius + this.to.radius)
+        this.minLength = this.from.radius + this.to.radius
+        this.maxLength = this.minLength * 2
 
         this.to.position = this.from.position.copy().add(
-            Vector.RandomUnit().setMagnitude(this.length)
+            Vector.RandomUnit().setMagnitude(_.floor((this.minLength + this.maxLength) / 2))
         )
         this.physics = Constraint.create({
             bodyA: this.from.physics,
             bodyB: this.to.physics,
-            length: this.length,
-            stiffness: .2,
-            damping: .05,
+            stiffness: .5,
+            damping: 0,
         });
+
+        return this
     }
 
     render(graphics) {
         graphics.drawLine(this.from.position, this.to.position, {
             lineWidth: 1 + (this.physics.stiffness * 4),
-            strokeStyle: '#AAAAFF'
+            strokeStyle: this.from.color,
+            globalAlpha: 0.25,
         });
     }
     
-    tick() {
-        
+    sense() {
+        return this.sensors.map(s => s())
+    }
+
+    act(values) {
+        this.triggers.forEach((t, i) => t(values[i]))
     }
 
     static CreateRandom() {
-        return new Muscle(_.random(5, 10))
+        return new Muscle()
     }
 }
 
