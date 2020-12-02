@@ -9,13 +9,15 @@ class Config {
     static get Defaults() {
         return {
             Creature: {
-                MaxParts: 5,
+                MinStartingParts: 2,
+                MaxStartingParts: 2,
+                MaxParts: 2,
                 ChanceOf: {
                     BrainMutation: .25,
-                    PartGain: .1,           // always spawn a part with exactly one connecting muscle
-                    // PartLoss: 1,           // also causes all connected muscles to be lost
-                    MuscleGain: .1,         // no-op if the graph is already connected
-                    MuscleLoss: .1,         // can also result in loss of part if only connection
+                    PartGain: 0,           // always spawn a part with exactly one connecting muscle
+                    // PartLoss: 0,        // also causes all connected muscles to be lost
+                    MuscleGain: 0,         // no-op if the graph is already connected
+                    MuscleLoss: 0,         // can also result in loss of part if only connection
                 },
                 Render: {
                     ShadowOffset: 2,
@@ -40,7 +42,7 @@ class Config {
                 SecondsPerGeneration: 2,
             },
             Simulation: {
-                MaxPopulation: 16,
+                MaxPopulation: 1,
                 ElitismPercentile: .25,
                 ReproductionPercentile: .5,
             },

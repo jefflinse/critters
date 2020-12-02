@@ -75,7 +75,7 @@ class Universe {
         World.add(physics.world, mouseConstraint);
 
         // keep the mouse in sync with rendering
-        // render.mouse = mouse;
+        physics.mouse = mouse;
 
         return physics;
     }

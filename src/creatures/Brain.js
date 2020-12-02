@@ -69,7 +69,12 @@ class Brain {
 
     removeOutputs(start, num) {
         let that = this
-        let toRemove = this.network.nodes.slice(start, start + num)
+        let firstOutputIdx = 0;
+        while (firstOutputIdx < this.network.nodes.length && this.network.nodes[firstOutputIdx].type !== 'output') {
+            firstOutputIdx++
+        }
+
+        let toRemove = this.network.nodes.slice(firstOutputIdx + start, firstOutputIdx + start + num)
         toRemove.forEach(n => that.network.remove(n))
     }
 

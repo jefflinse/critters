@@ -104,15 +104,15 @@ class Creature {
 
         // remove the brain inputs and outputs corresponding to the muscle's sensors and triggers
         // to do this, we need to count all the inputs and outputs from the muscles before this muscle
-        let firstSensorIdx = 0
-        let firstTriggerIdx = 0
+        let firstInputIdx = 0
+        let firstOutputIdx = 0
         for (let i = 0; i < muscleIdx; i++) {
-            firstSensorIdx += this.muscles[i].sensors.length
-            firstTriggerIdx += this.muscles[i].triggers.length
+            firstInputIdx += this.muscles[i].sensors.length
+            firstOutputIdx += this.muscles[i].triggers.length
         }
 
-        this.brain.removeInputs(firstSensorIdx, muscle.sensors.length)
-        this.brain.removeOutputs(firstTriggerIdx, muscle.triggers.length)
+        this.brain.removeInputs(firstInputIdx, muscle.sensors.length)
+        this.brain.removeOutputs(firstOutputIdx, muscle.triggers.length)
 
         this.muscles[muscleIdx].from.numMuscles--
         this.muscles[muscleIdx].to.numMuscles--
@@ -185,18 +185,21 @@ class Creature {
 
     tick() {
         // collect sensor inputs from parts and muscles and activate neural network
-        let inputs = this.parts.map(p => p.sense()).concat(this.muscles.map(m => m.sense()))
+        let inputs = this.parts.reduce((pInputs, p) => pInputs.concat(p.sense()), [])
+            .concat(this.muscles.reduce((mInputs, m) => mInputs.concat(m.sense()), []))
         let outputs = this.brain.network.activate(inputs)
 
-        // trigger the parts and muscles using outputs
+        console.log(`inputs: ${inputs.length}, outputs: ${outputs.length}`)
+
+        // trigger the muscles and parts using outputs
         let outputIdx = 0
-        this.parts.forEach(p => {
-            p.act(outputs.slice(outputIdx, outputIdx + p.triggers.length))
-            outputIdx += p.triggers.length
-        })
         this.muscles.forEach(m => {
             m.act(outputs.slice(outputIdx, outputIdx + m.triggers.length))
             outputIdx += m.triggers.length
+        })
+        this.parts.forEach(p => {
+            p.act(outputs.slice(outputIdx, outputIdx + p.triggers.length))
+            outputIdx += p.triggers.length
         })
     }
 
@@ -232,7 +235,7 @@ class Creature {
         creature.color = `hsla(${_.random(0, 360)}, 100%, 50%, 1)`
         creature.addPart(Part.CreateRandom(creature.color))
 
-        _.times(_.random(Config.Creature.MaxParts - 1), () => {
+        _.times(_.random(Config.Creature.MinStartingParts - 1, Config.Creature.MaxStartingParts - 1), () => {
             let part = Part.CreateRandom(creature.color)
             let muscle = Muscle.CreateRandom().connect(_.sample(creature.parts), part)
             creature.addPart(part)
@@ -244,6 +247,12 @@ class Creature {
         _.times(numMusclesToAdd, () => {
             creature.connectTwoRandomParts()
         })
+
+        // Hack: Neataptic can't create a random network with zero inputs or outputs,
+        // so every brain starts with one input and one output. However, they aren't needed
+        // and throw off the input/output counts, so we explicitly remove them here.
+        creature.brain.removeInputs(0, 1)
+        creature.brain.removeOutputs(0, 1)
 
         return creature
     }
