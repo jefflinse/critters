@@ -14,13 +14,16 @@ class Part extends PhysicalObject {
         this.radius = radius
         this.color = 'black'
         this.sensors = [
-            () => _.random(true)
+            () => this.physics.speed,
+            () => this.physics.angularSpeed,
+            () => this.physics.angle,
+            () => this.physics.frictionAir,
         ]
         this.triggers = [
             (value) => {
                 this.physics.frictionAir = _.clamp(this.physics.frictionAir + value, 0, 1)
                 this.alpha = this.physics.frictionAir
-            }
+            },
         ]
 
         // runtime-specific

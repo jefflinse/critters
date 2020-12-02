@@ -11,7 +11,8 @@ class Muscle {
         this.from = null
         this.to = null
         this.sensors = [
-            () => _.random(true)
+            () => this.physics.length,
+            () => this.physics.stiffness,
         ]
         this.triggers = [
             (value) => {
@@ -19,7 +20,7 @@ class Muscle {
             },
             (value) => {
                 this.physics.stiffness = _.clamp(this.physics.stiffness + value, 0, 1)
-            }
+            },
         ]
     }
 

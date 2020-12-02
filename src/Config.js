@@ -10,8 +10,8 @@ class Config {
         return {
             Creature: {
                 MinStartingParts: 2,
-                MaxStartingParts: 2,
-                MaxParts: 2,
+                MaxStartingParts: 5,
+                MaxParts: 5,
                 ChanceOf: {
                     BrainMutation: .25,
                     PartGain: 0,           // always spawn a part with exactly one connecting muscle
@@ -39,10 +39,10 @@ class Config {
             },
             Runner: {
                 TicksPerSecond: 60,
-                SecondsPerGeneration: 2,
+                SecondsPerGeneration: 3,
             },
             Simulation: {
-                MaxPopulation: 1,
+                MaxPopulation: 16,
                 ElitismPercentile: .25,
                 ReproductionPercentile: .5,
             },
