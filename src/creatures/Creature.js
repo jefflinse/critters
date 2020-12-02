@@ -146,11 +146,20 @@ class Creature {
             }
         }
 
-        // if (_.random(true) < Config.Creature.ChanceOf.PartLoss) {
-        //     if (this.parts.length > 1) {
-        //         this.removePart(_.sample(this.parts))
-        //     }
-        // }
+        if (_.random(true) < Config.Creature.ChanceOf.PartLoss) {
+            if (this.parts.length > 1) {
+                // only remove leaf node parts otherwise the whole creature might die
+                let leafNodeParts = this.parts.filter(p => p.numMuscles === 1)
+                if (leafNodeParts.length > 0) {
+                    let toRemove = _.sample(leafNodeParts)
+                    this.removePart(toRemove)
+
+                    // remove the muscle
+                    let connectedMuscles = this.muscles.filter(m => m.from === toRemove || m.to === toRemove)
+                    this.removeMuscle(connectedMuscles[0])
+                }
+            }
+        }
 
         if (_.random(true) < Config.Creature.ChanceOf.MuscleGain) {
             if (this.muscles.length < this.maxMuscles) {
