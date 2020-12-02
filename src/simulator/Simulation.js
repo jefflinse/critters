@@ -17,14 +17,26 @@ class Simulation {
 
     nextGeneration() {
         this.population.sort((a, b) => b.fitness - a.fitness);
-        let best = this.population[0];
 
         // create next population
         let nextPopulation = [];
-        nextPopulation.push(best.clone().scatter(this.universe.width, this.universe.height));
-        nextPopulation.push(best.clone().mutate().scatter(this.universe.width, this.universe.height));
-        for (let i = 2; i < this.population.length; i++) {
-            nextPopulation.push(this.population[i].clone().mutate().scatter(this.universe.width, this.universe.height));
+
+        // elitism (individuals who get to advance on as-is)
+        let numElites = Math.floor(Config.Simulation.ElitismPercentile * this.population.length)
+        for (let i = 0; i < numElites; i++) {
+            nextPopulation.push(this.population[i].clone())
+        }
+
+        // reproduction (individuals who get to produce mutated offspring)
+        let numReproducing = Math.floor(Config.Simulation.ReproductionPercentile * this.population.length)
+        for (let i = 0; i < numReproducing; i++) {
+            nextPopulation.push(this.population[i].clone().mutate());
+        }
+
+        // provenance (randomly generated individuals)
+        let numRandom = this.population.length - numElites - numReproducing
+        for (let i = 0; i < numRandom; i++) {
+            nextPopulation.push(Creature.CreateRandom())
         }
 
         // remove all old
@@ -34,6 +46,7 @@ class Simulation {
 
         // add all new
         nextPopulation.forEach(i => {
+            i.scatter(this.universe.width, this.universe.height)
             this._addIndividual(i)
         })
 

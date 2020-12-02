@@ -14,7 +14,12 @@ class Muscle {
             () => _.random(true)
         ]
         this.triggers = [
-            (value) => this.physics.length = _.clamp(this.physics.length + (value * .1), this.minLength, this.maxLength)
+            (value) => {
+                this.physics.length = _.clamp(this.physics.length + value, this.minLength, this.maxLength)
+            },
+            (value) => {
+                this.physics.stiffness = _.clamp(this.physics.stiffness + value, 0, 1)
+            }
         ]
     }
 
@@ -24,7 +29,7 @@ class Muscle {
 
         // make sure it's at least long enough
         this.minLength = this.from.radius + this.to.radius
-        this.maxLength = this.minLength * 2
+        this.maxLength = this.minLength * 3
 
         this.to.position = this.from.position.copy().add(
             Vector.RandomUnit().setMagnitude(_.floor((this.minLength + this.maxLength) / 2))
@@ -33,7 +38,7 @@ class Muscle {
             bodyA: this.from.physics,
             bodyB: this.to.physics,
             stiffness: .5,
-            damping: 0,
+            damping: 0.05,
         });
 
         from.numMuscles++
@@ -46,7 +51,6 @@ class Muscle {
         graphics.drawLine(this.from.position, this.to.position, {
             lineWidth: 1 + (this.physics.stiffness * 4),
             strokeStyle: this.from.color,
-            globalAlpha: 0.25,
         });
     }
     

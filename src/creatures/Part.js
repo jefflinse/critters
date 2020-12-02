@@ -17,7 +17,10 @@ class Part extends PhysicalObject {
             () => _.random(true)
         ]
         this.triggers = [
-            (value) => this.alpha = _.clamp(this.alpha + (value * .1), 0, 1)
+            (value) => {
+                this.physics.frictionAir = _.clamp(this.physics.frictionAir + value, 0, 1)
+                this.alpha = this.physics.frictionAir
+            }
         ]
 
         // runtime-specific

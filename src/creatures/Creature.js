@@ -146,11 +146,11 @@ class Creature {
             }
         }
 
-        if (_.random(true) < Config.Creature.ChanceOf.PartLoss) {
-            if (this.parts.length > Config.Creature.MinParts) {
-                this.removePart(_.sample(this.parts))
-            }
-        }
+        // if (_.random(true) < Config.Creature.ChanceOf.PartLoss) {
+        //     if (this.parts.length > 1) {
+        //         this.removePart(_.sample(this.parts))
+        //     }
+        // }
 
         if (_.random(true) < Config.Creature.ChanceOf.MuscleGain) {
             if (this.muscles.length < this.maxMuscles) {
